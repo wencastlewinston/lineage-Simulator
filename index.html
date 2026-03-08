@@ -12,7 +12,7 @@
         .box { border: 2px solid var(--border); background: var(--panel); border-radius: 16px; padding: 15px; max-width: 440px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         
         /* 版本資訊 */
-        .version-info { font-size: 11px; color: #777; margin-top: -8px; margin-bottom: 12px; }
+        .version-info { font-size: 11px; color: #777; margin-top: 5px; margin-bottom: 12px; }
         
         /* 成本面板 */
         .setting-panel { background: #2a2a2a; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
@@ -143,7 +143,7 @@
     </div>
 
     <div class="footer">
-        原  創  者：<b>Winston</b><br>
+        原  創  者：<b>Winston</b><br>
         <a href="https://www.facebook.com/share/1CjgmReSuZ/" target="_blank" class="social-btn fb-link">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             Facebook：WenCastle.winston
@@ -178,13 +178,22 @@
     }
     function coreLogic(lv, isManual = true) {
         if (lv === -1 || lv >= 10) return lv;
-        const type = document.getElementById('item-mode').options[document.getElementById('item-mode').selectedIndex].getAttribute('data-type');
+        const sel = document.getElementById('item-mode');
+        const type = sel.options[sel.selectedIndex].getAttribute('data-type');
+        const safeLimit = parseInt(sel.value);
         scrolls++;
         const log = getChanceLogic(lv, type);
         let r = Math.random() * 100;
-        if (r < log.s) { lvStats[lv+1] = (lvStats[lv+1] || 0) + 1; if (isManual) setGameMsg(`+${lv} 成功升級為 +${lv+1}`, 'success'); return lv + 1; }
+        if (r < log.s) { 
+            lvStats[lv+1] = (lvStats[lv+1] || 0) + 1; 
+            if (isManual) {
+                let msg = (lv + 1 <= safeLimit) ? "強烈的銀色光芒一閃即逝。" : "強烈的銀色光芒一閃即逝，順利地強化成功。";
+                setGameMsg(msg, 'success'); 
+            }
+            return lv + 1; 
+        }
         if (r < (log.s + log.k)) return lv;
-        if (isManual) setGameMsg(`+${lv} 消失了。`, 'fail'); return -1;
+        if (isManual) setGameMsg("剛才強化的物品，因為強化的失敗而消失了。", 'fail'); return -1;
     }
     function updateUI() {
         const sel = document.getElementById('item-mode');
@@ -211,9 +220,19 @@
     }
     function allPlusOne() {
         const skipLvs = Array.from(document.querySelectorAll('.lv-skip:checked')).map(el => parseInt(el.value));
-        let success = 0; let actionCount = 0;
-        items = items.map(lv => { if (lv !== -1 && !skipLvs.includes(lv)) { actionCount++; let next = coreLogic(lv, false); if (next > lv) success++; return next; } return lv; });
-        setGameMsg(`全體強化：針對未排除裝備衝了 ${actionCount} 件，成功 ${success} 件。`, success > 0 ? 'success' : 'fail');
+        const sel = document.getElementById('item-mode');
+        const safeLimit = parseInt(sel.value);
+        let hasFail = false; let hasOverSafeSuccess = false; let actionCount = 0;
+        items = items.map(lv => { 
+            if (lv !== -1 && !skipLvs.includes(lv)) { 
+                actionCount++; let next = coreLogic(lv, false); 
+                if (next === -1) hasFail = true;
+                if (next > lv && next > safeLimit) hasOverSafeSuccess = true;
+                return next; 
+            } return lv; 
+        });
+        if (hasFail) setGameMsg("剛才強化的物品，因為強化的失敗而消失了。", 'fail');
+        else if (actionCount > 0) setGameMsg(hasOverSafeSuccess ? "強烈的銀色光芒一閃即逝，順利地強化成功。" : "強烈的銀色光芒一閃即逝。", 'success');
         setSysMsg(`執行全體強化 +1 (已跳過勾選等級)。`); updateUI();
     }
     function buyItems() {
@@ -239,4 +258,4 @@
     updateUI();
 </script>
 </body>
-</html>
+</html>```
