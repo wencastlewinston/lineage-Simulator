@@ -2,95 +2,128 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>溫家堡 27 露足跡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溫家堡露營足跡</title>
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #1a2a1a; padding: 10px; display: flex; justify-content: center; margin: 0; }
-        .log-card { background: white; width: 100%; max-width: 600px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; }
-        .header { background: #2d5a27; color: white; text-align: center; padding: 18px; font-size: 22px; font-weight: bold; letter-spacing: 2px; }
+        /* 靠左對齊設計 */
+        body { font-family: "Microsoft JhengHei", sans-serif; background: #1a2a1a; padding: 10px; margin: 0; text-align: left; }
         
-        .search-container { padding: 15px; background: #f0f4f0; text-align: center; border-bottom: 1px solid #ddd; }
-        #searchInput { width: 85%; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; font-size: 15px; outline: none; transition: 0.3s; }
-
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: center; font-size: 16px; }
-        th { background: #f0f4f0; color: #2d5a27; font-weight: bold; border-bottom: 2px solid #2d5a27; white-space: nowrap; }
-        tr:nth-child(even) { background: #fcfdfc; }
+        .log-card { background: white; width: 100%; max-width: 500px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); overflow: hidden; margin: 0 auto 0 0; }
         
-        .num { font-weight: bold; color: #444; width: 45px; white-space: nowrap; }
-        .date { color: #555; font-family: monospace; font-weight: bold; width: 95px; white-space: nowrap; }
+        /* 標題：溫 家 堡 露 營 足 跡 */
+        .header { background: #2d5a27; color: white; text-align: left; padding: 20px 15px; font-size: 22px; font-weight: bold; letter-spacing: 4px; }
         
-        .camp { font-weight: 600; color: #1b4332; text-align: left; padding-left: 15px; white-space: normal; word-break: break-all; }
-        .camp-link { color: #1877F2; text-decoration: underline; cursor: pointer; display: inline-block; margin-right: 8px; margin-bottom: 5px; }
+        .search-container { padding: 15px; background: #f0f4f0; border-bottom: 1px solid #ddd; text-align: left; }
+        #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; outline: none; }
 
-        #noResult { display: none; padding: 20px; text-align: center; color: #888; font-style: italic; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: left; font-size: 16px; word-wrap: break-word; }
+        th { background: #f8faf8; color: #2d5a27; font-weight: bold; border-bottom: 2px solid #2d5a27; }
+        
+        .col-num { width: 50px; text-align: center; }
+        .col-date { width: 95px; font-size: 14px; color: #666; font-weight: bold; }
+        .col-camp { width: auto; }
 
-        .footer { background: #f9f9f9; text-align: center; padding: 25px; border-top: 2px solid #2d5a27; }
-        .family-tag { font-size: 18px; color: #2d5a27; font-weight: bold; margin-bottom: 20px; display: block; white-space: normal; line-height: 1.5; }
-        .social-links { display: flex; flex-direction: column; gap: 12px; align-items: center; }
-        .btn { width: 90%; max-width: 450px; padding: 12px; border-radius: 30px; text-decoration: none; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; transition: 0.3s; white-space: normal; }
-        .btn img { width: 20px; height: 20px; flex-shrink: 0; }
-        .btn-fb { background-color: #1877F2; box-shadow: 0 4px #0d59b8; }
-        .btn-yt { background-color: #FF0000; box-shadow: 0 4px #b30000; }
-        .author { color: #aaa; font-size: 12px; margin-top: 20px; }
+        tr:nth-child(even) { background: #f9fdf9; }
+        .num { font-weight: bold; color: #2d5a27; text-align: center; }
+
+        .camp-link { 
+            color: #1877F2; 
+            text-decoration: none; 
+            background: #e7f3ff; 
+            padding: 4px 8px; 
+            border-radius: 6px; 
+            display: inline-block; 
+            margin: 3px 2px; 
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #cfe2ff;
+        }
+
+        #noResult { display: none; padding: 30px; text-align: left; color: #888; font-size: 16px; padding-left: 20px; }
+
+        .footer { background: #f9f9f9; text-align: left; padding: 25px 15px; border-top: 3px solid #2d5a27; }
+        .family-tag { font-size: 17px; color: #1a2a1a; font-weight: bold; margin-bottom: 20px; display: block; line-height: 1.5; }
+        
+        .social-links { display: flex; flex-direction: column; gap: 12px; }
+        .btn { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding-left: 20px;
+            gap: 12px;
+            box-sizing: border-box;
+        }
+        .btn-fb { background-color: #1877F2; }
+        .btn-yt { background-color: #FF0000; }
+        
+        .author { color: #bbb; font-size: 12px; margin-top: 25px; text-align: left; }
     </style>
 </head>
 <body>
 
 <div class="log-card">
-    <div class="header">⛺ 溫家堡 27 露全紀錄</div>
+    <div class="header">⛺ 溫 家 堡 露 營 足 跡</div>
     
     <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋日期或營地名稱...">
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋日期或營地...">
     </div>
 
     <table id="campTable">
         <thead>
             <tr>
-                <th>露數</th>
-                <th>日期</th>
-                <th style="text-align:left; padding-left:15px;">營地名稱</th>
+                <th class="col-num">露次</th>
+                <th class="col-date">日期</th>
+                <th class="col-camp">營地名稱與影片</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td class="num">01</td><td class="date">112-03-25</td><td class="camp"><a href="https://youtu.be/aN31ncrqotE?si=zatvXbDBkexl_IGr" target="_blank" class="camp-link">觀星賞月(1)</a> <a href="https://youtu.be/dSjlIm6qnB8?si=N2ya9PXkhblQDABz" target="_blank" class="camp-link">觀星賞月(2)</a></td></tr>
-            <tr><td class="num">02</td><td class="date">112-04-22</td><td class="camp"><a href="https://youtu.be/hVuoLePX-K0?si=gscBISp8YnEziZKv" target="_blank" class="camp-link">和平柿外佳園</a></td></tr>
-            <tr><td class="num">03</td><td class="date">112-05-27</td><td class="camp"><a href="https://youtu.be/Ds0w4Z5fHf0?si=iYYeObstFSu2OtOH" target="_blank" class="camp-link">爺亨溫泉露營</a></td></tr>
-            <tr><td class="num">04</td><td class="date">112-06-03</td><td class="camp"><a href="https://youtu.be/tff8GEcSmdQ?si=G41i2ouD_clZaTZs" target="_blank" class="camp-link">高台山</a></td></tr>
-            <tr><td class="num">05</td><td class="date">112-07-01</td><td class="camp"><a href="https://youtu.be/oX-30ZS3NC0?si=G4uxKm7oZzB4Lf1r" target="_blank" class="camp-link">梅花梯田</a></td></tr>
-            <tr><td class="num">06</td><td class="date">112-08-04</td><td class="camp"><a href="https://youtu.be/2i9OCn2VZ9k?si=dEw0dUBr9-G37Nr_" target="_blank" class="camp-link">達彥</a></td></tr>
-            <tr><td class="num">07</td><td class="date">112-08-12</td><td class="camp"><a href="https://youtu.be/u3yQGjKV1-Q?si=D_JYGXfNetMHGJTm" target="_blank" class="camp-link">蘇珊藏美露營</a></td></tr>
-            <tr><td class="num">08</td><td class="date">112-09-08</td><td class="camp"><a href="https://youtu.be/w9TcVjczbK8?si=5a5QOaxABtTW_df_" target="_blank" class="camp-link">自然野趣</a></td></tr>
-            <tr><td class="num">09</td><td class="date">112-09-22</td><td class="camp"><a href="https://youtu.be/Lb1J01aJJpE?si=xxZsyqXaBTLESzYq" target="_blank" class="camp-link">水秀農場</a></td></tr>
-            <tr><td class="num">10</td><td class="date">112-10-07</td><td class="camp"><a href="https://youtu.be/zYW1oIkJGJs?si=53e7MALkFHLZ3OU4" target="_blank" class="camp-link">卡果牧場</a></td></tr>
-            <tr><td class="num">11</td><td class="date">112-11-11</td><td class="camp"><a href="https://youtu.be/pBxlD6u24Pc?si=mNSAqJ53qlYSAgt0" target="_blank" class="camp-link">鹿林道</a></td></tr>
-            <tr><td class="num">12</td><td class="date">112-11-18</td><td class="camp"><a href="https://youtu.be/igeGHRadJgE?si=GmD86-9cg-JQxU15" target="_blank" class="camp-link">達彥</a></td></tr>
-            <tr><td class="num">13</td><td class="date">112-12-23</td><td class="camp"><a href="https://youtu.be/5A12mOZwHN4?si=Q1CVEet6BNY9tLCT" target="_blank" class="camp-link">皇后鎮森林金山</a></td></tr>
-            <tr><td class="num">14</td><td class="date">113-03-02</td><td class="camp"><a href="https://youtu.be/eI-zannL0LY?si=T1NyXiMVx6sUBmcZ" target="_blank" class="camp-link">老鷹山．鑽石林</a></td></tr>
-            <tr><td class="num">15</td><td class="date">113-03-23</td><td class="camp"><a href="https://youtu.be/kPj3HapJltY?si=qszjzP82V7XDVOeF" target="_blank" class="camp-link">福興小農庄(1)</a> <a href="https://youtu.be/HfcG5Ep7WKo?si=coZzaidrebS3fZr7" target="_blank" class="camp-link">福興小農庄(2)</a></td></tr>
-            <tr><td class="num">16</td><td class="date">113-04-04</td><td class="camp"><a href="https://youtu.be/GQ3kAfu9xNk?si=xkaq3SMqfzZ-Pcf0" target="_blank" class="camp-link">下班趣開心農場(1)</a> <a href="https://youtu.be/mu1eD5Bj7IY?si=1CiPDxc2lww1cPDX" target="_blank" class="camp-link">下班趣開心農場(2)</a></td></tr>
-            <tr><td class="num">17</td><td class="date">113-05-18</td><td class="camp"><a href="https://youtu.be/nKYFs4dsqkw?si=FI74uUYVAOY268vL" target="_blank" class="camp-link">好馨勤齊</a></td></tr>
-            <tr><td class="num">18</td><td class="date">113-06-08</td><td class="camp"><a href="https://youtu.be/psu4BeR_6ho?si=tI-YQ5iy9yIeEQAp" target="_blank" class="camp-link">桃喜悠境莊園</a></td></tr>
-            <tr><td class="num">19</td><td class="date">113-09-14</td><td class="camp"><a href="https://youtu.be/u7GSTp-5nLs?si=OVmbVtlysRCP3si9" target="_blank" class="camp-link">下班趣開心農場(1)</a> <a href="https://youtu.be/Tyt1JWg3buw?si=qrNJDROGO4T4zS_o" target="_blank" class="camp-link">下班趣開心農場(2)</a> <a href="https://youtu.be/h5Mjnxf0ol8?si=Y0kcjL6rPRr7eSC2" target="_blank" class="camp-link">下班趣開心農場(3)</a></td></tr>
-            <tr><td class="num">20</td><td class="date">113-10-10</td><td class="camp"><a href="https://youtu.be/Ol_gopA7LRs?si=tutdfGfE6l1uDaXn" target="_blank" class="camp-link">逸香園農場</a></td></tr>
-            <tr><td class="num">21</td><td class="date">113-11-16</td><td class="camp"><a href="https://youtu.be/dDKxm0pBvfE?si=trQChDvtLH-QN7T2" target="_blank" class="camp-link">移動城堡</a></td></tr>
-            <tr><td class="num">22</td><td class="date">114-05-17</td><td class="camp"><a href="https://youtu.be/3eGV_SKtp28?si=qz4Ph57p09VjAPug" target="_blank" class="camp-link">馬武督</a></td></tr>
-            <tr><td class="num">23</td><td class="date">114-05-30</td><td class="camp"><a href="https://youtu.be/dvK7p4uNgQI?si=JZded0LlRhTjeeks" target="_blank" class="camp-link">春友彩虹</a></td></tr>
-            <tr><td class="num">24</td><td class="date">114-07-05</td><td class="camp"><a href="https://youtu.be/G72lAhsfdFU?si=tQnwf6q2Nk9z8c0m" target="_blank" class="camp-link">那羅的家</a></td></tr>
-            <tr><td class="num">25</td><td class="date">114-09-27</td><td class="camp"><a href="https://youtu.be/izvuLLFaOzQ?si=7rrbba_7mcVpt0GB" target="_blank" class="camp-link">達彥</a></td></tr>
-            <tr><td class="num">26</td><td class="date">114-10-10</td><td class="camp"><a href="https://youtu.be/c9o-ctblFiM?si=UG3s0O0OkEoRKojG" target="_blank" class="camp-link">比亞山</a></td></tr>
-            <tr><td class="num">27</td><td class="date">114-12-06</td><td class="camp"><a href="https://youtu.be/_6e9jrXaSI8?si=8iBVQHKAbNq9giZA" target="_blank" class="camp-link">下班趣開心農場(1)</a> <a href="https://youtu.be/zxjmMkOkQaE?si=6KvCXgx4Ymjd5lJl" target="_blank" class="camp-link">下班趣開心農場(2)</a></td></tr>
+            <tr><td class="num">01</td><td>112.03.25</td><td><a href="https://youtu.be/aN31ncrqotE" target="_blank" class="camp-link">觀星賞月(1)</a><a href="https://youtu.be/dSjlIm6qnB8" target="_blank" class="camp-link">觀星賞月(2)</a></td></tr>
+            <tr><td class="num">02</td><td>112.04.22</td><td><a href="https://youtu.be/hVuoLePX-K0" target="_blank" class="camp-link">和平柿外佳園</a></td></tr>
+            <tr><td class="num">03</td><td>112.05.27</td><td><a href="https://youtu.be/Ds0w4Z5fHf0" target="_blank" class="camp-link">爺亨溫泉露營</a></td></tr>
+            <tr><td class="num">04</td><td>112.06.03</td><td><a href="https://youtu.be/tff8GEcSmdQ" target="_blank" class="camp-link">高台山</a></td></tr>
+            <tr><td class="num">05</td><td>112.07.01</td><td><a href="https://youtu.be/oX-30ZS3NC0" target="_blank" class="camp-link">梅花梯田</a></td></tr>
+            <tr><td class="num">06</td><td>112.08.04</td><td><a href="https://youtu.be/2i9OCn2VZ9k" target="_blank" class="camp-link">達彥</a></td></tr>
+            <tr><td class="num">07</td><td>112.08.12</td><td><a href="https://youtu.be/u3yQGjKV1-Q" target="_blank" class="camp-link">蘇珊藏美</a></td></tr>
+            <tr><td class="num">08</td><td>112.09.08</td><td><a href="https://youtu.be/w9TcVjczbK8" target="_blank" class="camp-link">自然野趣</a></td></tr>
+            <tr><td class="num">09</td><td>112.09.22</td><td><a href="https://youtu.be/Lb1J01aJJpE" target="_blank" class="camp-link">水秀農場</a></td></tr>
+            <tr><td class="num">10</td><td>112.10.07</td><td><a href="https://youtu.be/zYW1oIkJGJs" target="_blank" class="camp-link">卡果牧場</a></td></tr>
+            <tr><td class="num">11</td><td>112.11.11</td><td><a href="https://youtu.be/pBxlD6u24Pc" target="_blank" class="camp-link">鹿林道</a></td></tr>
+            <tr><td class="num">12</td><td>112.11.18</td><td><a href="https://youtu.be/igeGHRadJgE" target="_blank" class="camp-link">達彥</a></td></tr>
+            <tr><td class="num">13</td><td>112.12.23</td><td><a href="https://youtu.be/5A12mOZwHN4" target="_blank" class="camp-link">皇后鎮森林</a></td></tr>
+            <tr><td class="num">14</td><td>113.03.02</td><td><a href="https://youtu.be/eI-zannL0LY" target="_blank" class="camp-link">老鷹山．鑽石林</a></td></tr>
+            <tr><td class="num">15</td><td>113.03.23</td><td><a href="https://youtu.be/kPj3HapJltY" target="_blank" class="camp-link">福興小農庄(1)</a><a href="https://youtu.be/HfcG5Ep7WKo" target="_blank" class="camp-link">福興小農庄(2)</a></td></tr>
+            <tr><td class="num">16</td><td>113.04.04</td><td><a href="https://youtu.be/GQ3kAfu9xNk" target="_blank" class="camp-link">下班趣(1)</a><a href="https://youtu.be/mu1eD5Bj7IY" target="_blank" class="camp-link">下班趣(2)</a></td></tr>
+            <tr><td class="num">17</td><td>113.05.18</td><td><a href="https://youtu.be/nKYFs4dsqkw" target="_blank" class="camp-link">好馨勤齊</a></td></tr>
+            <tr><td class="num">18</td><td>113.06.08</td><td><a href="https://youtu.be/psu4BeR_6ho" target="_blank" class="camp-link">桃喜悠境莊園</a></td></tr>
+            <tr><td class="num">19</td><td>113.09.14</td><td><a href="https://youtu.be/u7GSTp-5nLs" target="_blank" class="camp-link">下班趣(1)</a><a href="https://youtu.be/Tyt1JWg3buw" target="_blank" class="camp-link">下班趣(2)</a><a href="https://youtu.be/h5Mjnxf0ol8" target="_blank" class="camp-link">下班趣(3)</a></td></tr>
+            <tr><td class="num">20</td><td>113.10.10</td><td><a href="https://youtu.be/Ol_gopA7LRs" target="_blank" class="camp-link">逸香園農場</a></td></tr>
+            <tr><td class="num">21</td><td>113.11.16</td><td><a href="https://youtu.be/dDKxm0pBvfE" target="_blank" class="camp-link">移動城堡</a></td></tr>
+            <tr><td class="num">22</td><td>114.05.17</td><td><a href="https://youtu.be/3eGV_SKtp28" target="_blank" class="camp-link">馬武督</a></td></tr>
+            <tr><td class="num">23</td><td>114.05.30</td><td><a href="https://youtu.be/dvK7p4uNgQI" target="_blank" class="camp-link">春友彩虹</a></td></tr>
+            <tr><td class="num">24</td><td>114.07.05</td><td><a href="https://youtu.be/G72lAhsfdFU" target="_blank" class="camp-link">那羅的家</a></td></tr>
+            <tr><td class="num">25</td><td>114.09.27</td><td><a href="https://youtu.be/izvuLLFaOzQ" target="_blank" class="camp-link">達彥</a></td></tr>
+            <tr><td class="num">26</td><td>114.10.10</td><td><a href="https://youtu.be/c9o-ctblFiM" target="_blank" class="camp-link">比亞山</a></td></tr>
+            <tr><td class="num">27</td><td>114.12.06</td><td><a href="https://youtu.be/_6e9jrXaSI8" target="_blank" class="camp-link">下班趣(1)</a><a href="https://youtu.be/zxjmMkOkQaE" target="_blank" class="camp-link">下班趣(2)</a></td></tr>
         </tbody>
     </table>
     
     <div id="noResult">找不到符合條件的營地喔！⛺</div>
 
     <div class="footer">
-        <span class="family-tag">溫士頓+玉鳳+瑄寶+饅頭=溫家堡🏠</span>
+        <span class="family-tag">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</span>
         <div class="social-links">
-            <a href="https://www.facebook.com/share/1FLh8JXKkf/" target="_blank" class="btn btn-fb"> Facebook 臉書：Winston.li </a>
-            <a href="https://www.youtube.com/@WenCastle" target="_blank" class="btn btn-yt"> YouTube 頻道：@WenCastle </a>
+            <a href="https://www.facebook.com/share/1FLh8JXKkf/" target="_blank" class="btn btn-fb">Facebook：Winston.li</a>
+            <a href="https://www.youtube.com/@WenCastle" target="_blank" class="btn btn-yt">YouTube：@WenCastle</a>
         </div>
-        <div class="author">原創者：Winston</div>
+        <div class="author">溫 家 堡 露 營 足 跡</div>
     </div>
 </div>
 
