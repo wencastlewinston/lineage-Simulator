@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>天堂(經典版) 衝裝模擬器 v1.0</title>
+    <style>
+        :root { --gold: #ffd700; --bg: #121212; --panel: #222; --border: #8c7851; --red: #ff5252; --blue: #00ffff; --sys: #00ff00; --fb-blue: #1877F2; --yt-red: #FF0000; }
+        body { background: var(--bg); color: #eee; text-align: center; font-family: 'Segoe UI', sans-serif; padding: 10px; margin: 0; }
+        .box { border: 2px solid var(--border); background: var(--panel); border-radius: 16px; padding: 15px; max-width: 440px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        
+        /* 版本資訊 */
+        .version-info { font-size: 11px; color: #777; margin-top: -8px; margin-bottom: 12px; }
+        
+        /* 成本面板 */
+        .setting-panel { background: #2a2a2a; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+        .setting-item { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #bbb; }
+        .setting-item input { width: 60px; background: #000; color: var(--gold); border: 1px solid #555; padding: 3px 5px; border-radius: 4px; text-align: right; outline: none; }
+        
+        /* 排除框架 */
+        .filter-panel { background: #252525; border: 1px solid var(--red); border-radius: 10px; padding: 8px; margin-bottom: 12px; }
+        .filter-title { font-size: 12px; color: var(--red); margin-bottom: 5px; font-weight: bold; }
+        .filter-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+        .filter-item { font-size: 11px; color: #ccc; display: flex; align-items: center; justify-content: center; gap: 2px; }
+
+        /* 機率面板 */
+        .chance-panel { background: #1a1a1a; border: 2px solid var(--blue); border-radius: 10px; padding: 10px; margin-bottom: 12px; text-align: left; }
+        .chance-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; margin-bottom: 8px; }
+        .chance-panel label { font-size: 10px; color: var(--blue); font-weight: bold; display: block; margin-bottom: 2px; }
+        .chance-panel input { width: 90%; background: #000; color: #fff; border: 1px solid var(--blue); text-align: center; font-size: 11px; border-radius: 4px; padding: 2px; outline: none; }
+        .chance-title { color: var(--blue); font-size: 12px; font-weight: bold; border-bottom: 1px solid #333; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-reset-prob { background: #555; color: #fff; border: none; padding: 2px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; }
+
+        .stats-panel { background: #111; border: 1px solid #444; border-radius: 10px; padding: 10px; margin-bottom: 12px; font-size: 11px; text-align: left; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .stat-item { color: #aaa; border-bottom: 1px solid #222; padding: 2px 0; }
+        .stat-val { color: var(--gold); font-weight: bold; float: right; }
+        
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 10px 0; max-height: 180px; overflow-y: auto; padding: 10px; background: #151515; border-radius: 10px; border: 2px inset #000; }
+        .item { background: #2a2a2a; border: 1px solid #444; border-radius: 6px; padding: 10px 0; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .broken { color: #555; background: #111 !important; text-decoration: line-through; border-color: #222 !important; cursor: default; }
+
+        .msg-box { height: 35px; line-height: 18px; font-size: 12px; margin: 4px 0; padding: 5px; background: #000; border-radius: 6px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; }
+        #game-msg { border-color: #553333; }
+        #sys-msg { border-color: #335533; color: var(--sys); }
+        .msg-success { color: var(--blue); text-shadow: 0 0 5px var(--blue); }
+        .msg-fail { color: var(--red); text-shadow: 0 0 5px var(--red); }
+        
+        select { width: 100%; padding: 10px; background: #333; color: white; border: 1px solid var(--gold); border-radius: 8px; margin-bottom: 10px; font-size: 15px; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+        .btn-action { padding: 10px; font-size: 13px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: white; width: 100%; }
+
+        /* 作者與社群按鈕 */
+        .footer { margin-top: 20px; padding: 15px 10px; border-top: 1px solid #333; font-size: 14px; color: #ccc; }
+        .footer b { color: var(--gold); }
+        .footer .social-btn { 
+            text-decoration: none; display: flex; align-items: center; justify-content: center;
+            gap: 8px; margin: 8px auto; padding: 8px; width: fit-content; min-width: 220px;
+            background: rgba(255,255,255,0.05); border-radius: 8px; transition: 0.2s; border: 1px solid transparent;
+        }
+        .footer svg { width: 18px; height: 18px; }
+        .fb-link { color: var(--fb-blue); border-color: rgba(24, 119, 242, 0.3); }
+        .yt-link { color: var(--yt-red); border-color: rgba(255, 0, 0, 0.3); }
+        .social-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div style="font-size: 16px; color: var(--gold); font-weight: bold; margin-bottom: 4px;">天堂(經典版) 衝裝模擬器</div>
+    <div class="version-info">v1.0 | 更新日期: 2026/03/08</div>
+    
+    <div class="setting-panel">
+        <div class="setting-item"><label>📜 武卷單價</label> <input type="number" id="price-weapon" value="80000" oninput="updateUI()"></div>
+        <div class="setting-item"><label>📜 防卷單價</label> <input type="number" id="price-armor" value="40000" oninput="updateUI()"></div>
+        <div class="setting-item"><label>⚔️ 武器底價</label> <input type="number" id="base-weapon" value="20000" oninput="updateUI()"></div>
+        <div class="setting-item"><label>🛡️ 防具底價</label> <input type="number" id="base-armor" value="30000" oninput="updateUI()"></div>
+        <div class="setting-item"><label>💹 台幣匯率</label> <input type="number" id="rate-twd" value="170" oninput="updateUI()"></div>
+        <div class="setting-item"><label>📦 購買裝備</label> <input type="number" id="item-count" value="10" oninput="updateUI()"></div>
+    </div>
+
+    <div class="filter-panel">
+        <div class="filter-title">🚫 全體強化排除對象 (勾選 = 不生效)</div>
+        <div class="filter-grid">
+            <div class="filter-item"><input type="checkbox" class="lv-skip" value="5"> +5</div>
+            <div class="filter-item"><input type="checkbox" class="lv-skip" value="6"> +6</div>
+            <div class="filter-item"><input type="checkbox" class="lv-skip" value="7"> +7</div>
+            <div class="filter-item"><input type="checkbox" class="lv-skip" value="8"> +8</div>
+            <div class="filter-item"><input type="checkbox" class="lv-skip" value="9"> +9</div>
+            <div class="filter-item"><input type="checkbox" class="lv-skip" value="10"> +10</div>
+        </div>
+    </div>
+
+    <div class="chance-panel">
+        <div class="chance-title"><span>⚔️ 武器強化機率</span> <button class="btn-reset-prob" onclick="resetProb()">重置</button></div>
+        <div class="chance-grid">
+            <div><label>+7 (過1)</label><input type="number" id="w-7" value="32.43" oninput="updateUI()"></div>
+            <div><label>+8 (過2)</label><input type="number" id="w-8" value="32.43" oninput="updateUI()"></div>
+            <div><label>+9 (過3)</label><input type="number" id="w-9" value="32.43" oninput="updateUI()"></div>
+            <div><label>+10 (過4)</label><input type="number" id="w-10" value="0.90" oninput="updateUI()"></div>
+        </div>
+        <div class="chance-title"><span>🛡️ 一般防具 (安定4)</span></div>
+        <div class="chance-grid">
+            <div><label>+5 (過1)</label><input type="number" id="a4-5" value="16.6" oninput="updateUI()"></div>
+            <div><label>+6 (過2)</label><input type="number" id="a4-6" value="10.0" oninput="updateUI()"></div>
+            <div><label>+7 (過3)</label><input type="number" id="a4-7" value="7.5" oninput="updateUI()"></div>
+            <div><label>+8 (過4)</label><input type="number" id="a4-8" value="4.2" oninput="updateUI()"></div>
+        </div>
+        <div class="chance-title"><span>👕 特製防具 (安定6)</span></div>
+        <div class="chance-grid">
+            <div><label>+7 (過1)</label><input type="number" id="a6-7" value="16.6" oninput="updateUI()"></div>
+            <div><label>+8 (過2)</label><input type="number" id="a6-8" value="12.0" oninput="updateUI()"></div>
+            <div><label>+9 (過3)</label><input type="number" id="a6-9" value="8.0" oninput="updateUI()"></div>
+            <div><label>+10 (過4)</label><input type="number" id="a6-10" value="5.0" oninput="updateUI()"></div>
+        </div>
+    </div>
+
+    <select id="item-mode" onchange="updateUI()">
+        <option value="6" data-type="weapon">⚔️ 模式：武器 (安定+6)</option>
+        <option value="4" data-type="armor4">🛡️ 模式：一般防具 (安定+4)</option>
+        <option value="6" data-type="armor6">👕 模式：特製防具 (安定+6)</option>
+    </select>
+
+    <div class="stats-panel"><div class="stat-grid" id="stats-content"></div></div>
+    <div class="grid" id="grid"></div>
+
+    <div id="game-msg" class="msg-box">等待強化動作...</div>
+    <div id="sys-msg" class="msg-box">系統就緒</div>
+
+    <div class="btn-group">
+        <button class="btn-action" style="background: #b8860b;" onclick="batchEnhance()">✨ 自動衝安定</button>
+        <button class="btn-action" style="background: #444;" onclick="allPlusOne()">🔨 全體強化 +1</button>
+    </div>
+    <div class="btn-group">
+        <button class="btn-action" style="background: #2e7d32;" onclick="buyItems()">🔄 裝備購買</button>
+        <button class="btn-action" style="background: #3f51b5;" onclick="removeBroken()">🧹 回收碎物</button>
+    </div>
+    <div class="btn-group">
+        <button class="btn-action" style="background: #9c27b0;" onclick="clearStatsOnly()">📊 統計清零</button>
+        <button class="btn-action" style="background: #c62828;" onclick="clearAll()">🚫 全部重來</button>
+    </div>
+
+    <div class="footer">
+        原  創  者：<b>Winston</b><br>
+        <a href="https://www.facebook.com/share/1CjgmReSuZ/" target="_blank" class="social-btn fb-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook：WenCastle.winston
+        </a>
+        <a href="https://www.youtube.com/@wencastle" target="_blank" class="social-btn yt-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube 頻道：@wencastle
+        </a>
+    </div>
+</div>
+
+<script>
+    let items = []; let lvStats = {}; let scrolls = 0; let wBought = 0; let aBought = 0;
+    function setGameMsg(txt, type) { const el = document.getElementById('game-msg'); el.innerText = txt; el.className = 'msg-box ' + (type === 'success' ? 'msg-success' : (type === 'fail' ? 'msg-fail' : '')); }
+    function setSysMsg(txt) { document.getElementById('sys-msg').innerText = '系統：' + txt; }
+    function getChanceLogic(lv, type) {
+        const target = lv + 1;
+        if (type === 'weapon') {
+            if (target <= 6) return { s: 100, k: 0 };
+            let val = document.getElementById('w-' + Math.min(target, 10)).value;
+            return { s: parseFloat(val), k: target >= 10 ? 32.43 : 0 };
+        } else if (type === 'armor4') {
+            if (target <= 4) return { s: 100, k: 0 };
+            let val = document.getElementById('a4-' + Math.min(target, 8)).value;
+            return { s: parseFloat(val), k: 0 };
+        } else if (type === 'armor6') {
+            if (target <= 6) return { s: 100, k: 0 };
+            let val = document.getElementById('a6-' + Math.min(target, 10)).value;
+            return { s: parseFloat(val), k: 0 };
+        }
+        return { s: 0, k: 0 };
+    }
+    function coreLogic(lv, isManual = true) {
+        if (lv === -1 || lv >= 10) return lv;
+        const type = document.getElementById('item-mode').options[document.getElementById('item-mode').selectedIndex].getAttribute('data-type');
+        scrolls++;
+        const log = getChanceLogic(lv, type);
+        let r = Math.random() * 100;
+        if (r < log.s) { lvStats[lv+1] = (lvStats[lv+1] || 0) + 1; if (isManual) setGameMsg(`+${lv} 成功升級為 +${lv+1}`, 'success'); return lv + 1; }
+        if (r < (log.s + log.k)) return lv;
+        if (isManual) setGameMsg(`+${lv} 消失了。`, 'fail'); return -1;
+    }
+    function updateUI() {
+        const sel = document.getElementById('item-mode');
+        const type = sel.options[sel.selectedIndex].getAttribute('data-type');
+        const rate = Number(document.getElementById('rate-twd').value) || 1;
+        const pScroll = (type === 'weapon') ? Number(document.getElementById('price-weapon').value) : Number(document.getElementById('price-armor').value);
+        const totalGold = (scrolls * pScroll) + (wBought * Number(document.getElementById('base-weapon').value)) + (aBought * Number(document.getElementById('base-armor').value));
+        let html = `<div class="stat-item">📦 累計裝備: <span class="stat-val">${(wBought + aBought).toLocaleString()}</span></div>
+            <div class="stat-item">📜 消耗卷軸: <span class="stat-val">${scrolls.toLocaleString()}</span></div>
+            <div class="stat-item">💰 天幣總計: <span class="stat-val">${totalGold.toLocaleString()}</span></div>
+            <div class="stat-item" style="color:var(--red)">🧧 台幣支出: <span class="stat-val">${Math.floor(totalGold/rate).toLocaleString()}</span></div>`;
+        let start = (type === 'armor4') ? 5 : 7;
+        for (let i = 0; i < 4; i++) { let cur = start + i; let prob = getChanceLogic(cur - 1, type).s; html += `<div class="stat-item">✨ +${cur}: <span class="stat-val">${lvStats[cur] || 0} (${prob}%)</span></div>`; }
+        document.getElementById('stats-content').innerHTML = html; renderGrid();
+    }
+    function renderGrid() {
+        const grid = document.getElementById('grid'); grid.innerHTML = '';
+        items.forEach((lv, idx) => {
+            const div = document.createElement('div'); div.className = 'item' + (lv === -1 ? ' broken' : '');
+            div.innerText = lv === -1 ? '碎' : `+${lv}`;
+            if (lv !== -1) div.onclick = () => { items[idx] = coreLogic(items[idx], true); updateUI(); };
+            grid.appendChild(div);
+        });
+    }
+    function allPlusOne() {
+        const skipLvs = Array.from(document.querySelectorAll('.lv-skip:checked')).map(el => parseInt(el.value));
+        let success = 0; let actionCount = 0;
+        items = items.map(lv => { if (lv !== -1 && !skipLvs.includes(lv)) { actionCount++; let next = coreLogic(lv, false); if (next > lv) success++; return next; } return lv; });
+        setGameMsg(`全體強化：針對未排除裝備衝了 ${actionCount} 件，成功 ${success} 件。`, success > 0 ? 'success' : 'fail');
+        setSysMsg(`執行全體強化 +1 (已跳過勾選等級)。`); updateUI();
+    }
+    function buyItems() {
+        const count = parseInt(document.getElementById('item-count').value) || 0;
+        const type = document.getElementById('item-mode').options[document.getElementById('item-mode').selectedIndex].getAttribute('data-type');
+        if (type === 'weapon') wBought += count; else aBought += count;
+        for(let i=0; i<count; i++) items.push(0); setSysMsg(`購入了 ${count} 件裝備。`); updateUI();
+    }
+    function batchEnhance() {
+        const safe = parseInt(document.getElementById('item-mode').value);
+        items = items.map(lv => { if (lv !== -1 && lv < safe) { scrolls += (safe - lv); for(let j = lv+1; j <= safe; j++) lvStats[j] = (lvStats[j] || 0) + 1; return safe; } return lv; });
+        setSysMsg(`自動強化至安定值 +${safe}。`); updateUI();
+    }
+    function removeBroken() { items = items.filter(lv => lv !== -1); setSysMsg(`回收碎裂物品。`); updateUI(); }
+    function clearStatsOnly() { lvStats = {}; scrolls = 0; wBought = 0; aBought = 0; setSysMsg("統計清零。"); updateUI(); }
+    function clearAll() { items = []; lvStats = {}; scrolls = 0; wBought = 0; aBought = 0; setSysMsg("全部重置。"); updateUI(); }
+    function resetProb() {
+        document.getElementById('w-7').value="32.43"; document.getElementById('w-8').value="32.43"; document.getElementById('w-9').value="32.43"; document.getElementById('w-10').value="0.90";
+        document.getElementById('a4-5').value="16.6"; document.getElementById('a4-6').value="10.0"; document.getElementById('a4-7').value="7.5"; document.getElementById('a4-8').value="4.2";
+        document.getElementById('a6-7').value="16.6"; document.getElementById('a6-8').value="12.0"; document.getElementById('a6-9').value="8.0"; document.getElementById('a6-10').value="5.0";
+        setSysMsg("機率已重置。"); updateUI();
+    }
+    updateUI();
+</script>
+</body>
+</html>
