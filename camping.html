@@ -3,94 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>溫家堡露營足跡 - 影院版</title>
+    <title>溫家堡露營足跡</title>
     <style>
         :root { 
             --primary: #2d5a27; 
-            --bg: #0f0f0f; /* 深色背景，更有劇院感 */
-            --panel-bg: #1a1a1a; 
-            --text-main: #ffffff;
-            --text-sub: #aaaaaa;
+            --bg: #000; 
+            --panel-bg: #fff; 
             --yt-red: #FF0000; 
             --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
         }
         
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); color: var(--text-main); }
-        .rainbow-line { height: 3px; background: var(--rainbow); width: 100%; position: absolute; top: 0; z-index: 1000; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); }
+        .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: absolute; top: 0; z-index: 1000; }
 
-        /* 主佈局 - 手機版預設上下 */
-        .main-layout { display: flex; flex-direction: column; height: 100vh; padding-top: 3px; }
+        .main-layout { display: flex; flex-direction: column; height: 100vh; padding-top: 4px; box-sizing: border-box; }
 
         /* 影片區 */
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         iframe#ktv_player { width: 100%; height: 100%; border: none; }
 
-        /* 控制台區 */
-        .content-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--panel-bg); }
-        .header { padding: 15px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* 搜尋與過濾 */
-        .search-container { padding: 12px; background: #222; border-bottom: 1px solid #333; }
-        .search-bar-row { display: flex; gap: 8px; margin-bottom: 10px; }
-        #searchInput { flex: 1; padding: 10px 15px; border-radius: 4px; border: 1px solid #444; background: #000; color: #fff; outline: none; }
-        .icon-btn { width: 40px; height: 40px; background: #333; border: none; color: #fff; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        /* 列表與內容區 */
+        .content-area { flex: 1; background: var(--panel-bg); overflow-y: auto; display: flex; flex-direction: column; }
+        .header { background: var(--primary); color: white; padding: 15px; font-size: 20px; font-weight: bold; text-align: center; }
 
-        /* 按鈕風格 */
-        .yt-action-row { display: flex; gap: 8px; margin-bottom: 10px; }
-        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; text-decoration: none; color: white; background: var(--yt-red); }
+        /* 搜尋控制區 - 大字體與大按鈕 */
+        .search-container { padding: 12px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .search-bar-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        #searchInput { flex: 1; padding: 12px 15px; border-radius: 25px; border: 2px solid #ccc; font-size: 16px; outline: none; }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        .yt-action-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 25px; font-size: 15px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; color: white; background: var(--yt-red); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         
         .tool-bar { display: flex; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .filter-tags { display: flex; gap: 6px; }
-        .tag { background: #333; padding: 6px 15px; border-radius: 4px; font-size: 13px; color: #ccc; cursor: pointer; border: 1px solid transparent; }
-        .tag.active { background: var(--primary); color: white; border-color: #555; }
+        .filter-tags { display: flex; gap: 8px; white-space: nowrap; }
+        .tag { background: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid #ddd; cursor: pointer; color: #333; }
+        .tag.active { background: var(--primary); color: white; font-weight: bold; }
 
-        /* 列表樣式 */
-        .camp-list { flex: 1; overflow-y: auto; }
-        .camp-item { display: flex; padding: 12px; border-bottom: 1px solid #2a2a2a; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .camp-item:hover { background: #252525; }
-        .camp-item.active { background: #2d3d2d; border-left: 4px solid var(--primary); }
+        /* 列表樣式 - 大字體加粗 */
+        .camp-list { width: 100%; }
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; cursor: pointer; }
+        .camp-item.active { background: #e8f5e9; border-left: 6px solid var(--primary); }
+        .col-num { width: 35px; text-align: center; font-weight: bold; color: var(--primary); font-size: 22px; align-self: center; }
+        .col-thumb { width: 110px; flex-shrink: 0; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #000; }
+        .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
         
-        .col-num { width: 30px; color: var(--primary); font-size: 1.2rem; font-weight: bold; text-align: center; align-self: center; }
-        .col-thumb { width: 120px; flex-shrink: 0; position: relative; }
-        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; background: #000; }
-        .thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-        
-        .col-info { flex: 1; }
-        .stars { color: #f1c40f; font-size: 12px; }
-        .camp-date { color: var(--text-sub); font-size: 12px; }
-        .camp-name { font-weight: bold; font-size: 1rem; margin: 3px 0; color: #fff; }
-        .video-btn-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
-        .video-btn { background: #333; color: #fff; padding: 4px 10px; border-radius: 3px; font-size: 11px; border: 1px solid #444; }
+        .col-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .stars { color: #f1c40f; font-size: 14px; margin-bottom: 2px; }
+        .camp-name { font-weight: bold; font-size: 18px; margin: 4px 0; color: #111; }
+        .camp-date { color: #666; font-size: 13px; }
+        .video-btn { background: #e7f3ff; color: #1877F2; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-flex; margin-top: 5px; border: 1px solid #cfe2ff; margin-right: 6px; }
+
+        /* 照片牆模式修復 */
+        .grid-mode .camp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 12px; }
+        .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 12px; padding: 10px; position: relative; }
+        .grid-mode .col-num { position: absolute; top: 0; left: 0; background: var(--primary); color: white; padding: 4px 10px; font-size: 14px; border-radius: 12px 0 12px 0; z-index: 5; }
+        .grid-mode .col-thumb { width: 100%; }
+
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 15px; color: #333; font-weight: bold; border-top: 2px solid var(--primary); }
 
         /* ==========================================
-           💻 電腦專業版佈局 (螢幕大於 992px)
+           💻 電腦版劇院佈局 (螢幕大於 1024px)
         ========================================== */
-        @media (min-width: 992px) {
-            .main-layout { flex-direction: row; padding: 20px; gap: 20px; box-sizing: border-box; background: #000; }
-            
-            /* 左側影片劇院 */
-            .video-box { 
-                flex: 1; 
-                height: calc(100vh - 40px); 
-                aspect-ratio: auto; 
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            }
-
-            /* 右側控制台 */
-            .content-area { 
-                width: 400px; 
-                height: calc(100vh - 40px); 
-                border-radius: 12px;
-                border: 1px solid #333;
-            }
-            .header { background: #1a1a1a; }
-            .camp-list::-webkit-scrollbar { width: 6px; }
-            .camp-list::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+        @media (min-width: 1024px) {
+            .main-layout { flex-direction: row; padding-top: 0; }
+            .video-box { flex: 1; height: 100vh; aspect-ratio: auto; }
+            iframe#ktv_player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+            .content-area { width: 420px; height: 100vh; box-shadow: -5px 0 20px rgba(0,0,0,0.3); }
+            .header { font-size: 24px; padding: 25px; }
+            /* 電腦版照片牆維持兩排 */
+            .grid-mode .camp-list { grid-template-columns: 1fr 1fr; }
         }
-
-        #loading { text-align: center; padding: 40px; color: var(--text-sub); font-style: italic; }
     </style>
 </head>
 <body>
@@ -103,25 +87,23 @@
         </div>
 
         <div class="content-area" id="mainContainer">
-            <div class="header">
-                <span>🏰 溫家堡露營足跡</span>
-                <span id="campCount" style="font-size: 0.8rem; color: var(--text-sub);">Loading...</span>
-            </div>
+            <div class="header">⛺ 溫家堡露營足跡</div>
             
             <div class="search-container">
                 <div class="search-bar-row">
-                    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地、年份、星等...">
-                    <button class="icon-btn" onclick="reverseTable()">⇅</button>
+                    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地、日期...">
+                    <button class="icon-btn" onclick="toggleView()" title="切換照片牆">🖼️</button>
+                    <button class="icon-btn" onclick="reverseTable()" title="排序">⇅</button>
                 </div>
 
                 <div class="yt-action-row">
-                    <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn" style="background: #333;">頻道</a>
-                    <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">🔔 訂閱</a>
+                    <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn" style="background: #333;">頻道首頁</a>
+                    <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">🔔 訂閱溫家堡</a>
                 </div>
                 
                 <div class="tool-bar">
                     <div class="filter-tags">
-                        <div class="tag active" onclick="filterYear('', this)">ALL</div>
+                        <div class="tag active" onclick="filterYear('', this)">全部</div>
                         <div class="tag" onclick="filterYear('114', this)">114年</div>
                         <div class="tag" onclick="filterYear('113', this)">113年</div>
                         <div class="tag" onclick="filterYear('112', this)">112年</div>
@@ -129,8 +111,10 @@
                 </div>
             </div>
 
-            <div id="loading">🚐 準備出發中...</div>
+            <div id="loading" style="text-align:center; padding:30px; font-weight:bold;">🚐 載入資料中...</div>
             <div class="camp-list" id="campBody"></div>
+            
+            <div class="footer">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
         </div>
     </div>
 
@@ -146,12 +130,10 @@
                 document.getElementById('loading').style.display = 'none';
 
                 const validRows = rows.filter(row => row.trim() !== "").reverse();
-                document.getElementById('campCount').innerText = `共計 ${validRows.length} 露`;
                 
                 validRows.forEach((row, index) => {
                     const cols = row.split(',');
                     if (cols.length < 5) return;
-                    
                     const [num, date, name, stars, vid1, vid2] = cols.map(c => c.trim());
                     const starVal = parseInt(stars) || 5;
                     const starHtml = "★".repeat(starVal) + "☆".repeat(5 - starVal);
@@ -173,15 +155,13 @@
                             <div class="camp-name">${name}</div>
                             <div class="camp-date">${date}</div>
                             <div class="video-btn-row">
-                                <div class="video-btn">▶ 播放影片</div>
-                                ${vid2 ? `<div class="video-btn" onclick="event.stopPropagation(); playMainVid('${vid2}')">▶ 影片 2</div>` : ''}
+                                <div class="video-btn">🎬 播放影片</div>
+                                ${vid2 ? `<div class="video-btn" onclick="event.stopPropagation(); playMainVid('${vid2}')">🎬 影片 2</div>` : ''}
                             </div>
                         </div>`;
                     campBody.appendChild(item);
                 });
-            } catch (error) {
-                document.getElementById('loading').innerText = "❌ 資料庫連線異常";
-            }
+            } catch (e) { document.getElementById('loading').innerText = "讀取失敗"; }
         }
 
         function playMainVid(id) {
@@ -192,6 +172,8 @@
             if(target) target.classList.add('active');
         }
 
+        function toggleView() { document.getElementById("mainContainer").classList.toggle("grid-mode"); }
+        
         function searchTable() {
             const filter = document.getElementById("searchInput").value.toUpperCase();
             const items = document.getElementsByClassName("camp-item");
