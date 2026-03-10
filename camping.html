@@ -13,35 +13,38 @@
             --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
         }
         
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); }
-        .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: absolute; top: 0; z-index: 1000; }
+        /* 修正滾動問題：讓 body 在手機版可以自然捲動 */
+        body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; }
+        .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 1000; }
 
-        .main-layout { display: flex; flex-direction: column; height: 100vh; padding-top: 4px; box-sizing: border-box; }
+        .main-layout { display: flex; flex-direction: column; min-height: 100vh; padding-top: 4px; }
 
-        /* 影片區 */
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        /* 影片區 - 手機版固定在頂部 */
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 4px; z-index: 999; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         iframe#ktv_player { width: 100%; height: 100%; border: none; }
 
-        /* 列表與內容區 */
-        .content-area { flex: 1; background: var(--panel-bg); overflow-y: auto; display: flex; flex-direction: column; }
+        /* 內容區 */
+        .content-area { flex: 1; background: var(--panel-bg); display: flex; flex-direction: column; }
         .header { background: var(--primary); color: white; padding: 15px; font-size: 20px; font-weight: bold; text-align: center; }
 
-        /* 搜尋控制區 - 大字體與大按鈕 */
+        /* 搜尋控制區 */
         .search-container { padding: 12px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        /* 這裡的 sticky 是相對於 content-area 的 */
+        
         .search-bar-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
         #searchInput { flex: 1; padding: 12px 15px; border-radius: 25px; border: 2px solid #ccc; font-size: 16px; outline: none; }
-        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
         .yt-action-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 25px; font-size: 15px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; color: white; background: var(--yt-red); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 25px; font-size: 15px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; color: white; background: var(--yt-red); }
         
         .tool-bar { display: flex; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .filter-tags { display: flex; gap: 8px; white-space: nowrap; }
-        .tag { background: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid #ddd; cursor: pointer; color: #333; }
+        .tag { background: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid #ddd; cursor: pointer; }
         .tag.active { background: var(--primary); color: white; font-weight: bold; }
 
-        /* 列表樣式 - 大字體加粗 */
-        .camp-list { width: 100%; }
+        /* 列表樣式 */
+        .camp-list { width: 100%; flex: 1; }
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; cursor: pointer; }
         .camp-item.active { background: #e8f5e9; border-left: 6px solid var(--primary); }
         .col-num { width: 35px; text-align: center; font-weight: bold; color: var(--primary); font-size: 22px; align-self: center; }
@@ -49,30 +52,28 @@
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #000; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
         
-        .col-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .stars { color: #f1c40f; font-size: 14px; margin-bottom: 2px; }
+        .col-info { flex: 1; }
+        .stars { color: #f1c40f; font-size: 14px; }
         .camp-name { font-weight: bold; font-size: 18px; margin: 4px 0; color: #111; }
         .camp-date { color: #666; font-size: 13px; }
         .video-btn { background: #e7f3ff; color: #1877F2; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-flex; margin-top: 5px; border: 1px solid #cfe2ff; margin-right: 6px; }
 
-        /* 照片牆模式修復 */
+        /* 照片牆模式 */
         .grid-mode .camp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 12px; }
         .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 12px; padding: 10px; position: relative; }
         .grid-mode .col-num { position: absolute; top: 0; left: 0; background: var(--primary); color: white; padding: 4px 10px; font-size: 14px; border-radius: 12px 0 12px 0; z-index: 5; }
-        .grid-mode .col-thumb { width: 100%; }
 
-        .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 15px; color: #333; font-weight: bold; border-top: 2px solid var(--primary); }
+        /* 簽名檔 */
+        .footer { background: #f9f9f9; padding: 30px 15px; text-align: center; font-size: 16px; color: #333; font-weight: bold; border-top: 3px solid var(--primary); }
 
         /* ==========================================
-           💻 電腦版劇院佈局 (螢幕大於 1024px)
+           💻 電腦版 專用設定
         ========================================== */
         @media (min-width: 1024px) {
-            .main-layout { flex-direction: row; padding-top: 0; }
-            .video-box { flex: 1; height: 100vh; aspect-ratio: auto; }
-            iframe#ktv_player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-            .content-area { width: 420px; height: 100vh; box-shadow: -5px 0 20px rgba(0,0,0,0.3); }
-            .header { font-size: 24px; padding: 25px; }
-            /* 電腦版照片牆維持兩排 */
+            body, html { height: 100vh; overflow: hidden; }
+            .main-layout { flex-direction: row; padding-top: 0; height: 100vh; }
+            .video-box { flex: 1; height: 100vh; position: relative; top: 0; }
+            .content-area { width: 420px; height: 100vh; overflow-y: auto; box-shadow: -5px 0 20px rgba(0,0,0,0.3); }
             .grid-mode .camp-list { grid-template-columns: 1fr 1fr; }
         }
     </style>
@@ -89,18 +90,16 @@
         <div class="content-area" id="mainContainer">
             <div class="header">⛺ 溫家堡露營足跡</div>
             
-            <div class="search-container">
+            <div class="search-container" id="stickySearch">
                 <div class="search-bar-row">
                     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地、日期...">
                     <button class="icon-btn" onclick="toggleView()" title="切換照片牆">🖼️</button>
                     <button class="icon-btn" onclick="reverseTable()" title="排序">⇅</button>
                 </div>
-
                 <div class="yt-action-row">
                     <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn" style="background: #333;">頻道首頁</a>
                     <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">🔔 訂閱溫家堡</a>
                 </div>
-                
                 <div class="tool-bar">
                     <div class="filter-tags">
                         <div class="tag active" onclick="filterYear('', this)">全部</div>
@@ -128,7 +127,6 @@
                 const rows = data.split(/\r?\n/).slice(1); 
                 const campBody = document.getElementById('campBody');
                 document.getElementById('loading').style.display = 'none';
-
                 const validRows = rows.filter(row => row.trim() !== "").reverse();
                 
                 validRows.forEach((row, index) => {
@@ -137,19 +135,15 @@
                     const [num, date, name, stars, vid1, vid2] = cols.map(c => c.trim());
                     const starVal = parseInt(stars) || 5;
                     const starHtml = "★".repeat(starVal) + "☆".repeat(5 - starVal);
-                    
                     if (index === 0) playMainVid(vid1);
 
                     const item = document.createElement('div');
                     item.className = `camp-item ${index === 0 ? 'active' : ''}`;
                     item.id = `item-${vid1}`;
                     item.onclick = () => playMainVid(vid1);
-                    
                     item.innerHTML = `
                         <div class="col-num">${num}</div>
-                        <div class="col-thumb">
-                            <div class="thumb-box"><img src="https://img.youtube.com/vi/${vid1}/mqdefault.jpg"></div>
-                        </div>
+                        <div class="col-thumb"><div class="thumb-box"><img src="https://img.youtube.com/vi/${vid1}/mqdefault.jpg"></div></div>
                         <div class="col-info">
                             <div class="stars">${starHtml}</div>
                             <div class="camp-name">${name}</div>
@@ -170,30 +164,28 @@
             document.querySelectorAll('.camp-item').forEach(el => el.classList.remove('active'));
             const target = document.getElementById('item-' + id);
             if(target) target.classList.add('active');
+            // 手機版點擊後自動捲動到最上方看影片
+            if(window.innerWidth < 1024) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleView() { document.getElementById("mainContainer").classList.toggle("grid-mode"); }
-        
         function searchTable() {
             const filter = document.getElementById("searchInput").value.toUpperCase();
             const items = document.getElementsByClassName("camp-item");
             for (let item of items) { item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none"; }
         }
-
         function filterYear(year, btn) {
             document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById("searchInput").value = year;
             searchTable();
         }
-
         function reverseTable() {
             const body = document.getElementById("campBody");
             const items = Array.from(body.getElementsByClassName("camp-item"));
             body.innerHTML = "";
             items.reverse().forEach(item => body.appendChild(item));
         }
-
         fetchCampData();
     </script>
 </body>
