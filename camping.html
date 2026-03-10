@@ -2,111 +2,184 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>溫家堡露營足跡</title>
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #1a2a1a; padding: 10px; margin: 0; }
-        .log-card { background: white; width: 100%; max-width: 500px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; margin: 0 auto; }
-        .header { background: #2d5a27; color: white; padding: 25px 15px; font-size: 22px; font-weight: bold; letter-spacing: 4px; text-align: left; }
-        .search-container { padding: 15px; background: #f0f4f0; border-bottom: 1px solid #ddd; }
-        #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; outline: none; margin-bottom: 12px; }
-        .tool-bar { display: flex; justify-content: space-between; align-items: center; }
-        .filter-tags { display: flex; gap: 5px; overflow-x: auto; }
-        .tag { background: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; border: 1px solid #ccc; white-space: nowrap; cursor: pointer; color: #444; }
-        .sort-btn { background: #2d5a27; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { padding: 15px 8px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
-        th { background: #f8faf8; color: #2d5a27; font-size: 14px; border-bottom: 2px solid #2d5a27; }
-        .col-num { width: 45px; text-align: center; font-weight: bold; color: #2d5a27; font-size: 16px; }
-        .col-date { width: 90px; font-size: 13px; color: #666; font-weight: bold; }
-        .camp-name { font-weight: bold; display: block; margin-bottom: 6px; font-size: 16px; color: #1a2a1a; }
-        .camp-link { color: #1877F2; text-decoration: none; background: #e7f3ff; padding: 4px 10px; border-radius: 6px; display: inline-block; margin: 2px 2px 2px 0; font-size: 14px; font-weight: 600; border: 1px solid #cfe2ff; }
-        .footer { background: #f9f9f9; padding: 25px 15px; border-top: 3px solid #2d5a27; }
-        .family-tag { font-size: 17px; color: #1a2a1a; font-weight: bold; margin-bottom: 20px; display: block; }
-        .social-links { display: flex; flex-direction: column; gap: 10px; }
-        .btn { width: 100%; padding: 14px; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; display: flex; align-items: center; gap: 10px; box-sizing: border-box; justify-content: center; }
-        .btn-fb { background-color: #1877F2; }
-        .btn-yt { background-color: #FF0000; }
+        :root { --primary: #2d5a27; --bg: #1a2a1a; --yt-red: #FF0000; --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); }
+        body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .rainbow-line { height: 4px; background: var(--rainbow); position: fixed; top: 0; width: 100%; z-index: 100; }
+
+        /* 頂部播放器 */
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 4px; z-index: 99; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        iframe#ktv_player { width: 100%; height: 100%; border: none; }
+
+        /* 內容卡片 */
+        .log-card { flex: 1; background: #fff; width: 100%; overflow-y: auto; display: flex; flex-direction: column; }
+        .header { background: var(--primary); color: white; padding: 12px; font-size: 18px; font-weight: bold; text-align: center; }
+        
+        .search-container { padding: 12px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 10; }
+        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+        #searchInput { flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid #ccc; font-size: 15px; outline: none; }
+        
+        .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* YouTube 按鈕 - 等寬設計 */
+        .yt-action-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 6px rgba(255,0,0,0.3); color: white; background: var(--yt-red); }
+        .yt-btn:active { transform: scale(0.95); background: #cc0000; }
+        .yt-play-icon { width: 20px; height: 14px; background: white; border-radius: 3px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .yt-play-icon::after { content: ''; border-style: solid; border-width: 3px 0 3px 6px; border-color: transparent transparent transparent var(--yt-red); }
+
+        /* 年份標籤 - 不換行 */
+        .tool-bar { display: flex; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+        .tool-bar::-webkit-scrollbar { display: none; }
+        .filter-tags { display: flex; gap: 6px; white-space: nowrap; }
+        .tag { background: white; padding: 6px 14px; border-radius: 18px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; color: #666; }
+        .tag.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
+
+        /* 列表樣式 */
+        .camp-list { width: 100%; padding-bottom: 20px; }
+        .camp-item { display: flex; padding: 12px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; }
+        .camp-item.active { background: #e8f5e9; border-left: 5px solid var(--primary); }
+        .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 18px; align-self: center; }
+        .col-thumb { width: 100px; flex-shrink: 0; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #000; }
+        .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
+        .col-info { flex-grow: 1; }
+        .stars { color: #f1c40f; font-size: 12px; }
+        .camp-name { font-weight: bold; font-size: 15px; margin: 2px 0; color: #1a2a1a; }
+        .video-btn { background: #e7f3ff; color: #1877F2; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-flex; margin-top: 4px; border: 1px solid #cfe2ff; margin-right: 4px; }
+
+        /* 照片牆模式 */
+        .grid-mode .camp-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+        .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 10px; padding: 8px; background: #fff; position: relative; }
+        .grid-mode .col-num { position: absolute; top: 0; left: 0; background: rgba(45,90,39,0.85); color: #fff; padding: 2px 8px; font-size: 11px; border-radius: 10px 0 10px 0; z-index: 5; }
+
+        #loading { text-align: center; padding: 30px; color: var(--primary); font-weight: bold; font-size: 16px; }
+        .footer { background: #f9f9f9; padding: 15px; text-align: center; border-top: 2px solid var(--primary); font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="log-card">
-    <div class="header">⛺ 溫 家 堡 露 營 足 跡</div>
-    <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋日期或營地...">
-        <div class="tool-bar">
-            <div class="filter-tags">
-                <div class="tag" onclick="filterYear('')">全部</div>
-                <div class="tag" onclick="filterYear('112')">112年</div>
-                <div class="tag" onclick="filterYear('113')">113年</div>
-                <div class="tag" onclick="filterYear('114')">114年</div>
+    <div class="rainbow-line"></div>
+
+    <div class="video-box">
+        <iframe id="ktv_player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+
+    <div class="log-card" id="mainContainer">
+        <div class="header">⛺ 溫家堡露營足跡</div>
+        
+        <div class="search-container">
+            <div class="search-bar-row">
+                <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地或日期...">
+                <button class="icon-btn" onclick="toggleView()">🖼️</button>
+                <button class="icon-btn" onclick="reverseTable()">⇅</button>
             </div>
-            <button class="sort-btn" onclick="reverseTable()">⇅ 排序</button>
+
+            <div class="yt-action-row">
+                <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn">
+                    <div class="yt-play-icon"></div> 頻道
+                </a>
+                <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">
+                    🔔 訂閱溫家堡
+                </a>
+            </div>
+            
+            <div class="tool-bar">
+                <div class="filter-tags">
+                    <div class="tag active" onclick="filterYear('', this)">全部</div>
+                    <div class="tag" onclick="filterYear('114', this)">114年</div>
+                    <div class="tag" onclick="filterYear('113', this)">113年</div>
+                    <div class="tag" onclick="filterYear('112', this)">112年</div>
+                </div>
+            </div>
         </div>
+
+        <div id="loading">🚐 溫家堡出發中...載入雲端資料...</div>
+        <div class="camp-list" id="campBody"></div>
+        
+        <div class="footer">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
     </div>
 
-    <table id="campTable">
-        <thead>
-            <tr><th class="col-num">露次</th><th class="col-date">日期</th><th>營地名稱與影片</th></tr>
-        </thead>
-        <tbody id="campBody">
-            <tr><td class="col-num">27</td><td class="col-date">114.12.06</td><td><span class="camp-name">下班趣.開心農場</span><a href="https://youtu.be/_6e9jrXaSI8" target="_blank" class="camp-link">🎬 (1)</a><a href="https://youtu.be/zxjmMkOkQaE" target="_blank" class="camp-link">🎬 (2)</a></td></tr>
-            <tr><td class="col-num">26</td><td class="col-date">114.10.10</td><td><span class="camp-name">比亞山</span><a href="https://youtu.be/c9o-ctblFiM" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">25</td><td class="col-date">114.09.27</td><td><span class="camp-name">達彥</span><a href="https://youtu.be/izvuLLFaOzQ" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">24</td><td class="col-date">114.07.05</td><td><span class="camp-name">那羅的家</span><a href="https://youtu.be/G72lAhsfdFU" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">23</td><td class="col-date">114.05.30</td><td><span class="camp-name">春友彩虹</span><a href="https://youtu.be/dvK7p4uNgQI" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">22</td><td class="col-date">114.05.17</td><td><span class="camp-name">馬武督</span><a href="https://youtu.be/3eGV_SKtp28" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">21</td><td class="col-date">113.11.16</td><td><span class="camp-name">移動城堡</span><a href="https://youtu.be/dDKxm0pBvfE" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">20</td><td class="col-date">113.10.10</td><td><span class="camp-name">逸香園農場</span><a href="https://youtu.be/Ol_gopA7LRs" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">19</td><td class="col-date">113.09.14</td><td><span class="camp-name">下班趣</span><a href="https://youtu.be/u7GSTp-5nLs" target="_blank" class="camp-link">🎬 (1)</a><a href="https://youtu.be/Tyt1JWg3buw" target="_blank" class="camp-link">🎬 (2)</a><a href="https://youtu.be/h5Mjnxf0ol8" target="_blank" class="camp-link">🎬 (3)</a></td></tr>
-            <tr><td class="col-num">18</td><td class="col-date">113.06.08</td><td><span class="camp-name">桃喜悠境莊園</span><a href="https://youtu.be/psu4BeR_6ho" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">17</td><td class="col-date">113.05.18</td><td><span class="camp-name">好馨勤齊</span><a href="https://youtu.be/nKYFs4dsqkw" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">16</td><td class="col-date">113.04.04</td><td><span class="camp-name">下班趣</span><a href="https://youtu.be/GQ3kAfu9xNk" target="_blank" class="camp-link">🎬 (1)</a><a href="https://youtu.be/mu1eD5Bj7IY" target="_blank" class="camp-link">🎬 (2)</a></td></tr>
-            <tr><td class="col-num">15</td><td class="col-date">113.03.23</td><td><span class="camp-name">福興小農庄</span><a href="https://youtu.be/kPj3HapJltY" target="_blank" class="camp-link">🎬 (1)</a><a href="https://youtu.be/HfcG5Ep7WKo" target="_blank" class="camp-link">🎬 (2)</a></td></tr>
-            <tr><td class="col-num">14</td><td class="col-date">113.03.02</td><td><span class="camp-name">老鷹山．鑽石林</span><a href="https://youtu.be/eI-zannL0LY" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">13</td><td class="col-date">112.12.23</td><td><span class="camp-name">皇后鎮森林金山</span><a href="https://youtu.be/5A12mOZwHN4" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">12</td><td class="col-date">112.11.18</td><td><span class="camp-name">達彥</span><a href="https://youtu.be/igeGHRadJgE" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">11</td><td class="col-date">112.11.11</td><td><span class="camp-name">鹿林道</span><a href="https://youtu.be/pBxlD6u24Pc" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">10</td><td class="col-date">112.10.07</td><td><span class="camp-name">卡果牧場</span><a href="https://youtu.be/zYW1oIkJGJs" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">09</td><td class="col-date">112.09.22</td><td><span class="camp-name">水秀農場</span><a href="https://youtu.be/Lb1J01aJJpE" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">08</td><td class="col-date">112.09.08</td><td><span class="camp-name">自然野趣</span><a href="https://youtu.be/w9TcVjczbK8" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">07</td><td class="col-date">112.08.12</td><td><span class="camp-name">蘇珊藏美露營</span><a href="https://youtu.be/u3yQGjKV1-Q" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">06</td><td class="col-date">112.08.04</td><td><span class="camp-name">達彥</span><a href="https://youtu.be/2i9OCn2VZ9k" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">05</td><td class="col-date">112.07.01</td><td><span class="camp-name">梅花梯田</span><a href="https://youtu.be/oX-30ZS3NC0" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">04</td><td class="col-date">112.06.03</td><td><span class="camp-name">高台山</span><a href="https://youtu.be/tff8GEcSmdQ" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">03</td><td class="col-date">112.05.27</td><td><span class="camp-name">爺亨溫泉露營</span><a href="https://youtu.be/Ds0w4Z5fHf0" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">02</td><td class="col-date">112.04.22</td><td><span class="camp-name">和平柿外佳園</span><a href="https://youtu.be/hVuoLePX-K0" target="_blank" class="camp-link">🎬 影片</a></td></tr>
-            <tr><td class="col-num">01</td><td class="col-date">112.03.25</td><td><span class="camp-name">觀星賞月</span><a href="https://youtu.be/aN31ncrqotE" target="_blank" class="camp-link">🎬 (1)</a><a href="https://youtu.be/dSjlIm6qnB8" target="_blank" class="camp-link">🎬 (2)</a></td></tr>
-        </tbody>
-    </table>
+    <script>
+        // 自動連動堡主的試算表
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU8nSVvI4rNFr0HXt6UN7rLp138Af8JuBkzEuzOX8FT75hJpoNE9UecJ-w1iAzLHGXbz3uo1-vpKwu/pub?output=csv";
 
-    <div class="footer">
-        <span class="family-tag">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</span>
-        <div class="social-links">
-            <a href="https://www.facebook.com/share/1FLh8JXKkf/" target="_blank" class="btn btn-fb">Facebook：Winston.li</a>
-            <a href="https://www.youtube.com/@WenCastle" target="_blank" class="btn btn-yt">YouTube：@WenCastle</a>
-        </div>
-    </div>
-</div>
+        async function fetchCampData() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.text();
+                // 使用正則拆分 CSV，處理可能包含逗號的內容
+                const rows = data.split(/\r?\n/).slice(1); 
+                const campBody = document.getElementById('campBody');
+                document.getElementById('loading').style.display = 'none';
 
-<script>
-    function reverseTable() {
-        const body = document.getElementById("campBody");
-        const rows = Array.from(body.rows);
-        body.append(...rows.reverse());
-    }
-    function searchTable() {
-        var input = document.getElementById("searchInput"), filter = input.value.toUpperCase();
-        var tr = document.getElementById("campTable").getElementsByTagName("tr");
-        for (var i = 1; i < tr.length; i++) {
-            tr[i].style.display = tr[i].textContent.toUpperCase().includes(filter) ? "" : "none";
+                // 資料反轉，讓最新的在上面
+                const validRows = rows.filter(row => row.trim() !== "").reverse();
+                
+                validRows.forEach((row, index) => {
+                    const cols = row.split(',');
+                    if (cols.length < 5) return;
+                    
+                    const [num, date, name, stars, vid1, vid2] = cols.map(c => c.trim());
+                    const starHtml = "★".repeat(parseInt(stars) || 5) + "☆".repeat(5 - (parseInt(stars) || 5));
+                    
+                    // 預設播放第一筆
+                    if (index === 0) playMainVid(vid1);
+
+                    const item = document.createElement('div');
+                    item.className = `camp-item ${index === 0 ? 'active' : ''}`;
+                    item.id = `item-${vid1}`;
+                    item.onclick = () => playMainVid(vid1);
+                    
+                    item.innerHTML = `
+                        <div class="col-num">${num}</div>
+                        <div class="col-thumb"><div class="thumb-box"><img src="https://img.youtube.com/vi/${vid1}/mqdefault.jpg"></div></div>
+                        <div class="col-info">
+                            <div class="stars">${starHtml}</div><span class="camp-date">${date}</span>
+                            <div class="camp-name">${name}</div>
+                            <div class="video-btn">🎬 播放影片</div>
+                            ${vid2 ? `<div class="video-btn" onclick="event.stopPropagation(); playMainVid('${vid2}')">🎬 影片(2)</div>` : ''}
+                        </div>
+                    `;
+                    campBody.appendChild(item);
+                });
+            } catch (error) {
+                document.getElementById('loading').innerText = "❌ 讀取失敗，請確認網路連線";
+            }
         }
-    }
-    function filterYear(year) {
-        document.getElementById("searchInput").value = year;
-        searchTable();
-    }
-</script>
+
+        function playMainVid(id) {
+            if(!id) return;
+            document.getElementById('ktv_player').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+            document.querySelectorAll('.camp-item').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('item-' + id);
+            if(target) target.classList.add('active');
+            // 小技巧：自動捲動到最上面看影片
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleView() { document.getElementById("mainContainer").classList.toggle("grid-mode"); }
+        function searchTable() {
+            const filter = document.getElementById("searchInput").value.toUpperCase();
+            const items = document.getElementsByClassName("camp-item");
+            for (let item of items) { item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none"; }
+        }
+        function filterYear(year, btn) {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById("searchInput").value = year;
+            searchTable();
+        }
+        function reverseTable() {
+            const body = document.getElementById("campBody");
+            const items = Array.from(body.getElementsByClassName("camp-item"));
+            body.innerHTML = "";
+            items.reverse().forEach(item => body.appendChild(item));
+        }
+
+        fetchCampData();
+    </script>
 </body>
 </html>
