@@ -2,82 +2,65 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>溫家堡露營足跡</title>
     <style>
         :root { --primary: #2d5a27; --bg: #000; --panel-bg: #fff; --yt-red: #FF0000; --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); }
         
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); }
+        /* 基礎字體設定，確保手機上閱讀舒適 */
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; background: var(--bg); font-size: 16px; }
         .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: absolute; top: 0; z-index: 1000; }
 
-        /* 主佈局 */
         .main-layout { display: flex; flex-direction: column; height: 100vh; padding-top: 4px; box-sizing: border-box; }
 
-        /* 影片播放區 - 手機版維持 16:9 */
+        /* 影片區 */
         .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
         iframe#ktv_player { width: 100%; height: 100%; border: none; }
 
-        /* 內容區 */
+        /* 列表區 */
         .content-area { flex: 1; background: var(--panel-bg); overflow-y: auto; display: flex; flex-direction: column; }
-        .header { background: var(--primary); color: white; padding: 12px; font-size: 18px; font-weight: bold; text-align: center; }
+        .header { background: var(--primary); color: white; padding: 15px; font-size: 20px; font-weight: bold; text-align: center; }
 
-        /* 搜尋與按鈕列 */
-        .search-container { padding: 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
-        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-        #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; font-size: 14px; outline: none; }
-        .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        /* 搜尋與按鈕 - 放大點擊區域 */
+        .search-container { padding: 12px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .search-bar-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        #searchInput { flex: 1; padding: 12px 15px; border-radius: 25px; border: 2px solid #ccc; font-size: 16px; outline: none; }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
-        .yt-action-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; color: white; background: var(--yt-red); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .yt-action-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 25px; font-size: 15px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; color: white; background: var(--yt-red); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         
-        .tool-bar { display: flex; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .filter-tags { display: flex; gap: 6px; white-space: nowrap; }
-        .tag { background: white; padding: 5px 12px; border-radius: 15px; font-size: 12px; border: 1px solid #ddd; cursor: pointer; }
-        .tag.active { background: var(--primary); color: white; font-weight: bold; }
+        .tool-bar { display: flex; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+        .filter-tags { display: flex; gap: 8px; white-space: nowrap; }
+        .tag { background: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid #ddd; cursor: pointer; color: #333; }
+        .tag.active { background: var(--primary); color: white; font-weight: bold; border-color: var(--primary); }
 
-        /* 列表項目 */
+        /* 列表項目內容放大 */
         .camp-list { width: 100%; }
-        .camp-item { display: flex; padding: 10px; border-bottom: 1px solid #eee; gap: 10px; cursor: pointer; }
-        .camp-item.active { background: #e8f5e9; border-left: 5px solid var(--primary); }
-        .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 18px; align-self: center; }
-        .col-thumb { width: 90px; flex-shrink: 0; }
-        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 5px; overflow: hidden; background: #000; }
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; cursor: pointer; }
+        .camp-item.active { background: #e8f5e9; border-left: 6px solid var(--primary); }
+        .col-num { width: 35px; text-align: center; font-weight: bold; color: var(--primary); font-size: 22px; align-self: center; }
+        .col-thumb { width: 110px; flex-shrink: 0; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #000; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .col-info { flex: 1; }
-        .stars { color: #f1c40f; font-size: 12px; }
-        .camp-name { font-weight: bold; font-size: 15px; margin: 2px 0; color: #111; }
-        .video-btn { background: #e7f3ff; color: #1877F2; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-flex; margin-top: 4px; border: 1px solid #cfe2ff; margin-right: 4px; }
+        
+        .col-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .stars { color: #f1c40f; font-size: 14px; margin-bottom: 2px; }
+        .camp-date { color: #666; font-size: 13px; }
+        .camp-name { font-weight: bold; font-size: 18px; margin: 4px 0; color: #111; }
+        .video-btn { background: #e7f3ff; color: #1877F2; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-flex; margin-top: 5px; border: 1px solid #cfe2ff; margin-right: 6px; }
 
-        /* 照片牆模式 */
-        .grid-mode .camp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; padding: 10px; }
-        .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 10px; }
-
-        .footer { background: #f9f9f9; padding: 15px; text-align: center; font-size: 12px; color: #666; }
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 14px; color: #333; font-weight: bold; }
 
         /* ==========================================
-           💻 電腦版 滿版垂直優化 (螢幕大於 1024px)
+           💻 電腦版 滿版垂直優化 (螢幕大於 900px)
         ========================================== */
-        @media (min-width: 1024px) {
+        @media (min-width: 900px) {
             .main-layout { flex-direction: row; padding-top: 0; }
-            .video-box { 
-                flex: 1; /* 影片佔領所有剩餘空間 */
-                height: 100vh; 
-                aspect-ratio: auto; 
-            }
-            /* 強制讓 iframe 在電腦版垂直撐滿，解決留白問題 */
-            iframe#ktv_player { 
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-            .content-area { 
-                width: 400px; /* 固定右側控制台寬度 */
-                height: 100vh; 
-                box-shadow: -5px 0 15px rgba(0,0,0,0.3);
-            }
-            .header { font-size: 22px; padding: 20px; }
+            .video-box { flex: 1; height: 100vh; aspect-ratio: auto; }
+            iframe#ktv_player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+            .content-area { width: 420px; height: 100vh; }
+            .header { font-size: 24px; padding: 25px; }
         }
     </style>
 </head>
@@ -101,7 +84,9 @@
                 </div>
 
                 <div class="yt-action-row">
-                    <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn">頻道</a>
+                    <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn">
+                        <div class="yt-play-icon"></div> 頻道
+                    </a>
                     <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">🔔 訂閱溫家堡</a>
                 </div>
                 
@@ -115,7 +100,7 @@
                 </div>
             </div>
 
-            <div id="loading" style="text-align:center; padding:20px;">載入雲端資料中...</div>
+            <div id="loading" style="text-align:center; padding:30px; font-weight:bold;">🚐 溫家堡載入中...</div>
             <div class="camp-list" id="campBody"></div>
             
             <div class="footer">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
@@ -123,6 +108,7 @@
     </div>
 
     <script>
+        // 自動連動堡主的試算表
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU8nSVvI4rNFr0HXt6UN7rLp138Af8JuBkzEuzOX8FT75hJpoNE9UecJ-w1iAzLHGXbz3uo1-vpKwu/pub?output=csv";
 
         async function fetchCampData() {
@@ -132,31 +118,39 @@
                 const rows = data.split(/\r?\n/).slice(1); 
                 const campBody = document.getElementById('campBody');
                 document.getElementById('loading').style.display = 'none';
+
                 const validRows = rows.filter(row => row.trim() !== "").reverse();
                 
                 validRows.forEach((row, index) => {
                     const cols = row.split(',');
                     if (cols.length < 5) return;
+                    
                     const [num, date, name, stars, vid1, vid2] = cols.map(c => c.trim());
                     const starVal = parseInt(stars) || 5;
                     const starHtml = "★".repeat(starVal) + "☆".repeat(5 - starVal);
+                    
                     if (index === 0) playMainVid(vid1);
+
                     const item = document.createElement('div');
                     item.className = `camp-item ${index === 0 ? 'active' : ''}`;
                     item.id = `item-${vid1}`;
                     item.onclick = () => playMainVid(vid1);
+                    
                     item.innerHTML = `
                         <div class="col-num">${num}</div>
                         <div class="col-thumb"><div class="thumb-box"><img src="https://img.youtube.com/vi/${vid1}/mqdefault.jpg"></div></div>
                         <div class="col-info">
-                            <div class="stars">${starHtml}</div><span class="camp-date">${date}</span>
+                            <div class="stars">${starHtml}</div>
+                            <span class="camp-date">${date}</span>
                             <div class="camp-name">${name}</div>
                             <div class="video-btn">🎬 播放</div>
                             ${vid2 ? `<div class="video-btn" onclick="event.stopPropagation(); playMainVid('${vid2}')">🎬 影片2</div>` : ''}
                         </div>`;
                     campBody.appendChild(item);
                 });
-            } catch (e) { document.getElementById('loading').innerText = "讀取失敗"; }
+            } catch (error) {
+                document.getElementById('loading').innerText = "❌ 資料載入失敗";
+            }
         }
 
         function playMainVid(id) {
@@ -166,6 +160,7 @@
             const target = document.getElementById('item-' + id);
             if(target) target.classList.add('active');
         }
+
         function toggleView() { document.getElementById("mainContainer").classList.toggle("grid-mode"); }
         function searchTable() {
             const filter = document.getElementById("searchInput").value.toUpperCase();
@@ -184,6 +179,7 @@
             body.innerHTML = "";
             items.reverse().forEach(item => body.appendChild(item));
         }
+
         fetchCampData();
     </script>
 </body>
