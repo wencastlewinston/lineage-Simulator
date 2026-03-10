@@ -6,116 +6,129 @@
     <title>溫家堡露營足跡</title>
     <style>
         :root { --primary: #2d5a27; --bg: #1a2a1a; --yt-red: #FF0000; --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); }
-        body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .rainbow-line { height: 4px; background: var(--rainbow); position: fixed; top: 0; width: 100%; z-index: 100; }
+        
+        body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; z-index: 1000; }
 
-        /* 頂部播放器 */
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 4px; z-index: 99; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        /* 主要容器 - 電腦版為左右，手機版為上下 */
+        .main-layout { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+        /* 影片播放區 */
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 99; }
         iframe#ktv_player { width: 100%; height: 100%; border: none; }
 
-        /* 內容卡片 */
-        .log-card { flex: 1; background: #fff; width: 100%; overflow-y: auto; display: flex; flex-direction: column; }
-        .header { background: var(--primary); color: white; padding: 12px; font-size: 18px; font-weight: bold; text-align: center; }
-        
-        .search-container { padding: 12px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 10; }
-        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-        #searchInput { flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid #ccc; font-size: 15px; outline: none; }
-        
-        .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        /* 右側/下方內容區 */
+        .content-area { flex: 1; background: #fff; overflow-y: auto; display: flex; flex-direction: column; }
+        .header { background: var(--primary); color: white; padding: 15px; font-size: 20px; font-weight: bold; text-align: center; }
 
-        /* YouTube 按鈕 - 等寬設計 */
-        .yt-action-row { display: flex; gap: 8px; margin-bottom: 10px; }
-        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 6px rgba(255,0,0,0.3); color: white; background: var(--yt-red); }
-        .yt-btn:active { transform: scale(0.95); background: #cc0000; }
-        .yt-play-icon { width: 20px; height: 14px; background: white; border-radius: 3px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .yt-play-icon::after { content: ''; border-style: solid; border-width: 3px 0 3px 6px; border-color: transparent transparent transparent var(--yt-red); }
+        /* 搜尋與控制區 */
+        .search-container { padding: 15px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .search-bar-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+        #searchInput { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid #ccc; font-size: 16px; outline: none; }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.3s; }
+        .icon-btn:hover { background: #eee; }
 
-        /* 年份標籤 - 不換行 */
-        .tool-bar { display: flex; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
-        .tool-bar::-webkit-scrollbar { display: none; }
-        .filter-tags { display: flex; gap: 6px; white-space: nowrap; }
-        .tag { background: white; padding: 6px 14px; border-radius: 18px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; color: #666; }
+        /* YouTube 按鈕 */
+        .yt-action-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .yt-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 30px; font-size: 15px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; color: white; background: var(--yt-red); box-shadow: 0 2px 6px rgba(255,0,0,0.3); }
+        .yt-play-icon { width: 22px; height: 15px; background: white; border-radius: 3px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .yt-play-icon::after { content: ''; border-style: solid; border-width: 4px 0 4px 7px; border-color: transparent transparent transparent var(--yt-red); }
+
+        /* 年份標籤 */
+        .tool-bar { display: flex; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .filter-tags { display: flex; gap: 8px; white-space: nowrap; }
+        .tag { background: white; padding: 8px 18px; border-radius: 20px; font-size: 14px; border: 1px solid #ddd; cursor: pointer; color: #666; }
         .tag.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
 
-        /* 列表樣式 */
-        .camp-list { width: 100%; padding-bottom: 20px; }
-        .camp-item { display: flex; padding: 12px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; }
-        .camp-item.active { background: #e8f5e9; border-left: 5px solid var(--primary); }
-        .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 18px; align-self: center; }
-        .col-thumb { width: 100px; flex-shrink: 0; }
-        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #000; }
+        /* 營地列表 */
+        .camp-list { padding: 10px 0; }
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; cursor: pointer; transition: 0.2s; }
+        .camp-item:hover { background: #f9f9f9; }
+        .camp-item.active { background: #e8f5e9; border-left: 6px solid var(--primary); }
+        .col-num { width: 40px; text-align: center; font-weight: bold; color: var(--primary); font-size: 22px; align-self: center; }
+        .col-thumb { width: 120px; flex-shrink: 0; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #000; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .col-info { flex-grow: 1; }
-        .stars { color: #f1c40f; font-size: 12px; }
-        .camp-name { font-weight: bold; font-size: 15px; margin: 2px 0; color: #1a2a1a; }
-        .video-btn { background: #e7f3ff; color: #1877F2; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-flex; margin-top: 4px; border: 1px solid #cfe2ff; margin-right: 4px; }
+        .col-info { flex: 1; }
+        .stars { color: #f1c40f; font-size: 14px; }
+        .camp-name { font-weight: bold; font-size: 17px; margin: 5px 0; color: #111; }
+        .video-btn { background: #e7f3ff; color: #1877F2; padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: bold; display: inline-flex; margin-top: 5px; border: 1px solid #cfe2ff; margin-right: 6px; }
 
-        /* 照片牆模式 */
-        .grid-mode .camp-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 10px; padding: 8px; background: #fff; position: relative; }
-        .grid-mode .col-num { position: absolute; top: 0; left: 0; background: rgba(45,90,39,0.85); color: #fff; padding: 2px 8px; font-size: 11px; border-radius: 10px 0 10px 0; z-index: 5; }
+        /* 照片牆模式 (預設手機兩排，電腦版會自動增加) */
+        .grid-mode .camp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; padding: 15px; }
+        .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 12px; padding: 10px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .grid-mode .col-num { position: absolute; top: 0; left: 0; background: var(--primary); color: white; padding: 4px 10px; font-size: 14px; border-radius: 12px 0 12px 0; z-index: 5; }
+        .grid-mode .col-thumb { width: 100%; }
 
-        #loading { text-align: center; padding: 30px; color: var(--primary); font-weight: bold; font-size: 16px; }
-        .footer { background: #f9f9f9; padding: 15px; text-align: center; border-top: 2px solid var(--primary); font-size: 13px; font-weight: bold; }
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; border-top: 2px solid var(--primary); font-size: 14px; font-weight: bold; }
+
+        /* ==========================================
+           💻 電腦版 響應式修正 (寬度大於 900px)
+        ========================================== */
+        @media (min-width: 900px) {
+            .main-layout { flex-direction: row; }
+            .video-box { width: 65%; height: 100%; aspect-ratio: auto; } /* 影片佔左邊 65% */
+            .content-area { width: 35%; height: 100vh; } /* 列表佔右邊 35% */
+            .grid-mode .camp-list { grid-template-columns: 1fr 1fr; } /* 電腦版照片牆兩排 */
+        }
     </style>
 </head>
 <body>
 
     <div class="rainbow-line"></div>
 
-    <div class="video-box">
-        <iframe id="ktv_player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>
-
-    <div class="log-card" id="mainContainer">
-        <div class="header">⛺ 溫家堡露營足跡</div>
-        
-        <div class="search-container">
-            <div class="search-bar-row">
-                <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地或日期...">
-                <button class="icon-btn" onclick="toggleView()">🖼️</button>
-                <button class="icon-btn" onclick="reverseTable()">⇅</button>
-            </div>
-
-            <div class="yt-action-row">
-                <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn">
-                    <div class="yt-play-icon"></div> 頻道
-                </a>
-                <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">
-                    🔔 訂閱溫家堡
-                </a>
-            </div>
-            
-            <div class="tool-bar">
-                <div class="filter-tags">
-                    <div class="tag active" onclick="filterYear('', this)">全部</div>
-                    <div class="tag" onclick="filterYear('114', this)">114年</div>
-                    <div class="tag" onclick="filterYear('113', this)">113年</div>
-                    <div class="tag" onclick="filterYear('112', this)">112年</div>
-                </div>
-            </div>
+    <div class="main-layout">
+        <div class="video-box">
+            <iframe id="ktv_player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
 
-        <div id="loading">🚐 溫家堡出發中...載入雲端資料...</div>
-        <div class="camp-list" id="campBody"></div>
-        
-        <div class="footer">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
+        <div class="content-area" id="mainContainer">
+            <div class="header">⛺ 溫家堡露營足跡</div>
+            
+            <div class="search-container">
+                <div class="search-bar-row">
+                    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地、日期或星等...">
+                    <button class="icon-btn" onclick="toggleView()" title="切換模式">🖼️</button>
+                    <button class="icon-btn" onclick="reverseTable()" title="排序">⇅</button>
+                </div>
+
+                <div class="yt-action-row">
+                    <a href="https://www.youtube.com/@WenCastle" target="_blank" class="yt-btn">
+                        <div class="yt-play-icon"></div> 頻道
+                    </a>
+                    <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="yt-btn">
+                        🔔 訂閱溫家堡
+                    </a>
+                </div>
+                
+                <div class="tool-bar">
+                    <div class="filter-tags">
+                        <div class="tag active" onclick="filterYear('', this)">全部</div>
+                        <div class="tag" onclick="filterYear('114', this)">114年</div>
+                        <div class="tag" onclick="filterYear('113', this)">113年</div>
+                        <div class="tag" onclick="filterYear('112', this)">112年</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" style="text-align: center; padding: 40px; font-weight: bold; color: var(--primary);">🚐 載入雲端資料庫中...</div>
+            <div class="camp-list" id="campBody"></div>
+            
+            <div class="footer">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
+        </div>
     </div>
 
     <script>
-        // 自動連動堡主的試算表
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU8nSVvI4rNFr0HXt6UN7rLp138Af8JuBkzEuzOX8FT75hJpoNE9UecJ-w1iAzLHGXbz3uo1-vpKwu/pub?output=csv";
 
         async function fetchCampData() {
             try {
                 const response = await fetch(sheetUrl);
                 const data = await response.text();
-                // 使用正則拆分 CSV，處理可能包含逗號的內容
                 const rows = data.split(/\r?\n/).slice(1); 
                 const campBody = document.getElementById('campBody');
                 document.getElementById('loading').style.display = 'none';
 
-                // 資料反轉，讓最新的在上面
                 const validRows = rows.filter(row => row.trim() !== "").reverse();
                 
                 validRows.forEach((row, index) => {
@@ -123,9 +136,9 @@
                     if (cols.length < 5) return;
                     
                     const [num, date, name, stars, vid1, vid2] = cols.map(c => c.trim());
-                    const starHtml = "★".repeat(parseInt(stars) || 5) + "☆".repeat(5 - (parseInt(stars) || 5));
+                    const starVal = parseInt(stars) || 5;
+                    const starHtml = "★".repeat(starVal) + "☆".repeat(5 - starVal);
                     
-                    // 預設播放第一筆
                     if (index === 0) playMainVid(vid1);
 
                     const item = document.createElement('div');
@@ -139,14 +152,14 @@
                         <div class="col-info">
                             <div class="stars">${starHtml}</div><span class="camp-date">${date}</span>
                             <div class="camp-name">${name}</div>
-                            <div class="video-btn">🎬 播放影片</div>
+                            <div class="video-btn">🎬 播放</div>
                             ${vid2 ? `<div class="video-btn" onclick="event.stopPropagation(); playMainVid('${vid2}')">🎬 影片(2)</div>` : ''}
                         </div>
                     `;
                     campBody.appendChild(item);
                 });
             } catch (error) {
-                document.getElementById('loading').innerText = "❌ 讀取失敗，請確認網路連線";
+                document.getElementById('loading').innerText = "❌ 讀取失敗";
             }
         }
 
@@ -156,8 +169,6 @@
             document.querySelectorAll('.camp-item').forEach(el => el.classList.remove('active'));
             const target = document.getElementById('item-' + id);
             if(target) target.classList.add('active');
-            // 小技巧：自動捲動到最上面看影片
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleView() { document.getElementById("mainContainer").classList.toggle("grid-mode"); }
