@@ -12,7 +12,6 @@
         body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; }
         .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
         
-        /* 頁首標題：防斷行 */
         .header-fixed { position: sticky; top: 4px; z-index: 1000; background: var(--primary); color: white; padding: 20px 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .header-title { font-size: 22px; font-weight: bold; margin-bottom: 15px; white-space: nowrap; }
         
@@ -23,18 +22,15 @@
 
         .main-content { max-width: 800px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
 
-        /* 工具列 */
         .search-container { padding: 15px; background: #f1f3f1; border-bottom: 1px solid #ddd; }
         .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; }
         .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         
-        /* 標籤欄：可左右滑動 */
         .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
         .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; }
         .tag.active { background: var(--primary); color: white; }
 
-        /* 列表樣式 */
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
         .col-num { width: 35px; text-align: center; font-weight: bold; color: var(--primary); font-size: 18px; align-self: center; }
         .col-thumb { width: 115px; flex-shrink: 0; }
@@ -45,22 +41,23 @@
         .camp-date { color: #666; font-size: 13px; }
         .btn-vid2 { display: inline-block; background: #f8f9fa; color: #333; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 8px; border: 1px solid #ddd; }
 
-        /* 📂 摺疊區 */
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; font-size: 17px; align-items: center; }
         .playlist-content { display: block; background: #fff; }
 
-        /* 🖼️ 照片牆模式 */
         .grid-mode #campBody, .grid-mode .playlist-content { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 10px; }
         .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 8px; padding: 8px; }
         .grid-mode .col-thumb { width: 100%; }
 
-        /* 頁尾精簡 */
+        /* --- 頁尾優化 --- */
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
-        .footer-line1 { color: #555; font-size: 15px; margin-bottom: 8px; }
-        .footer-line2 { color: #888; font-size: 14px; font-weight: bold; }
+        .footer-line1 { color: var(--primary); font-size: 15px; font-weight: bold; margin-bottom: 5px; }
+        .footer-line2 { color: #888; font-size: 13px; margin-bottom: 12px; }
+        .visitor-count { 
+            display: inline-block; padding-top: 10px; border-top: 1px dashed #ddd; 
+            color: #bbb; font-size: 11px; letter-spacing: 0.5px; 
+        }
 
-        /* 播放視窗 */
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 3000; align-items: center; justify-content: center; }
         .video-container { width: 95%; max-width: 850px; aspect-ratio: 16/9; position: relative; }
         .video-container iframe { width: 100%; height: 100%; border: none; }
@@ -110,6 +107,9 @@
         <div class="footer">
             <div class="footer-line1">記錄每一刻與家人共度的自然時光</div>
             <div class="footer-line2">溫家堡 WenCastle ⓒ 2021-2026</div>
+            <div class="visitor-count">
+                👣 足跡總覽次數：<span id="busuanzi_value_site_pv">--</span> 次
+            </div>
         </div>
     </div>
 
@@ -121,6 +121,8 @@
             <iframe id="popup_player" src="" allowfullscreen allow="autoplay"></iframe>
         </div>
     </div>
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     <script>
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU8nSVvI4rNFr0HXt6UN7rLp138Af8JuBkzEuzOX8FT75hJpoNE9UecJ-w1iAzLHGXbz3uo1-vpKwu/pub?output=csv";
@@ -177,9 +179,7 @@
         function openVid(rawUrl) {
             if(!rawUrl) return;
             const yt = parseYoutube(rawUrl);
-            const finalUrl = yt.isList 
-                ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` 
-                : `https://www.youtube.com/embed/${yt.id}?autoplay=1&rel=0`;
+            const finalUrl = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1&rel=0`;
             document.getElementById('popup_player').src = finalUrl;
             document.getElementById('videoOverlay').style.display = 'flex';
             document.body.style.overflow = 'hidden';
