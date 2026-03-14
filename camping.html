@@ -21,7 +21,6 @@
 
         .main-content { max-width: 800px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
 
-        /* 搜尋區 */
         .search-container { padding: 15px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 85px; z-index: 900; }
         .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; }
@@ -35,7 +34,6 @@
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        /* 列表項目核心樣式 */
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; transition: transform 0.1s; }
         .camp-item:active { transform: scale(0.97); }
         
@@ -56,17 +54,10 @@
         .btn-yt-style { display: inline-flex; align-items: center; gap: 4px; background: var(--yt-red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; }
         .play-tri { width: 0; height: 0; border-top: 4px solid transparent; border-left: 7px solid white; border-bottom: 4px solid transparent; }
 
-        /* 相片牆 (Grid Mode) 修正方案 */
-        .grid-mode #campBody, .grid-mode .playlist-content { 
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; 
-        }
-        .grid-mode .camp-item { 
-            flex-direction: column; padding: 8px; border: 1px solid #eee; border-radius: 8px; gap: 8px;
-        }
+        .grid-mode #campBody, .grid-mode .playlist-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+        .grid-mode .camp-item { flex-direction: column; padding: 8px; border: 1px solid #eee; border-radius: 8px; gap: 8px; position: relative; }
         .grid-mode .col-thumb { width: 100%; }
-        .grid-mode .col-num { position: absolute; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; z-index: 5; font-size: 12px; }
-        .grid-mode .camp-name { font-size: 14px; }
-        .grid-mode .btn-yt-style { padding: 3px 6px; font-size: 10px; }
+        .grid-mode .col-num { position: absolute; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; z-index: 5; font-size: 12px; left: 8px; top: 8px; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
@@ -77,6 +68,7 @@
         .close-btn { position: absolute; top: -45px; right: 0; color: white; background: #f44336; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
 
         #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
+        .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -102,8 +94,8 @@
                 <div class="tag" onclick="filterYear('113', this)">113年</div>
                 <div class="tag" onclick="filterYear('112', this)">112年</div>
                 <div class="stat-inline">
-                    <div class="stat-item-small">計 <b><span id="stat-total">0</span></b> 露</div>
-                    <div class="stat-item-small">營地 <b><span id="stat-camps">0</span></b> 處</div>
+                    <div class="stat-item-small">共計 <b><span id="stat-total">0</span></b> 露</div>
+                    <div class="stat-item-small">造訪 <b><span id="stat-camps">0</span></b> 處</div>
                 </div>
             </div>
         </div>
@@ -120,7 +112,7 @@
 
         <div id="loading" style="text-align:center; padding:30px; font-weight:bold;">🚐 載入中...</div>
 
-        <div class="footer" style="padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee;">
+        <div class="footer">
             <div style="color:var(--primary); font-weight:bold; margin-bottom:5px;">記錄每一刻與家人共度的自然時光</div>
             <div style="color:#888; font-size:13px;">溫家堡 WenCastle ⓒ 2021-2026</div>
         </div>
@@ -239,11 +231,7 @@
             content.style.display = content.style.display === "none" ? "block" : "none";
         }
 
-        // 切換視圖功能修復
-        function toggleView() {
-            document.getElementById("mainWrapper").classList.toggle("grid-mode");
-        }
-
+        function toggleView() { document.getElementById("mainWrapper").classList.toggle("grid-mode"); }
         function reverseAll() {
             ['campBody', 'list-camping'].forEach(id => {
                 const box = document.getElementById(id);
