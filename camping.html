@@ -12,59 +12,71 @@
         body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; }
         .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
         
-        .header-fixed { position: sticky; top: 4px; z-index: 1000; background: var(--primary); color: white; padding: 20px 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .header-title { font-size: 22px; font-weight: bold; margin-bottom: 15px; white-space: nowrap; }
+        .header-fixed { position: sticky; top: 4px; z-index: 1000; background: var(--primary); color: white; padding: 12px 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .header-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
         
-        .official-btns { display: flex; justify-content: center; gap: 6px; flex-wrap: nowrap; }
-        .btn-fb { background: var(--fb-blue); color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; display: flex; align-items: center; }
-        .btn-yt { background: var(--yt-red); color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 4px; }
-        .btn-sub { background: var(--yt-red); color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.3); }
+        .official-btns { display: flex; justify-content: center; gap: 6px; }
+        .btn-fb { background: var(--fb-blue); color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px; }
+        .btn-yt { background: var(--yt-red); color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px; }
 
         .main-content { max-width: 800px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
 
-        .search-container { padding: 15px; background: #f1f3f1; border-bottom: 1px solid #ddd; }
-        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+        /* 搜尋區 */
+        .search-container { padding: 15px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 85px; z-index: 900; }
+        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; }
         .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         
-        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
+        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; align-items: center; -webkit-overflow-scrolling: touch; }
         .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; }
         .tag.active { background: var(--primary); color: white; }
 
-        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
-        .col-num { width: 35px; text-align: center; font-weight: bold; color: var(--primary); font-size: 18px; align-self: center; }
+        .stat-inline { display: flex; gap: 6px; margin-left: 10px; border-left: 1px solid #ccc; padding-left: 10px; }
+        .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
+        .stat-item-small b { color: var(--primary); font-size: 13px; }
+
+        /* 列表項目核心樣式 */
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; transition: transform 0.1s; }
+        .camp-item:active { transform: scale(0.97); }
+        
+        .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 16px; align-self: center; }
         .col-thumb { width: 115px; flex-shrink: 0; }
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #000; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .col-info { flex: 1; }
-        .camp-name { font-weight: bold; font-size: 17px; margin-bottom: 3px; color: #111; }
-        .camp-date { color: #666; font-size: 13px; display: flex; align-items: center; gap: 4px; }
         
-        .map-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1a73e8; font-size: 13px; margin-top: 8px; font-weight: bold; background: #fff; padding: 5px 15px; border-radius: 20px; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .map-link:active { background: #f1f3f4; }
-        .google-icon { width: 14px; height: 14px; fill: #EA4335; } 
+        .col-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .camp-name { font-weight: bold; font-size: 17px; color: #111; }
+        .camp-date { color: #666; font-size: 12px; }
+        
+        .map-row { margin-top: 2px; }
+        .map-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; }
+        .google-icon { width: 12px; height: 12px; fill: #EA4335; } 
 
-        .btn-vid2 { display: inline-block; background: #f8f9fa; color: #333; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 10px; border: 1px solid #ddd; }
+        .vid-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+        .btn-yt-style { display: inline-flex; align-items: center; gap: 4px; background: var(--yt-red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; }
+        .play-tri { width: 0; height: 0; border-top: 4px solid transparent; border-left: 7px solid white; border-bottom: 4px solid transparent; }
+
+        /* 相片牆 (Grid Mode) 修正方案 */
+        .grid-mode #campBody, .grid-mode .playlist-content { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; 
+        }
+        .grid-mode .camp-item { 
+            flex-direction: column; padding: 8px; border: 1px solid #eee; border-radius: 8px; gap: 8px;
+        }
+        .grid-mode .col-thumb { width: 100%; }
+        .grid-mode .col-num { position: absolute; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; z-index: 5; font-size: 12px; }
+        .grid-mode .camp-name { font-size: 14px; }
+        .grid-mode .btn-yt-style { padding: 3px 6px; font-size: 10px; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
-        .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; font-size: 17px; align-items: center; }
-        .playlist-content { display: block; background: #fff; }
-
-        .grid-mode #campBody, .grid-mode .playlist-content { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 10px; }
-        .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 8px; padding: 8px; }
-        .grid-mode .col-thumb { width: 100%; }
-
-        .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
-        .footer-line1 { color: var(--primary); font-size: 15px; font-weight: bold; margin-bottom: 5px; }
-        .footer-line2 { color: #888; font-size: 13px; margin-bottom: 12px; }
-        .visitor-count { display: inline-block; padding-top: 10px; border-top: 1px dashed #ddd; color: #bbb; font-size: 11px; }
+        .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
 
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 3000; align-items: center; justify-content: center; }
         .video-container { width: 95%; max-width: 850px; aspect-ratio: 16/9; position: relative; }
         .video-container iframe { width: 100%; height: 100%; border: none; }
-        .close-btn { position: absolute; top: -45px; right: 0; color: white; background: #f44336; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .close-btn { position: absolute; top: -45px; right: 0; color: white; background: #f44336; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
 
-        #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; z-index: 2500; }
+        #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -74,41 +86,43 @@
         <div class="official-btns">
             <a href="https://www.facebook.com/share/1EQ3BSyzmy/" target="_blank" class="btn-fb">Facebook</a>
             <a href="https://www.youtube.com/@WenCastle" target="_blank" class="btn-yt">▶ YouTube</a>
-            <a href="https://www.youtube.com/@WenCastle?sub_confirmation=1" target="_blank" class="btn-sub">訂閱 🔔</a>
         </div>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" id="mainWrapper">
         <div class="search-container">
             <div class="search-bar-row">
                 <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地...">
-                <button class="icon-btn" onclick="toggleView()">🖼️</button>
-                <button class="icon-btn" onclick="reverseAll()">⇅</button>
+                <button class="icon-btn" onclick="toggleView()" title="切換相片牆">🖼️</button>
+                <button class="icon-btn" onclick="reverseAll()" title="排序">⇅</button>
             </div>
             <div class="tool-bar">
                 <div class="tag active" onclick="filterYear('', this)">全部</div>
                 <div class="tag" onclick="filterYear('114', this)">114年</div>
                 <div class="tag" onclick="filterYear('113', this)">113年</div>
                 <div class="tag" onclick="filterYear('112', this)">112年</div>
+                <div class="stat-inline">
+                    <div class="stat-item-small">計 <b><span id="stat-total">0</span></b> 露</div>
+                    <div class="stat-item-small">營地 <b><span id="stat-camps">0</span></b> 處</div>
+                </div>
             </div>
         </div>
 
-        <div id="campBody" class="camp-list"></div>
+        <div id="campBody"></div>
 
         <div class="playlist-card">
-            <div class="playlist-header" onclick="togglePlaylist('list-camping', 'arrow-c')">
+            <div class="playlist-header" onclick="togglePlaylist()">
                 <span>🍀 有種幸福是我們一起露營 ❤️</span>
-                <span id="arrow-c">▲</span>
+                <span id="arrow">▲</span>
             </div>
             <div id="list-camping" class="playlist-content"></div>
         </div>
 
         <div id="loading" style="text-align:center; padding:30px; font-weight:bold;">🚐 載入中...</div>
 
-        <div class="footer">
-            <div class="footer-line1">記錄每一刻與家人共度的自然時光</div>
-            <div class="footer-line2">溫家堡 WenCastle ⓒ 2021-2026</div>
-            <div class="visitor-count">👣 足跡總覽次數：<span id="busuanzi_value_site_pv">--</span> 次</div>
+        <div class="footer" style="padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee;">
+            <div style="color:var(--primary); font-weight:bold; margin-bottom:5px;">記錄每一刻與家人共度的自然時光</div>
+            <div style="color:#888; font-size:13px;">溫家堡 WenCastle ⓒ 2021-2026</div>
         </div>
     </div>
 
@@ -121,24 +135,27 @@
         </div>
     </div>
 
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
     <script>
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU8nSVvI4rNFr0HXt6UN7rLp138Af8JuBkzEuzOX8FT75hJpoNE9UecJ-w1iAzLHGXbz3uo1-vpKwu/pub?output=csv";
 
-        function parseYoutube(url) {
-            if (!url) return { id: "", isList: false };
-            url = url.trim();
-            let id = ""; let isList = false;
-            if (url.includes("list=")) {
-                id = url.split("list=")[1].split("&")[0];
-                isList = true;
-            } else if (url.includes("v=")) {
-                id = url.split("v=")[1].split("&")[0];
-            } else if (url.includes("youtu.be/")) {
-                id = url.split("youtu.be/")[1].split("?")[0];
-            } else { id = url; }
-            return { id, isList };
+        function parseYoutube(idOrUrl) {
+            if (!idOrUrl) return { id: "", isList: false };
+            const str = idOrUrl.trim();
+            if (str.includes("list=")) return { id: str.split("list=")[1].split("&")[0], isList: true };
+            if (str.includes("v=")) return { id: str.split("v=")[1].split("&")[0], isList: false };
+            if (str.includes("youtu.be/")) return { id: str.split("youtu.be/")[1].split("?")[0], isList: false };
+            return { id: str, isList: false };
+        }
+
+        function updateStats() {
+            const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none');
+            const names = new Set();
+            visibleItems.forEach(item => {
+                const nameTag = item.querySelector('.camp-name');
+                if(nameTag) names.add(nameTag.innerText);
+            });
+            document.getElementById('stat-total').innerText = visibleItems.length;
+            document.getElementById('stat-camps').innerText = names.size;
         }
 
         async function fetchCampData() {
@@ -152,39 +169,54 @@
 
                 allRows.forEach((row) => {
                     const cols = row.split(',');
-                    if (cols.length < 3) return; // 確保至少有編號、日期、名稱
+                    if (cols.length < 4) return;
+                    const [cat, count, date, name, v1, v2, v3, t2, t3] = cols.map(c => c ? c.trim() : "");
+                    const yt1 = parseYoutube(v1);
+                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
                     
-                    // A:編號, B:日期, C:名稱, D:星級, E:影片1, F:影片2, G:類別
-                    const [num, date, name, stars, vid1, vid2, category] = cols.map(c => c ? c.trim() : "");
-                    const yt = parseYoutube(vid1);
                     const item = document.createElement('div');
                     item.className = 'camp-item';
-                    item.onclick = () => openVid(vid1);
-                    
-                    // 【邏輯優化】：直接使用 C 欄名稱 (name) 生成地圖搜尋網址
-                    const directMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
-
+                    item.onclick = () => { if(v1) openVid(v1); };
                     item.innerHTML = `
-                        <div class="col-num">${num}</div>
+                        <div class="col-num">${count}</div>
                         <div class="col-thumb">
-                            <div class="thumb-box"><img src="https://img.youtube.com/vi/${yt.id}/mqdefault.jpg" loading="lazy"></div>
+                            <div class="thumb-box"><img src="https://img.youtube.com/vi/${yt1.id}/mqdefault.jpg" loading="lazy"></div>
                         </div>
                         <div class="col-info">
                             <div class="camp-name">${name}</div>
                             <div class="camp-date">📅 ${date}</div>
-                            ${name ? `
-                            <a class="map-link" href="${directMapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                                <svg class="google-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
-                                導航前往
-                            </a>` : ''}
-                            <br>
-                            ${vid2 ? `<div class="btn-vid2" onclick="event.stopPropagation(); openVid('${vid2}')">影片 2</div>` : ''}
+                            <div class="map-row">
+                                <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                                    <svg class="google-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                    導航
+                                </a>
+                            </div>
+                            <div class="vid-row">
+                                ${t2 ? `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v2}')"><div class="play-tri"></div>${t2}</button>` : ''}
+                                ${t3 ? `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v3}')"><div class="play-tri"></div>${t3}</button>` : ''}
+                            </div>
                         </div>`;
 
-                    if (category === "露營") { listCamping.appendChild(item); } 
+                    if (cat === "露營") { listCamping.appendChild(item); } 
                     else { campBody.prepend(item); }
                 });
+                updateStats();
             } catch (e) { document.getElementById('loading').innerText = "載入失敗"; }
+        }
+
+        function searchTable() {
+            const filter = document.getElementById("searchInput").value.toUpperCase();
+            document.querySelectorAll(".camp-item").forEach(item => {
+                item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none";
+            });
+            updateStats();
+        }
+
+        function filterYear(year, btn) {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById("searchInput").value = year;
+            searchTable();
         }
 
         function openVid(rawUrl) {
@@ -202,27 +234,16 @@
             document.body.style.overflow = 'auto';
         }
 
-        function togglePlaylist(id, arrowId) {
-            const content = document.getElementById(id);
-            const arrow = document.getElementById(arrowId);
-            const isHidden = content.style.display === "none";
-            content.style.display = isHidden ? "block" : "none";
-            arrow.innerText = isHidden ? "▲" : "▼";
+        function togglePlaylist() {
+            const content = document.getElementById('list-camping');
+            content.style.display = content.style.display === "none" ? "block" : "none";
         }
 
-        function toggleView() { document.querySelector(".main-content").classList.toggle("grid-mode"); }
-        function searchTable() {
-            const filter = document.getElementById("searchInput").value.toUpperCase();
-            document.querySelectorAll(".camp-item").forEach(item => {
-                item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none";
-            });
+        // 切換視圖功能修復
+        function toggleView() {
+            document.getElementById("mainWrapper").classList.toggle("grid-mode");
         }
-        function filterYear(year, btn) {
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById("searchInput").value = year;
-            searchTable();
-        }
+
         function reverseAll() {
             ['campBody', 'list-camping'].forEach(id => {
                 const box = document.getElementById(id);
@@ -231,6 +252,7 @@
                 items.reverse().forEach(item => box.appendChild(item));
             });
         }
+
         window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
         fetchCampData();
     </script>
