@@ -38,8 +38,13 @@
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
         .col-info { flex: 1; }
         .camp-name { font-weight: bold; font-size: 17px; margin-bottom: 3px; color: #111; }
-        .camp-date { color: #666; font-size: 13px; }
-        .btn-vid2 { display: inline-block; background: #f8f9fa; color: #333; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 8px; border: 1px solid #ddd; }
+        .camp-date { color: #666; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+        
+        .map-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1a73e8; font-size: 13px; margin-top: 8px; font-weight: bold; background: #fff; padding: 5px 15px; border-radius: 20px; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .map-link:active { background: #f1f3f4; }
+        .google-icon { width: 14px; height: 14px; fill: #EA4335; } 
+
+        .btn-vid2 { display: inline-block; background: #f8f9fa; color: #333; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 10px; border: 1px solid #ddd; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; font-size: 17px; align-items: center; }
@@ -49,14 +54,10 @@
         .grid-mode .camp-item { flex-direction: column; border: 1px solid #eee; border-radius: 8px; padding: 8px; }
         .grid-mode .col-thumb { width: 100%; }
 
-        /* --- 頁尾優化 --- */
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
         .footer-line1 { color: var(--primary); font-size: 15px; font-weight: bold; margin-bottom: 5px; }
         .footer-line2 { color: #888; font-size: 13px; margin-bottom: 12px; }
-        .visitor-count { 
-            display: inline-block; padding-top: 10px; border-top: 1px dashed #ddd; 
-            color: #bbb; font-size: 11px; letter-spacing: 0.5px; 
-        }
+        .visitor-count { display: inline-block; padding-top: 10px; border-top: 1px dashed #ddd; color: #bbb; font-size: 11px; }
 
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 3000; align-items: center; justify-content: center; }
         .video-container { width: 95%; max-width: 850px; aspect-ratio: 16/9; position: relative; }
@@ -107,9 +108,7 @@
         <div class="footer">
             <div class="footer-line1">記錄每一刻與家人共度的自然時光</div>
             <div class="footer-line2">溫家堡 WenCastle ⓒ 2021-2026</div>
-            <div class="visitor-count">
-                👣 足跡總覽次數：<span id="busuanzi_value_site_pv">--</span> 次
-            </div>
+            <div class="visitor-count">👣 足跡總覽次數：<span id="busuanzi_value_site_pv">--</span> 次</div>
         </div>
     </div>
 
@@ -153,12 +152,18 @@
 
                 allRows.forEach((row) => {
                     const cols = row.split(',');
-                    if (cols.length < 5) return;
+                    if (cols.length < 3) return; // 確保至少有編號、日期、名稱
+                    
+                    // A:編號, B:日期, C:名稱, D:星級, E:影片1, F:影片2, G:類別
                     const [num, date, name, stars, vid1, vid2, category] = cols.map(c => c ? c.trim() : "");
                     const yt = parseYoutube(vid1);
                     const item = document.createElement('div');
                     item.className = 'camp-item';
                     item.onclick = () => openVid(vid1);
+                    
+                    // 【邏輯優化】：直接使用 C 欄名稱 (name) 生成地圖搜尋網址
+                    const directMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
+
                     item.innerHTML = `
                         <div class="col-num">${num}</div>
                         <div class="col-thumb">
@@ -166,7 +171,13 @@
                         </div>
                         <div class="col-info">
                             <div class="camp-name">${name}</div>
-                            <div class="camp-date">${date}</div>
+                            <div class="camp-date">📅 ${date}</div>
+                            ${name ? `
+                            <a class="map-link" href="${directMapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                                <svg class="google-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                導航前往
+                            </a>` : ''}
+                            <br>
                             ${vid2 ? `<div class="btn-vid2" onclick="event.stopPropagation(); openVid('${vid2}')">影片 2</div>` : ''}
                         </div>`;
 
