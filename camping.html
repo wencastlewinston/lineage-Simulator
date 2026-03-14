@@ -12,7 +12,6 @@
         body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; }
         .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
         
-        /* 優化：淡入動畫 */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease forwards; }
 
@@ -38,11 +37,6 @@
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        /* 優化：骨架屏 */
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-
-        /* 3 行相片牆核心 */
         .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; padding: 8px !important; }
         .grid-mode .camp-item { flex-direction: column !important; padding: 4px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; }
         .grid-mode .col-thumb { width: 100% !important; }
@@ -50,7 +44,6 @@
         .grid-mode .camp-name { font-size: 12px !important; margin-top: 3px; line-height: 1.2; height: 2.4em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .grid-mode .map-link, .grid-mode .vid-row { display: none !important; }
 
-        /* 列表模式 */
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
         .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 16px; align-self: center; }
         .col-thumb { width: 115px; flex-shrink: 0; }
@@ -71,7 +64,6 @@
         .close-btn { position: absolute; top: -45px; right: 0; color: white; background: #f44336; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
         #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
         
-        /* 靈魂 Footer */
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
         .footer-slogan { color: var(--primary); font-weight: bold; margin-bottom: 5px; font-size: 15px; }
         .footer-copy { color: #888; font-size: 13px; margin-top: 10px; }
@@ -106,9 +98,7 @@
             </div>
         </div>
 
-        <div id="campBody">
-            <div class="camp-item skeleton-loader"><div class="col-thumb"><div class="thumb-box skeleton"></div></div><div class="col-info"><div class="skeleton" style="height:20px; width:60%;"></div><div class="skeleton" style="height:14px; width:40%; margin-top:10px;"></div></div></div>
-        </div>
+        <div id="campBody"></div>
 
         <div class="playlist-card">
             <div class="playlist-header" onclick="togglePlaylist()">
@@ -158,6 +148,7 @@
                 allRows.forEach((row) => {
                     const cols = row.split(',');
                     if (cols.length < 4) return;
+                    // D 欄為索引 [3]
                     const [cat, count, date, name, v1, v2, v3, t2] = cols.map(c => c ? c.trim() : "");
                     const yt1 = parseYoutube(v1);
                     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
@@ -171,7 +162,7 @@
                         <div class="col-info">
                             <div class="camp-name">${name}</div>
                             <div class="camp-date">📅 ${date}</div>
-                            <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">導航</a>
+                            <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">${name}</a>
                             <div class="vid-row">${t2 ? `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v2}')">${t2}</button>` : ''}</div>
                         </div>`;
                     if (cat === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
@@ -181,7 +172,7 @@
         }
 
         function updateStats() {
-            const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none' && !i.classList.contains('skeleton-loader'));
+            const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none');
             const names = new Set();
             visibleItems.forEach(item => names.add(item.querySelector('.camp-name')?.innerText));
             document.getElementById('stat-total').innerText = visibleItems.length;
@@ -191,7 +182,6 @@
         function searchTable() {
             const filter = document.getElementById("searchInput").value.toUpperCase();
             document.querySelectorAll(".camp-item").forEach(item => {
-                if (item.classList.contains('skeleton-loader')) return;
                 item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none";
             });
             updateStats();
