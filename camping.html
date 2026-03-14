@@ -26,52 +26,52 @@
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; }
         .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         
-        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; align-items: center; -webkit-overflow-scrolling: touch; }
+        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; align-items: center; -webkit-overflow-scrolling: touch; }
         .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; }
         .tag.active { background: var(--primary); color: white; }
 
-        .stat-inline { display: flex; gap: 6px; margin-left: 10px; border-left: 1px solid #ccc; padding-left: 10px; }
+        .stat-row { display: flex; gap: 8px; padding-top: 5px; }
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; transition: transform 0.1s; }
-        .camp-item:active { transform: scale(0.97); }
-        
+        /* 相片牆核心設定：3行模式 */
+        .grid-mode #campBody, .grid-mode #list-camping { 
+            display: grid !important; 
+            grid-template-columns: 1fr 1fr 1fr !important; 
+            gap: 6px !important; 
+            padding: 8px !important; 
+        }
+        .grid-mode .camp-item { flex-direction: column !important; padding: 4px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; }
+        .grid-mode .col-thumb { width: 100% !important; }
+        .grid-mode .col-num { position: absolute !important; background: rgba(255,255,255,0.8) !important; padding: 1px 4px !important; border-radius: 4px !important; left: 3px !important; top: 3px !important; z-index: 5 !important; font-size: 10px !important; }
+        .grid-mode .camp-name { font-size: 12px !important; margin-top: 3px; line-height: 1.2; height: 2.4em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .grid-mode .camp-date { font-size: 10px !important; }
+        .grid-mode .map-link, .grid-mode .vid-row { display: none !important; }
+
+        /* 標準列表模式 */
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
         .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 16px; align-self: center; }
         .col-thumb { width: 115px; flex-shrink: 0; }
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #000; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        
         .col-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .camp-name { font-weight: bold; font-size: 17px; color: #111; }
         .camp-date { color: #666; font-size: 12px; }
-        
-        .map-row { margin-top: 2px; }
-        .map-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; }
-        .google-icon { width: 12px; height: 12px; fill: #EA4335; } 
-
+        .map-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; }
         .vid-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
         .btn-yt-style { display: inline-flex; align-items: center; gap: 4px; background: var(--yt-red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; }
-        .play-tri { width: 0; height: 0; border-top: 4px solid transparent; border-left: 7px solid white; border-bottom: 4px solid transparent; }
-
-        .grid-mode #campBody, .grid-mode .playlist-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
-        .grid-mode .camp-item { flex-direction: column; padding: 8px; border: 1px solid #eee; border-radius: 8px; gap: 8px; position: relative; }
-        .grid-mode .col-thumb { width: 100%; }
-        .grid-mode .col-num { position: absolute; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px; z-index: 5; font-size: 12px; left: 8px; top: 8px; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
-
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 3000; align-items: center; justify-content: center; }
         .video-container { width: 95%; max-width: 850px; aspect-ratio: 16/9; position: relative; }
         .video-container iframe { width: 100%; height: 100%; border: none; }
         .close-btn { position: absolute; top: -45px; right: 0; color: white; background: #f44336; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
-
         #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
     </style>
 </head>
-<body>
+<body class="">
     <div class="rainbow-line"></div>
     <div class="header-fixed">
         <div class="header-title">⛺ 溫家堡 WenCastle 露營足跡</div>
@@ -93,10 +93,10 @@
                 <div class="tag" onclick="filterYear('114', this)">114年</div>
                 <div class="tag" onclick="filterYear('113', this)">113年</div>
                 <div class="tag" onclick="filterYear('112', this)">112年</div>
-                <div class="stat-inline">
-                    <div class="stat-item-small">共計 <b><span id="stat-total">0</span></b> 露</div>
-                    <div class="stat-item-small">造訪 <b><span id="stat-camps">0</span></b> 處</div>
-                </div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-item-small">共計 <b><span id="stat-total">0</span></b> 露</div>
+                <div class="stat-item-small">造訪 <b><span id="stat-camps">0</span></b> 處</div>
             </div>
         </div>
 
@@ -105,22 +105,21 @@
         <div class="playlist-card">
             <div class="playlist-header" onclick="togglePlaylist()">
                 <span>🍀 有種幸福是我們一起露營 ❤️</span>
-                <span id="arrow">▲</span>
+                <span id="arrow">▼</span>
             </div>
-            <div id="list-camping" class="playlist-content"></div>
+            <div id="list-camping" class="playlist-content" style="display:block;"></div>
         </div>
 
         <div id="loading" style="text-align:center; padding:30px; font-weight:bold;">🚐 載入中...</div>
 
         <div class="footer">
-            <div style="color:var(--primary); font-weight:bold; margin-bottom:5px;">記錄每一刻與家人共度的自然時光</div>
             <div style="color:#888; font-size:13px;">溫家堡 WenCastle ⓒ 2021-2026</div>
         </div>
     </div>
 
     <div id="goTopBtn" onclick="window.scrollTo(0,0)">↑</div>
 
-    <div class="video-overlay" id="videoOverlay" onclick="closeVid()">
+    <div id="videoOverlay" class="video-overlay" onclick="closeVid()">
         <div class="video-container" onclick="event.stopPropagation()">
             <div class="close-btn" onclick="closeVid()">✕ 關閉</div>
             <iframe id="popup_player" src="" allowfullscreen allow="autoplay"></iframe>
@@ -177,20 +176,12 @@
                         <div class="col-info">
                             <div class="camp-name">${name}</div>
                             <div class="camp-date">📅 ${date}</div>
-                            <div class="map-row">
-                                <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                                    <svg class="google-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
-                                    導航
-                                </a>
-                            </div>
+                            <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">導航</a>
                             <div class="vid-row">
-                                ${t2 ? `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v2}')"><div class="play-tri"></div>${t2}</button>` : ''}
-                                ${t3 ? `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v3}')"><div class="play-tri"></div>${t3}</button>` : ''}
+                                ${t2 ? `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v2}')">${t2}</button>` : ''}
                             </div>
                         </div>`;
-
-                    if (cat === "露營") { listCamping.appendChild(item); } 
-                    else { campBody.prepend(item); }
+                    if (cat === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
                 });
                 updateStats();
             } catch (e) { document.getElementById('loading').innerText = "載入失敗"; }
@@ -211,6 +202,7 @@
             searchTable();
         }
 
+        function toggleView() { document.body.classList.toggle("grid-mode"); }
         function openVid(rawUrl) {
             if(!rawUrl) return;
             const yt = parseYoutube(rawUrl);
@@ -219,19 +211,17 @@
             document.getElementById('videoOverlay').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
-
         function closeVid() {
             document.getElementById('popup_player').src = "";
             document.getElementById('videoOverlay').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
-
         function togglePlaylist() {
             const content = document.getElementById('list-camping');
-            content.style.display = content.style.display === "none" ? "block" : "none";
+            const arrow = document.getElementById('arrow');
+            content.style.display = (content.style.display === "none") ? "block" : "none";
+            arrow.innerText = (content.style.display === "none") ? "▲" : "▼";
         }
-
-        function toggleView() { document.getElementById("mainWrapper").classList.toggle("grid-mode"); }
         function reverseAll() {
             ['campBody', 'list-camping'].forEach(id => {
                 const box = document.getElementById(id);
@@ -240,7 +230,7 @@
                 items.reverse().forEach(item => box.appendChild(item));
             });
         }
-
+        
         window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
         fetchCampData();
     </script>
