@@ -10,11 +10,19 @@
             --primary-light: #43a047;
             --bg: #f4f7f4; --yt-red: #ff0000; --fb-blue: #1877f2;
             --coming-soon: #e67e22;
+            --low: #8bc34a; --mid: #2d5a27; --high: #1a73e8;
+            --spring: #e91e63; --summer: #ff9800; --autumn: #795548; --winter: #00bcd4;
             --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
         }
-        body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; }
+        body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
         
+        /* 載入動畫 */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; transition: opacity 0.6s ease; }
+        .loader-icon { font-size: 50px; margin-bottom: 10px; animation: pulse 1.5s infinite; }
+        .loader-text { font-weight: bold; color: var(--primary); letter-spacing: 2px; }
+        @keyframes pulse { 0% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0.3; transform: scale(0.9); } }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease forwards; }
 
@@ -29,45 +37,98 @@
 
         .search-container { padding: 12px 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 85px; z-index: 900; }
         .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-        #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; }
-        
-        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding: 2px 0 8px 0; align-items: center; -webkit-overflow-scrolling: touch; }
-        .tool-bar::-webkit-scrollbar { display: none; }
+        #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; min-width: 0; }
+        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding: 2px 0 8px 0; align-items: center; }
         .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; font-weight: bold; color: #666; }
         .tag.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         .icon-btn { width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         
         .stat-row { display: flex; gap: 8px; }
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
+        /* 清單項目 */
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; position: relative; box-sizing: border-box; }
         .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 16px; align-self: center; }
         .col-thumb { width: 115px; flex-shrink: 0; position: relative; }
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; }
         .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 4px; right: 5px; font-size: 9px; color: rgba(255,255,255,0.6); font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); pointer-events: none; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
         
-        .col-info { flex: 1; display: flex; flex-direction: column; gap: 0px; }
-        .camp-date { color: #888; font-size: 11px; margin-bottom: 0px; line-height: 1.2; } 
-        .camp-name-box { display: block; line-height: 1.1; margin: 0; }
-        .camp-name { display: inline-block; font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .altitude-row { display: block; margin-top: -1px; } 
-        .altitude-tag { color: #777; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+        .col-info { flex: 1; display: flex; flex-direction: column; gap: 0px; min-width: 0; }
+        .camp-date { color: #888; font-size: 11px; margin-bottom: 0px; line-height: 1.2; display: flex; flex-wrap: wrap; align-items: center; } 
+        .season-badge { font-size: 9px; margin-left: 4px; padding: 1px 4px; border-radius: 4px; font-weight: bold; background: #f8f8f8; white-space: nowrap; }
+
+        .camp-name-box { display: block; line-height: 1.1; margin: 0; position: relative; overflow: hidden; }
+        .camp-name { 
+            display: inline-block; font-weight: bold; font-size: 18px; letter-spacing: 0.3px; 
+            background: linear-gradient(to right, var(--primary), var(--primary-light)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            white-space: nowrap; 
+        }
+
+        /* 海拔儀儀表 */
+        .altitude-row { 
+            position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; 
+            background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box;
+        }
+        .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
+        .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; letter-spacing: 0px; white-space: nowrap; }
 
         .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
         .upcoming-thumb { background: linear-gradient(45deg, #2d5a27, #43a047) !important; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; }
-        .status-badge { display: inline-block; color: var(--coming-soon); border: 1px solid var(--coming-soon); font-size: 10px; padding: 0px 5px; border-radius: 4px; font-weight: bold; margin-left: 6px; vertical-align: middle; background: white; }
+        .status-badge { display: inline-block; color: var(--coming-soon); border: 1px solid var(--coming-soon); font-size: 10px; padding: 0px 4px; border-radius: 4px; font-weight: bold; margin-left: 4px; vertical-align: middle; background: white; }
 
-        .map-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; margin-top: 6px; }
-        .map-icon { width: 14px; height: 14px; }
-        .vid-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-        .btn-yt-style { background: var(--yt-red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; }
+        .map-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 2px 8px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; margin-top: 6px; }
+        .map-icon { width: 12px; height: 12px; }
+        .vid-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+        .btn-yt-style { background: var(--yt-red); color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; border: none; }
 
-        .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 8px !important; padding: 8px !important; }
-        .grid-mode .camp-item { flex-direction: column !important; padding: 6px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
+        /* --- 相片牆跑馬燈核心 CSS --- */
+        .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; padding: 6px !important; }
+        .grid-mode .camp-item { flex-direction: column !important; padding: 5px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; overflow: hidden; }
         .grid-mode .col-thumb { width: 100% !important; }
+        
+        .grid-mode .camp-name-box { 
+            width: 100%; overflow: hidden; text-align: center; margin-top: 2px;
+        }
+        .grid-mode .camp-name { 
+            font-size: 13px !important; display: inline-block; padding-left: 0;
+            animation: none; /* 預設不動 */
+        }
+        
+        /* 當寬度超出時的動畫定義 */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(0); }
+            45% { transform: translateX(calc(-100% + 80px)); } /* 根據格子寬度滑動 */
+            55% { transform: translateX(calc(-100% + 80px)); }
+            90% { transform: translateX(0); }
+            100% { transform: translateX(0); }
+        }
+
+        .marquee-active {
+            display: inline-block;
+            padding-left: 100%; /* 起始推開 */
+            animation: marquee-scroll 10s linear infinite;
+        }
+        
+        /* 另一種簡潔的來回跑馬燈（堡主推薦） */
+        .grid-mode .marquee-box {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee-auto 6s ease-in-out infinite alternate;
+            padding: 0 5px;
+        }
+
+        @keyframes marquee-auto {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(0); }
+            80% { transform: translateX(var(--move-dist, 0)); }
+            100% { transform: translateX(var(--move-dist, 0)); }
+        }
+
+        /* ------------------------- */
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
@@ -81,6 +142,8 @@
 </head>
 <body>
     <div class="rainbow-line"></div>
+    <div id="loader"><div class="loader-icon">🏕️</div><div class="loader-text">WenCastle 載入中...</div></div>
+
     <div class="header-fixed">
         <div class="header-title">⛺ 溫家堡 WenCastle 露營足跡</div>
         <div class="official-btns">
@@ -147,6 +210,17 @@
             return { id: str, isList: false };
         }
 
+        function getSeasonBadge(dateStr) {
+            const match = dateStr.match(/\.(\d+)\./); 
+            if (!match) return "";
+            const month = parseInt(match[1]);
+            if ([12, 1, 2].includes(month)) return `<span class="season-badge" style="color:var(--winter)">❄️ 冬露</span>`;
+            if ([3, 4, 5].includes(month)) return `<span class="season-badge" style="color:var(--spring)">🌸 春露</span>`;
+            if ([6, 7, 8].includes(month)) return `<span class="season-badge" style="color:var(--summer)">☀️ 夏露</span>`;
+            if ([9, 10, 11].includes(month)) return `<span class="season-badge" style="color:var(--autumn)">🍁 秋露</span>`;
+            return "";
+        }
+
         async function fetchCampData() {
             try {
                 const response = await fetch(sheetUrl);
@@ -163,9 +237,19 @@
                     
                     const yt1 = parseYoutube(v1);
                     const isUpcoming = !yt1;
-                    const altHtml = altitude ? `<div class="altitude-row"><span class="altitude-tag">⛰️ ${altitude}m</span></div>` : "";
-                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
+                    const seasonBadge = getSeasonBadge(date);
                     
+                    let altHtml = "";
+                    if (altitude) {
+                        const altV = parseInt(altitude);
+                        let barColor = "var(--low)";
+                        if (altV > 500) barColor = "var(--mid)";
+                        if (altV > 1000) barColor = "var(--high)";
+                        const barWidth = Math.min((altV / 2000) * 100, 100);
+                        altHtml = `<div class="altitude-row"><div class="alt-bar-fill" style="width: ${barWidth}%; background: ${barColor}; opacity: 0.3;"></div><span class="altitude-tag">⛰️ ${altitude}m</span></div>`;
+                    }
+
+                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
                     let vidBtns = "";
                     if(v2) vidBtns += `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v2}')">${t2 || '影片2'}</button>`;
                     if(v3) vidBtns += `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v3}')">${t3 || '影片3'}</button>`;
@@ -182,27 +266,50 @@
                         <div class="col-num">${isUpcoming ? '🔜' : count}</div>
                         <div class="col-thumb">${thumbContent}</div>
                         <div class="col-info">
-                            <div class="camp-date">📅 ${date}</div>
-                            <div class="camp-name-box"><span class="camp-name">${name}</span>${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}</div>
+                            <div class="camp-date">📅 ${date}${seasonBadge}</div>
+                            <div class="camp-name-box">
+                                <span class="camp-name">${name}</span>
+                                ${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}
+                            </div>
                             ${altHtml}
                             <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();"><img src="https://www.google.com/s2/favicons?domain=maps.google.com" class="map-icon"> ${name}</a>
-                            <div class="vid-row">${isUpcoming ? '<span style="font-size:11px;color:#e67e22;font-weight:bold;">探索中...</span>' : vidBtns}</div>
+                            <div class="vid-row">${isUpcoming ? '<span style="font-size:10px;color:#e67e22;font-weight:bold;">探索中...</span>' : vidBtns}</div>
                         </div>`;
                     
                     if (cat === "露營") { listCamping.appendChild(item); } 
                     else { campBody.prepend(item); }
                 });
                 updateStats(); 
+                checkMarquee(); // 載入後檢查是否需要跑馬燈
+                setTimeout(() => {
+                    const loader = document.getElementById('loader');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 600);
+                }, 500);
             } catch (e) { campBody.innerText = "載入失敗"; }
+        }
+
+        // 智慧跑馬燈判定：如果名字寬度 > 格子寬度，就加上動畫
+        function checkMarquee() {
+            if (!document.body.classList.contains("grid-mode")) return;
+            const names = document.querySelectorAll('.grid-mode .camp-name');
+            names.forEach(name => {
+                const containerWidth = name.parentElement.offsetWidth;
+                const textWidth = name.scrollWidth;
+                if (textWidth > containerWidth) {
+                    const moveDist = containerWidth - textWidth - 10;
+                    name.style.setProperty('--move-dist', `${moveDist}px`);
+                    name.classList.add('marquee-box');
+                } else {
+                    name.classList.remove('marquee-box');
+                }
+            });
         }
 
         function updateStats() {
             const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none' && !i.classList.contains('is-upcoming'));
             const names = new Set();
-            visibleItems.forEach(item => {
-                const nameNode = item.querySelector('.camp-name');
-                if (nameNode) names.add(nameNode.innerText.trim());
-            });
+            visibleItems.forEach(item => names.add(item.querySelector('.camp-name').innerText.trim()));
             document.getElementById('stat-total').innerText = visibleItems.length;
             document.getElementById('stat-camps').innerText = names.size;
         }
@@ -220,9 +327,14 @@
                 item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none";
             });
             updateStats();
+            setTimeout(checkMarquee, 100); // 搜尋後重新判定
         }
 
-        function toggleView() { document.body.classList.toggle("grid-mode"); }
+        function toggleView() { 
+            document.body.classList.toggle("grid-mode"); 
+            setTimeout(checkMarquee, 200); // 切換模式時重新判定
+        }
+        
         function openVid(u) {
             const yt = parseYoutube(u);
             if(!yt) return;
@@ -236,7 +348,6 @@
             content.style.display = isHidden ? "block" : "none";
             document.getElementById('arrow').innerText = isHidden ? "▼" : "▲";
         }
-
         function reverseAll() {
             const campBody = document.getElementById('campBody');
             const listCamping = document.getElementById('list-camping');
@@ -245,8 +356,8 @@
                 box.innerHTML = '';
                 items.reverse().forEach(item => box.appendChild(item));
             });
+            setTimeout(checkMarquee, 100);
         }
-
         window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
         fetchCampData();
     </script>
