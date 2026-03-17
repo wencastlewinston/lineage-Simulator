@@ -6,7 +6,10 @@
     <title>溫家堡 WenCastle 露營足跡</title>
     <style>
         :root { 
-            --primary: #2d5a27; --bg: #f4f7f4; --yt-red: #ff0000; --fb-blue: #1877f2;
+            --primary: #2d5a27; 
+            --primary-light: #43a047;
+            --bg: #f4f7f4; --yt-red: #ff0000; --fb-blue: #1877f2;
+            --coming-soon: #e67e22;
             --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
         }
         body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; }
@@ -24,48 +27,47 @@
 
         .main-content { max-width: 800px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
 
-        .search-container { padding: 15px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 85px; z-index: 900; }
-        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+        .search-container { padding: 12px 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 85px; z-index: 900; }
+        .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; }
-        .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         
-        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; align-items: center; }
-        .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; }
-        .tag.active { background: var(--primary); color: white; }
+        .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding: 2px 0 8px 0; align-items: center; -webkit-overflow-scrolling: touch; }
+        .tool-bar::-webkit-scrollbar { display: none; }
+        .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; font-weight: bold; color: #666; }
+        .tag.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .stat-row { display: flex; gap: 8px; padding-top: 5px; }
+        .icon-btn { width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        
+        .stat-row { display: flex; gap: 8px; }
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        /* 相片牆模式優化 */
-        .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 8px !important; padding: 8px !important; }
-        .grid-mode .camp-item { flex-direction: column !important; padding: 6px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
-        .grid-mode .col-thumb { width: 100% !important; }
-        .grid-mode .col-num { position: absolute !important; background: rgba(255,255,255,0.8) !important; padding: 1px 4px !important; left: 3px !important; top: 3px !important; font-size: 11px !important; border-radius: 4px; z-index: 5; }
-        
-        .grid-mode .camp-date { order: 1; font-size: 11px !important; text-align: center; margin-top: 2px; color: #888; display: block !important; }
-        .grid-mode .camp-name { order: 2; font-size: 14px !important; margin-top: 0px !important; line-height: 1.1 !important; font-weight: bold; text-align: center; color: var(--primary); }
-        .grid-mode .altitude-row { order: 3; text-align: center; margin-top: -1px !important; }
-        .grid-mode .map-link { order: 4; display: flex !important; justify-content: center; font-size: 11px !important; padding: 2px 5px !important; margin-top: 4px; }
-        .grid-mode .vid-row { order: 5; display: flex !important; justify-content: center !important; gap: 4px; margin-top: 4px; }
-
-        /* 列表模式優化 */
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
         .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 16px; align-self: center; }
-        .col-thumb { width: 115px; flex-shrink: 0; }
-        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; }
+        .col-thumb { width: 115px; flex-shrink: 0; position: relative; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; }
+        .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 4px; right: 5px; font-size: 9px; color: rgba(255,255,255,0.6); font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); pointer-events: none; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .col-info { flex: 1; display: flex; flex-direction: column; gap: 0px; }
         
+        .col-info { flex: 1; display: flex; flex-direction: column; gap: 0px; }
         .camp-date { color: #888; font-size: 11px; margin-bottom: 0px; line-height: 1.2; } 
-        .camp-name { font-weight: bold; font-size: 18px; color: var(--primary); line-height: 1.1; letter-spacing: 0.3px; margin: 0; }
+        .camp-name-box { display: block; line-height: 1.1; margin: 0; }
+        .camp-name { display: inline-block; font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .altitude-row { display: block; margin-top: -1px; } 
         .altitude-tag { color: #777; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+
+        .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
+        .upcoming-thumb { background: linear-gradient(45deg, #2d5a27, #43a047) !important; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; }
+        .status-badge { display: inline-block; color: var(--coming-soon); border: 1px solid var(--coming-soon); font-size: 10px; padding: 0px 5px; border-radius: 4px; font-weight: bold; margin-left: 6px; vertical-align: middle; background: white; }
 
         .map-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; margin-top: 6px; }
         .map-icon { width: 14px; height: 14px; }
         .vid-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .btn-yt-style { background: var(--yt-red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; }
+
+        .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 8px !important; padding: 8px !important; }
+        .grid-mode .camp-item { flex-direction: column !important; padding: 6px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
+        .grid-mode .col-thumb { width: 100% !important; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
@@ -75,8 +77,6 @@
         .close-btn { position: absolute; top: -40px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; border: 1px solid rgba(255,255,255,0.3); }
         #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
-        .footer-slogan { color: var(--primary); font-weight: bold; margin-bottom: 5px; font-size: 15px; }
-        .footer-copy { color: #888; font-size: 13px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -98,12 +98,13 @@
             </div>
             <div class="tool-bar">
                 <div class="tag active" onclick="filterYear('', this)">全部</div>
+                <div class="tag" onclick="filterYear('115', this)">115年</div>
                 <div class="tag" onclick="filterYear('114', this)">114年</div>
                 <div class="tag" onclick="filterYear('113', this)">113年</div>
                 <div class="tag" onclick="filterYear('112', this)">112年</div>
             </div>
             <div class="stat-row">
-                <div class="stat-item-small">共計 <b><span id="stat-total">0</span></b> 露</div>
+                <div class="stat-item-small">已完成 <b><span id="stat-total">0</span></b> 露</div>
                 <div class="stat-item-small">造訪 <b><span id="stat-camps">0</span></b> 處</div>
             </div>
         </div>
@@ -138,7 +139,7 @@
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU8nSVvI4rNFr0HXt6UN7rLp138Af8JuBkzEuzOX8FT75hJpoNE9UecJ-w1iAzLHGXbz3uo1-vpKwu/pub?output=csv";
 
         function parseYoutube(idOrUrl) {
-            if (!idOrUrl) return { id: "", isList: false };
+            if (!idOrUrl || idOrUrl.trim() === "") return null;
             const str = idOrUrl.trim();
             if (str.includes("list=")) return { id: str.split("list=")[1].split("&")[0], isList: true };
             if (str.includes("v=")) return { id: str.split("v=")[1].split("&")[0], isList: false };
@@ -160,10 +161,9 @@
                     if (cols.length < 4) return;
                     const [cat, count, date, name, v1, v2, v3, t2, t3, altitude] = cols.map(c => c ? c.trim() : "");
                     
-                    // 修正海拔邏輯：若沒填則 altHtml 為空
-                    const altHtml = altitude ? `<div class="altitude-row"><span class="altitude-tag">⛰️ ${altitude}m</span></div>` : "";
-                    
                     const yt1 = parseYoutube(v1);
+                    const isUpcoming = !yt1;
+                    const altHtml = altitude ? `<div class="altitude-row"><span class="altitude-tag">⛰️ ${altitude}m</span></div>` : "";
                     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
                     
                     let vidBtns = "";
@@ -171,36 +171,47 @@
                     if(v3) vidBtns += `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v3}')">${t3 || '影片3'}</button>`;
 
                     const item = document.createElement('div');
-                    item.className = 'camp-item fade-in';
-                    item.onclick = () => { if(v1) openVid(v1); };
+                    item.className = `camp-item fade-in ${isUpcoming ? 'is-upcoming' : ''}`;
+                    if (!isUpcoming) item.onclick = () => openVid(v1);
+
+                    const thumbContent = isUpcoming 
+                        ? `<div class="thumb-box upcoming-thumb">下一站</div>`
+                        : `<div class="thumb-box"><img src="https://img.youtube.com/vi/${yt1.id}/mqdefault.jpg" loading="lazy"></div>`;
+
                     item.innerHTML = `
-                        <div class="col-num">${count}</div>
-                        <div class="col-thumb"><div class="thumb-box"><img src="https://img.youtube.com/vi/${yt1.id}/mqdefault.jpg" loading="lazy"></div></div>
+                        <div class="col-num">${isUpcoming ? '🔜' : count}</div>
+                        <div class="col-thumb">${thumbContent}</div>
                         <div class="col-info">
                             <div class="camp-date">📅 ${date}</div>
-                            <div class="camp-name">${name}</div>
+                            <div class="camp-name-box"><span class="camp-name">${name}</span>${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}</div>
                             ${altHtml}
-                            <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                                <img src="https://www.google.com/s2/favicons?domain=maps.google.com" class="map-icon"> ${name}
-                            </a>
-                            <div class="vid-row">${vidBtns}</div>
+                            <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();"><img src="https://www.google.com/s2/favicons?domain=maps.google.com" class="map-icon"> ${name}</a>
+                            <div class="vid-row">${isUpcoming ? '<span style="font-size:11px;color:#e67e22;font-weight:bold;">探索中...</span>' : vidBtns}</div>
                         </div>`;
                     
-                    if (cat === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
+                    if (cat === "露營") { listCamping.appendChild(item); } 
+                    else { campBody.prepend(item); }
                 });
                 updateStats(); 
             } catch (e) { campBody.innerText = "載入失敗"; }
         }
 
         function updateStats() {
-            const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none');
+            const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none' && !i.classList.contains('is-upcoming'));
             const names = new Set();
             visibleItems.forEach(item => {
                 const nameNode = item.querySelector('.camp-name');
-                if (nameNode) names.add(nameNode.innerText);
+                if (nameNode) names.add(nameNode.innerText.trim());
             });
             document.getElementById('stat-total').innerText = visibleItems.length;
             document.getElementById('stat-camps').innerText = names.size;
+        }
+
+        function filterYear(year, btn) {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById("searchInput").value = year;
+            searchTable();
         }
 
         function searchTable() {
@@ -211,16 +222,10 @@
             updateStats();
         }
 
-        function filterYear(year, btn) {
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById("searchInput").value = year;
-            searchTable();
-        }
-
         function toggleView() { document.body.classList.toggle("grid-mode"); }
         function openVid(u) {
             const yt = parseYoutube(u);
+            if(!yt) return;
             document.getElementById('popup_player').src = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1`;
             document.getElementById('videoOverlay').style.display = 'flex';
         }
@@ -231,12 +236,17 @@
             content.style.display = isHidden ? "block" : "none";
             document.getElementById('arrow').innerText = isHidden ? "▼" : "▲";
         }
+
         function reverseAll() {
-            ['campBody', 'list-camping'].forEach(id => {
-                const box = document.getElementById(id);
-                Array.from(box.children).reverse().forEach(item => box.appendChild(item));
+            const campBody = document.getElementById('campBody');
+            const listCamping = document.getElementById('list-camping');
+            [campBody, listCamping].forEach(box => {
+                const items = Array.from(box.children);
+                box.innerHTML = '';
+                items.reverse().forEach(item => box.appendChild(item));
             });
         }
+
         window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
         fetchCampData();
     </script>
