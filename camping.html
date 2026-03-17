@@ -37,15 +37,15 @@
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        /* 相片牆模式修正：放大字體、顯示按鈕 */
+        /* 相片牆模式 */
         .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 8px !important; padding: 8px !important; }
         .grid-mode .camp-item { flex-direction: column !important; padding: 6px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
         .grid-mode .col-thumb { width: 100% !important; }
         .grid-mode .col-num { position: absolute !important; background: rgba(255,255,255,0.8) !important; padding: 1px 4px !important; left: 3px !important; top: 3px !important; font-size: 11px !important; border-radius: 4px; z-index: 5; }
-        .grid-mode .camp-name { font-size: 14px !important; margin-top: 5px; line-height: 1.3; font-weight: bold; text-align: center; } /* 字體調大 */
+        .grid-mode .camp-name { font-size: 14px !important; margin-top: 5px; line-height: 1.3; font-weight: bold; text-align: center; }
         .grid-mode .camp-date { display: none; }
-        .grid-mode .map-link { display: flex !important; justify-content: center; font-size: 10px !important; padding: 2px 5px !important; margin-top: 4px; } /* 補回導航 */
-        .grid-mode .vid-row { display: flex !important; justify-content: center !important; gap: 4px; margin-top: 4px; } /* 補回影片 */
+        .grid-mode .map-link { display: flex !important; justify-content: center; font-size: 10px !important; padding: 2px 5px !important; margin-top: 4px; border-radius: 4px; }
+        .grid-mode .vid-row { display: flex !important; justify-content: center !important; gap: 4px; margin-top: 4px; }
         .grid-mode .btn-yt-style { font-size: 10px !important; padding: 2px 4px !important; }
 
         /* 列表模式 */
@@ -64,10 +64,13 @@
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 3000; align-items: center; justify-content: center; }
-        .video-container { width: 95%; max-width: 850px; aspect-ratio: 16/9; position: relative; }
-        .video-container iframe { width: 100%; height: 100%; border: none; }
-        .close-btn { position: absolute; top: -45px; right: 0; color: white; background: #f44336; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+        
+        /* 修正為浮動小視窗播放器 */
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: none; z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .video-container { width: 90%; max-width: 600px; aspect-ratio: 16/9; position: relative; background: #000; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .video-container iframe { width: 100%; height: 100%; border: none; border-radius: 12px; }
+        .close-btn { position: absolute; top: -40px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; border: 1px solid rgba(255,255,255,0.3); }
+
         #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
         
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
@@ -150,14 +153,16 @@
                 const campBody = document.getElementById('campBody');
                 const listCamping = document.getElementById('list-camping');
                 campBody.innerHTML = ""; 
+                listCamping.innerHTML = "";
 
                 allRows.forEach((row) => {
                     const cols = row.split(',');
                     if (cols.length < 4) return;
-                    // cat[0], count[1], date[2], name[3], v1[4], v2[5], v3[6], t2[7], t3[8]
+                    
+                    // 修正資料映射：v3在[6], t3在[8]
                     const [cat, count, date, name, v1, v2, v3, t2, t3] = cols.map(c => c ? c.trim() : "");
                     const yt1 = parseYoutube(v1);
-                    const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(name)}`;
+                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
                     
                     let vidBtns = "";
                     if(v2) vidBtns += `<button class="btn-yt-style" onclick="event.stopPropagation(); openVid('${v2}')">${t2 || '影片2'}</button>`;
@@ -177,6 +182,7 @@
                             </a>
                             <div class="vid-row">${vidBtns}</div>
                         </div>`;
+                    
                     if (cat === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
                 });
                 updateStats();
@@ -207,24 +213,37 @@
         }
 
         function toggleView() { document.body.classList.toggle("grid-mode"); }
+        
         function openVid(u) {
             const yt = parseYoutube(u);
-            document.getElementById('popup_player').src = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1`;
+            const player = document.getElementById('popup_player');
+            player.src = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1`;
             document.getElementById('videoOverlay').style.display = 'flex';
         }
-        function closeVid() { document.getElementById('popup_player').src = ""; document.getElementById('videoOverlay').style.display = 'none'; }
+        
+        function closeVid() { 
+            document.getElementById('popup_player').src = ""; 
+            document.getElementById('videoOverlay').style.display = 'none'; 
+        }
+
         function togglePlaylist() {
             const content = document.getElementById('list-camping');
-            content.style.display = (content.style.display === "none") ? "block" : "none";
-            document.getElementById('arrow').innerText = (content.style.display === "none") ? "▲" : "▼";
+            const isHidden = content.style.display === "none";
+            content.style.display = isHidden ? "block" : "none";
+            document.getElementById('arrow').innerText = isHidden ? "▼" : "▲";
         }
+
         function reverseAll() {
             ['campBody', 'list-camping'].forEach(id => {
                 const box = document.getElementById(id);
                 Array.from(box.children).reverse().forEach(item => box.appendChild(item));
             });
         }
-        window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
+
+        window.onscroll = () => { 
+            document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; 
+        };
+        
         fetchCampData();
     </script>
 </body>
