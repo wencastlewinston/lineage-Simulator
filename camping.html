@@ -37,42 +37,43 @@
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        /* 相片牆模式 */
+        /* 相片牆模式優化 */
         .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 8px !important; padding: 8px !important; }
         .grid-mode .camp-item { flex-direction: column !important; padding: 6px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
         .grid-mode .col-thumb { width: 100% !important; }
         .grid-mode .col-num { position: absolute !important; background: rgba(255,255,255,0.8) !important; padding: 1px 4px !important; left: 3px !important; top: 3px !important; font-size: 11px !important; border-radius: 4px; z-index: 5; }
-        .grid-mode .camp-name { font-size: 14px !important; margin-top: 5px; line-height: 1.3; font-weight: bold; text-align: center; }
-        .grid-mode .camp-date { display: none; }
-        .grid-mode .map-link { display: flex !important; justify-content: center; font-size: 10px !important; padding: 2px 5px !important; margin-top: 4px; border-radius: 4px; }
-        .grid-mode .vid-row { display: flex !important; justify-content: center !important; gap: 4px; margin-top: 4px; }
-        .grid-mode .btn-yt-style { font-size: 10px !important; padding: 2px 4px !important; }
+        
+        .grid-mode .camp-date { order: 1; font-size: 11px !important; text-align: center; margin-top: 2px; color: #888; display: block !important; }
+        .grid-mode .camp-name { order: 2; font-size: 14px !important; margin-top: 0px !important; line-height: 1.1 !important; font-weight: bold; text-align: center; color: var(--primary); }
+        .grid-mode .altitude-row { order: 3; text-align: center; margin-top: -1px !important; }
+        .grid-mode .map-link { order: 4; display: flex !important; justify-content: center; font-size: 11px !important; padding: 2px 5px !important; margin-top: 4px; }
+        .grid-mode .vid-row { order: 5; display: flex !important; justify-content: center !important; gap: 4px; margin-top: 4px; }
 
-        /* 列表模式 */
+        /* 列表模式優化 */
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; cursor: pointer; background: #fff; }
         .col-num { width: 30px; text-align: center; font-weight: bold; color: var(--primary); font-size: 16px; align-self: center; }
         .col-thumb { width: 115px; flex-shrink: 0; }
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .col-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        .camp-name { font-weight: bold; font-size: 17px; color: #111; }
-        .camp-date { color: #666; font-size: 12px; }
-        .map-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; }
+        .col-info { flex: 1; display: flex; flex-direction: column; gap: 0px; }
+        
+        .camp-date { color: #888; font-size: 11px; margin-bottom: 0px; line-height: 1.2; } 
+        .camp-name { font-weight: bold; font-size: 18px; color: var(--primary); line-height: 1.1; letter-spacing: 0.3px; margin: 0; }
+        .altitude-row { display: block; margin-top: -1px; } 
+        .altitude-tag { color: #777; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+
+        .map-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 3px 10px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; margin-top: 6px; }
         .map-icon { width: 14px; height: 14px; }
-        .vid-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+        .vid-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .btn-yt-style { background: var(--yt-red); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
-        
-        /* 修正為浮動小視窗播放器 */
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: none; z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .video-container { width: 90%; max-width: 600px; aspect-ratio: 16/9; position: relative; background: #000; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .video-container iframe { width: 100%; height: 100%; border: none; border-radius: 12px; }
         .close-btn { position: absolute; top: -40px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; border: 1px solid rgba(255,255,255,0.3); }
-
         #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; cursor: pointer; }
-        
         .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
         .footer-slogan { color: var(--primary); font-weight: bold; margin-bottom: 5px; font-size: 15px; }
         .footer-copy { color: #888; font-size: 13px; margin-top: 10px; }
@@ -152,15 +153,16 @@
                 const allRows = data.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
                 const campBody = document.getElementById('campBody');
                 const listCamping = document.getElementById('list-camping');
-                campBody.innerHTML = ""; 
-                listCamping.innerHTML = "";
+                campBody.innerHTML = ""; listCamping.innerHTML = "";
 
                 allRows.forEach((row) => {
                     const cols = row.split(',');
                     if (cols.length < 4) return;
+                    const [cat, count, date, name, v1, v2, v3, t2, t3, altitude] = cols.map(c => c ? c.trim() : "");
                     
-                    // 修正資料映射：v3在[6], t3在[8]
-                    const [cat, count, date, name, v1, v2, v3, t2, t3] = cols.map(c => c ? c.trim() : "");
+                    // 修正海拔邏輯：若沒填則 altHtml 為空
+                    const altHtml = altitude ? `<div class="altitude-row"><span class="altitude-tag">⛰️ ${altitude}m</span></div>` : "";
+                    
                     const yt1 = parseYoutube(v1);
                     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
                     
@@ -175,8 +177,9 @@
                         <div class="col-num">${count}</div>
                         <div class="col-thumb"><div class="thumb-box"><img src="https://img.youtube.com/vi/${yt1.id}/mqdefault.jpg" loading="lazy"></div></div>
                         <div class="col-info">
-                            <div class="camp-name">${name}</div>
                             <div class="camp-date">📅 ${date}</div>
+                            <div class="camp-name">${name}</div>
+                            ${altHtml}
                             <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
                                 <img src="https://www.google.com/s2/favicons?domain=maps.google.com" class="map-icon"> ${name}
                             </a>
@@ -185,16 +188,19 @@
                     
                     if (cat === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
                 });
-                updateStats();
+                updateStats(); 
             } catch (e) { campBody.innerText = "載入失敗"; }
         }
 
         function updateStats() {
             const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none');
             const names = new Set();
-            visibleItems.forEach(item => names.add(item.querySelector('.camp-name')?.innerText));
+            visibleItems.forEach(item => {
+                const nameNode = item.querySelector('.camp-name');
+                if (nameNode) names.add(nameNode.innerText);
+            });
             document.getElementById('stat-total').innerText = visibleItems.length;
-            document.getElementById('stat-camps').innerText = names.size - (names.has(undefined) ? 1 : 0);
+            document.getElementById('stat-camps').innerText = names.size;
         }
 
         function searchTable() {
@@ -213,37 +219,25 @@
         }
 
         function toggleView() { document.body.classList.toggle("grid-mode"); }
-        
         function openVid(u) {
             const yt = parseYoutube(u);
-            const player = document.getElementById('popup_player');
-            player.src = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1`;
+            document.getElementById('popup_player').src = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1`;
             document.getElementById('videoOverlay').style.display = 'flex';
         }
-        
-        function closeVid() { 
-            document.getElementById('popup_player').src = ""; 
-            document.getElementById('videoOverlay').style.display = 'none'; 
-        }
-
+        function closeVid() { document.getElementById('popup_player').src = ""; document.getElementById('videoOverlay').style.display = 'none'; }
         function togglePlaylist() {
             const content = document.getElementById('list-camping');
             const isHidden = content.style.display === "none";
             content.style.display = isHidden ? "block" : "none";
             document.getElementById('arrow').innerText = isHidden ? "▼" : "▲";
         }
-
         function reverseAll() {
             ['campBody', 'list-camping'].forEach(id => {
                 const box = document.getElementById(id);
                 Array.from(box.children).reverse().forEach(item => box.appendChild(item));
             });
         }
-
-        window.onscroll = () => { 
-            document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; 
-        };
-        
+        window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
         fetchCampData();
     </script>
 </body>
