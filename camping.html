@@ -64,10 +64,25 @@
         .col-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
         .camp-date { color: #888; font-size: 11px; margin-bottom: 0px; line-height: 1.2; display: flex; flex-wrap: wrap; align-items: center; } 
 
-        .camp-name-box { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+        .camp-name-box { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+        .camp-name-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
         .camp-name { font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         
-        .revisit-tag { font-size: 11px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 2px 10px; border-radius: 12px; display: inline-block; border: 1px solid rgba(45, 90, 39, 0.2); margin-top: 2px; }
+        .revisit-tag { 
+            font-size: 10px; 
+            color: var(--primary); 
+            font-weight: bold; 
+            background: rgba(45, 90, 39, 0.1); 
+            padding: 1px 8px; 
+            border-radius: 10px; 
+            display: inline-flex; 
+            align-items: center;
+            gap: 2px;
+            border: 1px solid rgba(45, 90, 39, 0.2);
+            white-space: nowrap;
+        }
+
+        .medal-icon { font-size: 12px; letter-spacing: -2px; margin-right: 2px; }
 
         .altitude-row { position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; }
         .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
@@ -76,7 +91,7 @@
         .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
         .upcoming-thumb { background: linear-gradient(45deg, #2d5a27, #43a047) !important; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; }
         .is-upcoming .count-badge { background: rgba(230, 126, 34, 0.7); }
-        .status-badge { display: inline-block; color: var(--coming-soon); border: 1px solid var(--coming-soon); font-size: 10px; padding: 0px 4px; border-radius: 4px; font-weight: bold; vertical-align: middle; background: white; margin-top: 2px; }
+        .status-badge { display: inline-block; color: var(--coming-soon); border: 1px solid var(--coming-soon); font-size: 10px; padding: 0px 4px; border-radius: 4px; font-weight: bold; vertical-align: middle; background: white; margin-left: 4px; }
 
         .map-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 2px 8px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; margin-top: 4px; }
         .map-icon { width: 12px; height: 12px; }
@@ -85,8 +100,9 @@
         .grid-mode .camp-item { flex-direction: column !important; padding: 5px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
         .grid-mode .col-thumb { width: 100% !important; }
         .grid-mode .camp-name-box { width: 100%; align-items: center; text-align: center; }
+        .grid-mode .camp-name-row { justify-content: center; }
         .grid-mode .camp-name { font-size: 13px !important; }
-        .grid-mode .revisit-tag { font-size: 9px; padding: 0px 6px; margin-top: 1px; }
+        .grid-mode .revisit-tag { font-size: 9px; padding: 0px 6px; }
 
         .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
         .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
@@ -191,8 +207,16 @@
                     const isUpcoming = !yt1;
                     
                     currentTrack[name] = (currentTrack[name] || 0) + 1;
+                    const thisVisitNum = currentTrack[name];
                     const totalVisits = campCounts[name] || 1;
-                    const revisitHtml = totalVisits > 1 ? `<div class="revisit-tag">第 ${currentTrack[name]} 訪</div>` : "";
+                    
+                    // 🚀 累加勳章邏輯 🚀
+                    let medalStr = "";
+                    if (thisVisitNum >= 2) {
+                        medalStr = `<span class="medal-icon">${"🏅".repeat(thisVisitNum)}</span>`;
+                    }
+
+                    const revisitHtml = thisVisitNum > 1 ? `<span class="revisit-tag">${medalStr} 第 ${thisVisitNum} 訪</span>` : "";
 
                     let altHtml = "";
                     if (altitude) {
@@ -214,12 +238,14 @@
                         <div class="col-info">
                             <div class="camp-date">📅 ${date}</div>
                             <div class="camp-name-box">
-                                <span class="camp-name">${name}</span>
-                                ${revisitHtml}
-                                ${isUpcoming ? '<div><span class="status-badge">期待中</span></div>' : ''}
+                                <div class="camp-name-row">
+                                    <span class="camp-name">${name}</span>
+                                    ${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}
+                                    ${revisitHtml}
+                                </div>
                             </div>
                             ${altHtml}
-                            <a class="map-link" href="https://www.google.com/maps/search/${encodeURIComponent(name)}" target="_blank" onclick="event.stopPropagation();">
+                            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}" target="_blank" onclick="event.stopPropagation();">
                                 <img src="https://www.google.com/s2/favicons?domain=maps.google.com" class="map-icon"> ${name}
                             </a>
                         </div>`;
