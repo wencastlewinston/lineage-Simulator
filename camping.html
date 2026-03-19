@@ -78,19 +78,25 @@
         .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
         .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }
 
+        .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
+        .upcoming-thumb { background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; display: flex; align-items: center; justify-content: center; color: white; width: 100%; height: 100%; }
+
+        /* 相簿牆 2 欄修正 */
         .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; padding: 10px !important; }
         .grid-mode .camp-item { flex-direction: column !important; padding: 8px !important; border: 1px solid #eee !important; border-radius: 8px !important; height: auto !important; align-items: flex-start !important; }
         .grid-mode .col-thumb { width: 100% !important; }
+        .grid-mode .camp-name { font-size: 16px !important; }
 
+        .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
+        .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
+        
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .video-container { width: 95%; max-width: 800px; aspect-ratio: 16/9; position: relative; background: #000; border-radius: 12px; }
         .video-container iframe { width: 100%; height: 100%; border: none; border-radius: 12px; }
         .close-btn { position: absolute; top: -45px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; }
         
-        #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 44px; height: 44px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; opacity: 0.8; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        
-        /* 底部墊高，防止回到頂端按鈕遮字 */
-        .footer { padding: 40px 20px 80px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
+        #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; }
+        .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -138,8 +144,8 @@
 
         <div class="footer">
             <div class="footer-slogan">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
-            <div class="footer-slogan" style="margin-top:5px; font-size:13px; color:#666;">記錄每一刻與家人共度的露營美好時光</div>
-            <div class="footer-copy" style="margin-top:15px; font-weight:bold; color:var(--primary);">溫家堡 WenCastle ⓒ 2021-2026</div>
+            <div class="footer-slogan">記錄每一刻與家人共度的露營美好時光</div>
+            <div class="footer-copy">溫家堡 WenCastle ⓒ 2021-2026</div>
         </div>
     </div>
 
