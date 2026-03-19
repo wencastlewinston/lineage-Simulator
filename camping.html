@@ -7,6 +7,7 @@
     
     <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/26fa.png">
     <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/26fa.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <meta name="theme-color" content="#2d5a27">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,10 +17,10 @@
             --primary: #2d5a27; 
             --primary-light: #43a047;
             --bg: #f4f7f4; --yt-red: #ff0000; --fb-blue: #1877f2;
+            --forest-green: #8bc34a;
             --coming-soon: #e67e22;
             --low: #8bc34a; --mid: #2d5a27; --high: #1a73e8;
             --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
-            --wood-cream: #f5f5dc;
         }
         body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
@@ -37,74 +38,59 @@
 
         .brand-banner { width: 100%; aspect-ratio: 16/9; background-image: url('https://wencastlewinston.github.io/lineage-Simulator/IMG_20260318_084529.png'); background-size: cover; background-position: center; }
 
-        .banner-btns { display: flex; justify-content: center; gap: 10px; padding: 15px 0; background: #f1f3f1; }
-        .btn-fb, .btn-yt { color: white; padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-fb { background: var(--fb-blue); } .btn-yt { background: var(--yt-red); }
-
         .search-container { padding: 12px 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 9px; z-index: 900; border-top-left-radius: 25px; border-top-right-radius: 25px; margin-top: -10px; }
         .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; min-width: 0; }
         
+        .icon-btn { width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .icon-btn i { font-size: 20px; }
+        .fb-ic { color: var(--fb-blue); }
+        .yt-ic { color: var(--yt-red); font-size: 18px !important; }
+
         .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding: 2px 0 8px 0; align-items: center; -webkit-overflow-scrolling: touch; }
         .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; font-weight: bold; color: #666; }
         .tag.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .icon-btn { width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         
         .stat-row { display: flex; gap: 8px; }
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
-        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; cursor: pointer; background: #fff; position: relative; box-sizing: border-box; }
-        .col-thumb { width: 140px; flex-shrink: 0; position: relative !important; }
-        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; }
-        .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 4px; right: 5px; font-size: 9px; color: rgba(255,255,255,0.6); font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); pointer-events: none; z-index: 100; }
+        .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; background: #fff; position: relative; box-sizing: border-box; }
+        .col-thumb { width: 140px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; gap: 5px; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        
         .count-badge { position: absolute; top: 0; left: 0; background: rgba(45, 90, 39, 0.7); color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-bottom-right-radius: 6px; z-index: 200; pointer-events: none; }
 
-        .col-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-        .camp-date { color: #888; font-size: 11px; margin-bottom: 0px; line-height: 1.2; display: flex; flex-wrap: wrap; align-items: center; } 
+        .thumb-id-row { display: flex; justify-content: center; gap: 15px; width: 100%; margin-top: 2px; }
+        .id-btn { font-size: 24px; color: #888; cursor: pointer; transition: color 0.2s; line-height: 1; border-radius: 50%; }
+        .id-btn.has-vid { color: var(--yt-red); }
+        .id-btn.active { color: var(--forest-green) !important; }
+        .id-btn.no-vid { color: #e0e0e0; cursor: default; }
 
-        .camp-name-box { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+        .col-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; justify-content: center; }
+        .camp-date { color: #888; font-size: 11px; line-height: 1.2; } 
         .camp-name-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
         .camp-name { font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         
-        .revisit-tag { font-size: 10px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 1px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(45, 90, 39, 0.2); white-space: nowrap; }
-        .medal-icon { font-size: 12px; letter-spacing: -2px; margin-right: 2px; }
+        .revisit-tag { font-size: 10px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 1px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(45, 90, 39, 0.2); }
 
         .altitude-row { position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; }
         .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
-        .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; letter-spacing: 0px; white-space: nowrap; }
+        .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }
 
-        .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
-        .upcoming-thumb { background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; position: relative; width: 100%; height: 100%; }
-        .top-right-tag { position: absolute; top: 0; right: 0; background: rgba(212, 175, 55, 0.9); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 6px; border-bottom-left-radius: 6px; z-index: 150; }
-        .center-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #f5f5dc; text-shadow: 1px 2px 4px rgba(0,0,0,0.5); z-index: 150; white-space: nowrap; }
-
-        .video-btns { display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
-        .v-btn { padding: 3px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; text-decoration: none; color: white; background: var(--yt-red); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
-
-        .is-upcoming .count-badge { background: rgba(230, 126, 34, 0.9); z-index: 200; }
-        .status-badge { display: inline-block; color: var(--coming-soon); border: 1px solid var(--coming-soon); font-size: 10px; padding: 0px 4px; border-radius: 4px; font-weight: bold; vertical-align: middle; background: white; margin-left: 4px; }
-        .map-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #1a73e8; font-size: 11px; font-weight: bold; background: #fff; padding: 2px 8px; border-radius: 20px; border: 1px solid #dadce0; width: fit-content; margin-top: 4px; }
-        .map-icon { width: 12px; height: 12px; }
-
-        .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; padding: 6px !important; }
-        .grid-mode .camp-item { flex-direction: column !important; padding: 5px !important; border: 1px solid #eee !important; border-radius: 6px !important; position: relative !important; height: auto !important; }
+        .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; padding: 10px !important; }
+        .grid-mode .camp-item { flex-direction: column !important; padding: 8px !important; border: 1px solid #eee !important; border-radius: 8px !important; height: auto !important; align-items: flex-start !important; }
         .grid-mode .col-thumb { width: 100% !important; }
-        .grid-mode .camp-name-box { width: 100%; align-items: center; text-align: center; }
-        .grid-mode .camp-name-row { justify-content: center; }
-        .grid-mode .camp-name { font-size: 13px !important; }
-        .grid-mode .revisit-tag { font-size: 9px; padding: 0px 6px; }
 
-        .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
-        .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: none; z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-        .video-container { width: 90%; max-width: 600px; aspect-ratio: 16/9; position: relative; background: #000; border-radius: 12px; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .video-container { width: 95%; max-width: 800px; aspect-ratio: 16/9; position: relative; background: #000; border-radius: 12px; }
         .video-container iframe { width: 100%; height: 100%; border: none; border-radius: 12px; }
-        .close-btn { position: absolute; top: -40px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; }
-        #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; }
-        .footer { padding: 30px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
+        .close-btn { position: absolute; top: -45px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        
+        #goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 44px; height: 44px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; opacity: 0.8; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        
+        /* 底部墊高，防止回到頂端按鈕遮字 */
+        .footer { padding: 40px 20px 80px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -114,14 +100,16 @@
 
     <div class="main-content" id="mainWrapper">
         <div class="brand-banner fade-in"></div>
-        <div class="banner-btns fade-in">
-            <a href="https://www.facebook.com/share/1EQ3BSyzmy/" target="_blank" class="btn-fb">Facebook</a>
-            <a href="https://www.youtube.com/@WenCastle" target="_blank" class="btn-yt">YouTube</a>
-        </div>
 
         <div class="search-container">
             <div class="search-bar-row">
                 <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋營地...">
+                <a href="https://www.facebook.com/share/1EQ3BSyzmy/" target="_blank" class="icon-btn">
+                    <i class="fab fa-facebook-f fb-ic"></i>
+                </a>
+                <a href="https://www.youtube.com/@WenCastle" target="_blank" class="icon-btn">
+                    <i class="fab fa-youtube yt-ic"></i>
+                </a>
                 <button class="icon-btn" onclick="toggleView()">🖼️</button>
                 <button class="icon-btn" onclick="reverseAll()">⇅</button>
             </div>
@@ -139,6 +127,7 @@
         </div>
 
         <div id="campBody"></div>
+        
         <div class="playlist-card">
             <div class="playlist-header" onclick="togglePlaylist()">
                 <span>🍀 有種幸福是我們一起露營 ❤️</span>
@@ -149,8 +138,8 @@
 
         <div class="footer">
             <div class="footer-slogan">溫士頓 + 玉鳳 + 瑄寶 + 饅頭 = 溫家堡 🏠</div>
-            <div class="footer-slogan">記錄每一刻與家人共度的露營美好時光</div>
-            <div class="footer-copy">溫家堡 WenCastle ⓒ 2021-2026</div>
+            <div class="footer-slogan" style="margin-top:5px; font-size:13px; color:#666;">記錄每一刻與家人共度的露營美好時光</div>
+            <div class="footer-copy" style="margin-top:15px; font-weight:bold; color:var(--primary);">溫家堡 WenCastle ⓒ 2021-2026</div>
         </div>
     </div>
 
@@ -174,6 +163,20 @@
             return { id: str, isList: false };
         }
 
+        function switchThumb(btn, vid) {
+            const container = btn.closest('.col-thumb');
+            const thumbImg = container.querySelector('.camp-thumb-img');
+            const thumbBox = container.querySelector('.thumb-box');
+            const btns = container.querySelectorAll('.id-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const yt = parseYoutube(vid);
+            if (yt) {
+                thumbImg.src = `https://img.youtube.com/vi/${yt.id}/mqdefault.jpg`;
+                thumbBox.onclick = () => openVid(vid);
+            }
+        }
+
         async function fetchCampData() {
             try {
                 const response = await fetch(sheetUrl);
@@ -182,80 +185,79 @@
                 const campBody = document.getElementById('campBody');
                 const listCamping = document.getElementById('list-camping');
                 campBody.innerHTML = ""; listCamping.innerHTML = "";
-
-                const campCounts = {};
-                const parsedRows = allRows.map(row => {
-                    const cols = row.split(',');
-                    const name = cols[3] ? cols[3].trim() : "";
-                    if (name) campCounts[name] = (campCounts[name] || 0) + 1;
-                    return cols;
-                });
-
                 const currentTrack = {};
-
+                const parsedRows = allRows.map(row => row.split(',').map(c => c ? c.trim() : ""));
                 parsedRows.forEach((cols) => {
-                    if (cols.length < 9) return;
-                    const [cat, count, date, name, v1, v2, v3, label2, label3, altitude] = cols.map(c => c ? c.trim() : "");
-                    const yt1 = parseYoutube(v1);
-                    const isUpcoming = !yt1;
-                    
+                    if (cols.length < 4) return;
+                    const [cat, count, date, name, v1, v2, v3, , , altitude] = cols;
+                    const isUpcoming = !v1 || v1.trim() === "";
                     currentTrack[name] = (currentTrack[name] || 0) + 1;
                     const thisVisitNum = currentTrack[name];
-                    
-                    let medalStr = "";
-                    if (thisVisitNum >= 2) { medalStr = `<span class="medal-icon">${"🏅".repeat(thisVisitNum)}</span>`; }
-                    const revisitHtml = thisVisitNum > 1 ? `<span class="revisit-tag">${medalStr} 第 ${thisVisitNum} 訪</span>` : "";
-
+                    let revisitHtml = thisVisitNum > 1 ? `<span class="revisit-tag">🏅 第 ${thisVisitNum} 訪</span>` : "";
                     let altHtml = "";
                     if (altitude) {
                         const altV = parseInt(altitude);
-                        let barColor = altV > 1000 ? "var(--high)" : (altV > 500 ? "var(--mid)" : "var(--low)");
+                        const barColor = altV > 1000 ? "var(--high)" : (altV > 500 ? "var(--mid)" : "var(--low)");
                         const barWidth = Math.min((altV / 2000) * 100, 100);
                         altHtml = `<div class="altitude-row"><div class="alt-bar-fill" style="width:${barWidth}%; background:${barColor}; opacity:0.3;"></div><span class="altitude-tag">⛰️ ${altitude}m</span></div>`;
                     }
-
-                    let videoBtnsHtml = "";
-                    if (v2 && label2) videoBtnsHtml += `<div class="v-btn" onclick="event.stopPropagation(); openVid('${v2}')">${label2}</div>`;
-                    if (v3 && label3) videoBtnsHtml += `<div class="v-btn" onclick="event.stopPropagation(); openVid('${v3}')">${label3}</div>`;
-
+                    const vids = [v1, v2, v3];
+                    const icons = ["➊", "➋", "➌"];
+                    let idBtnsHtml = `<div class="thumb-id-row">`;
+                    vids.forEach((vid, index) => {
+                        const hasVid = vid && vid.trim() !== "";
+                        idBtnsHtml += `<div class="id-btn ${hasVid ? 'has-vid' : 'no-vid'} ${index===0 && hasVid ? 'active' : ''}" ${hasVid ? `onclick="event.stopPropagation(); switchThumb(this, '${vid}')"` : ''}>${icons[index]}</div>`;
+                    });
+                    idBtnsHtml += `</div>`;
                     const item = document.createElement('div');
                     item.className = `camp-item fade-in ${isUpcoming ? 'is-upcoming' : ''}`;
-                    if (!isUpcoming) item.onclick = () => openVid(v1);
-
-                    const thumbHtml = isUpcoming 
-                        ? `<div class="thumb-box"><div class="upcoming-thumb"><span class="top-right-tag">下一站</span><span class="center-text">預備..</span></div><div class="count-badge">${count}</div></div>`
-                        : `<div class="thumb-box"><img src="https://img.youtube.com/vi/${yt1.id}/mqdefault.jpg" loading="lazy"></div><div class="count-badge">${count}</div>`;
-
-                    item.innerHTML = `
-                        <div class="col-thumb">${thumbHtml}</div>
-                        <div class="col-info">
-                            <div class="camp-date">📅 ${date}</div>
-                            <div class="camp-name-box">
-                                <div class="camp-name-row"><span class="camp-name">${name}</span>${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}${revisitHtml}</div>
+                    const yt1 = parseYoutube(v1);
+                    const colThumbHtml = `
+                        <div class="col-thumb">
+                            <div class="thumb-box" ${(!isUpcoming && yt1) ? `onclick="openVid('${v1}')"` : ''}>
+                                ${isUpcoming ? `<div class="upcoming-thumb"><span class="center-text">預備..</span></div>` : `<img src="https://img.youtube.com/vi/${yt1.id}/mqdefault.jpg" class="camp-thumb-img" loading="lazy">`}
+                                <div class="count-badge">${count}</div>
                             </div>
-                            ${altHtml}
-                            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}" target="_blank" onclick="event.stopPropagation();">
-                                <img src="https://www.google.com/s2/favicons?domain=maps.google.com" class="map-icon"> ${name}
-                            </a>
-                            <div class="video-btns">${videoBtnsHtml}</div>
+                            ${isUpcoming ? '' : idBtnsHtml}
                         </div>`;
-                    
-                    if (cat === "露營") listCamping.appendChild(item); else campBody.prepend(item);
+                    item.innerHTML = `${colThumbHtml}<div class="col-info"><div class="camp-date">📅 ${date}</div><div class="camp-name-row"><span class="camp-name">${name}</span>${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}${revisitHtml}</div>${altHtml}</div>`;
+                    if (cat.trim() === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
                 });
-                updateStats(); checkMarquee();
-                setTimeout(() => { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display='none', 600); }, 500);
+                updateStats(); 
+                setTimeout(() => { document.getElementById('loader').style.display='none'; }, 500);
             } catch (e) { console.error(e); }
         }
 
-        function checkMarquee() { if (!document.body.classList.contains("grid-mode")) return; document.querySelectorAll('.grid-mode .camp-name').forEach(name => { const containerWidth = name.parentElement.offsetWidth; const textWidth = name.scrollWidth; if (textWidth > containerWidth) { name.style.setProperty('--move-dist', `${containerWidth - textWidth - 10}px`); name.classList.add('marquee-box'); } else { name.classList.remove('marquee-box'); } }); }
-        function updateStats() { const visibleItems = Array.from(document.querySelectorAll('.camp-item')).filter(i => i.style.display !== 'none' && !i.classList.contains('is-upcoming')); const names = new Set(); visibleItems.forEach(item => names.add(item.querySelector('.camp-name').innerText.trim())); document.getElementById('stat-total').innerText = visibleItems.length; document.getElementById('stat-camps').innerText = names.size; }
+        function updateStats() {
+            const items = Array.from(document.querySelectorAll('.camp-item:not(.is-upcoming)'));
+            const finishedItems = items.filter(item => item.style.display !== 'none');
+            const names = new Set();
+            finishedItems.forEach(item => {
+                const nameNode = item.querySelector('.camp-name');
+                if (nameNode) names.add(nameNode.innerText.trim());
+            });
+            document.getElementById('stat-total').innerText = finishedItems.length;
+            document.getElementById('stat-camps').innerText = names.size;
+        }
+
         function filterYear(year, btn) { document.querySelectorAll('.tag').forEach(t => t.classList.remove('active')); btn.classList.add('active'); document.getElementById("searchInput").value = year; searchTable(); }
-        function searchTable() { const filter = document.getElementById("searchInput").value.toUpperCase(); document.querySelectorAll(".camp-item").forEach(item => { item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none"; }); updateStats(); setTimeout(checkMarquee, 100); }
-        function toggleView() { document.body.classList.toggle("grid-mode"); setTimeout(checkMarquee, 200); }
+        function searchTable() { 
+            const filter = document.getElementById("searchInput").value.toUpperCase(); 
+            document.querySelectorAll(".camp-item").forEach(item => { 
+                item.style.display = item.textContent.toUpperCase().includes(filter) ? "" : "none"; 
+            }); 
+            updateStats(); 
+        }
+        function toggleView() { document.body.classList.toggle("grid-mode"); }
         function openVid(u) { const yt = parseYoutube(u); if(!yt) return; document.getElementById('popup_player').src = yt.isList ? `https://www.youtube.com/embed/videoseries?list=${yt.id}&autoplay=1` : `https://www.youtube.com/embed/${yt.id}?autoplay=1`; document.getElementById('videoOverlay').style.display = 'flex'; }
         function closeVid() { document.getElementById('popup_player').src = ""; document.getElementById('videoOverlay').style.display = 'none'; }
-        function togglePlaylist() { const content = document.getElementById('list-camping'); const isHidden = content.style.display === "none"; content.style.display = isHidden ? "block" : "none"; document.getElementById('arrow').innerText = isHidden ? "▼" : "▲"; }
-        function reverseAll() { const campBody = document.getElementById('campBody'); const listCamping = document.getElementById('list-camping'); [campBody, listCamping].forEach(box => { const items = Array.from(box.children); box.innerHTML = ''; items.reverse().forEach(item => box.appendChild(item)); }); setTimeout(checkMarquee, 100); }
+        function togglePlaylist() { 
+            const content = document.getElementById('list-camping'); 
+            content.style.display = content.style.display === "none" ? "block" : "none"; 
+            document.getElementById('arrow').innerText = (content.style.display === "none") ? "▲" : "▼";
+            updateStats();
+        }
+        function reverseAll() { const campBody = document.getElementById('campBody'); const listCamping = document.getElementById('list-camping'); [campBody, listCamping].forEach(box => { const items = Array.from(box.children); box.innerHTML = ''; items.reverse().forEach(item => box.appendChild(item)); }); }
         window.onscroll = () => { document.getElementById("goTopBtn").style.display = (window.scrollY > 300) ? "flex" : "none"; };
         fetchCampData();
     </script>
