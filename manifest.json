@@ -1,13 +1,13 @@
 {
-  "short_name": "溫家堡",
-  "name": "WenCastle",
-  "start_url": ".",
+  "short_name": "WenCastle",
+  "name": "WenCastle Camping",
+  "start_url": "camping.html", 
   "display": "standalone",
   "theme_color": "#2d5a27",
   "background_color": "#f5f5dc",
   "icons": [
     {
-      "src": "https://wencastlewinston.github.io/lineage-Simulator/1774111559586.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
