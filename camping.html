@@ -52,7 +52,7 @@
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
         .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; background: #fff; position: relative; box-sizing: border-box; }
-        .col-thumb { width: 140px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; gap: 5px; }
+        .col-thumb { width: 140px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; gap: 5px; align-items: center; }
         
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -60,7 +60,7 @@
         .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 3px; right: 5px; font-size: 10px; font-family: Arial, sans-serif; font-weight: bold; color: var(--watermark-color); text-shadow: 0 1px 2px rgba(0,0,0,0.3); z-index: 10; pointer-events: none; letter-spacing: 0.5px; }
         .count-badge { position: absolute; top: 0; left: 0; background: rgba(45, 90, 39, 0.7); color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-bottom-right-radius: 6px; z-index: 200; pointer-events: none; }
 
-        .thumb-id-row { display: flex; justify-content: center; gap: 15px; width: 100%; margin-top: 2px; }
+        .thumb-id-row { display: flex; justify-content: center; gap: 12px; width: 100%; margin-top: 2px; }
         .id-btn { font-size: 24px; color: #888; cursor: pointer; transition: color 0.2s; line-height: 1; border-radius: 50%; }
         .id-btn.has-vid { color: var(--yt-red); }
         .id-btn.active { color: var(--forest-green) !important; }
@@ -72,17 +72,13 @@
         .camp-name-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
         .camp-name { font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         
-        .revisit-tag { font-size: 10px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 1px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(45, 90, 39, 0.2); }
+        .revisit-tag { font-size: 10px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 2px 6px; border-radius: 8px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(45, 90, 39, 0.2); white-space: nowrap; }
 
         .altitude-row { position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; }
         .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
         .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }
 
-        /* --- 帳數詳細內容樣式 --- */
         .tent-count-tag { font-size: 11px; color: #666; font-weight: bold; margin-top: 2px; }
-        .details-btn { color: #1a73e8; cursor: pointer; text-decoration: none; margin-left: 5px; font-size: 10px; border: 1px solid #1a73e8; padding: 0 4px; border-radius: 4px; display: inline-block; vertical-align: middle; }
-        .details-content { font-size: 11px; color: #555; background: #f9f9f9; padding: 5px 8px; border-radius: 5px; margin-top: 4px; border-left: 3px solid #ccc; display: none; line-height: 1.4; }
-        /* ----------------------- */
 
         .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
         .upcoming-thumb { background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; display: flex; align-items: center; justify-content: center; color: white; width: 100%; height: 100%; }
@@ -192,14 +188,6 @@
             }
         }
 
-        // 新增：切換詳細內容展開狀態
-        function toggleDetails(btn) {
-            const content = btn.parentElement.nextElementSibling;
-            const isHidden = content.style.display === "none" || content.style.display === "";
-            content.style.display = isHidden ? "block" : "none";
-            btn.innerText = isHidden ? "(收起)" : "(詳細)";
-        }
-
         async function fetchCampData() {
             try {
                 const response = await fetch(sheetUrl);
@@ -213,8 +201,8 @@
                 
                 parsedRows.forEach((cols) => {
                     if (cols.length < 4) return;
-                    // M欄是索引12
-                    const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount, mNote] = cols;
+                    // 移除 M 欄的抓取，僅保留前 12 欄
+                    const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount] = cols;
                     
                     let seasonIcon = "";
                     if (date) {
@@ -235,7 +223,7 @@
                     let revisitHtml = "";
                     if (thisVisitNum > 1) {
                         const medals = "🏅".repeat(thisVisitNum);
-                        revisitHtml = `<span class="revisit-tag">${medals} 第 ${thisVisitNum} 訪</span>`;
+                        revisitHtml = `<div class="revisit-tag">${medals} 第 ${thisVisitNum} 訪</div>`;
                     }
                     
                     let altHtml = "";
@@ -246,17 +234,10 @@
                         altHtml = `<div class="altitude-row"><div class="alt-bar-fill" style="width:${barWidth}%; background:${barColor}; opacity:0.3;"></div><span class="altitude-tag">⛰️ ${altitude}m</span></div>`;
                     }
 
-                    // --- 更新：處理詳細註解邏輯 ---
                     let tentHtml = "";
                     if (tentCount && tentCount.trim() !== "") {
-                        const hasNote = mNote && mNote.trim() !== "";
-                        tentHtml = `
-                            <div class="tent-count-tag">
-                                <span>🏕️ 同行帳數：${tentCount} 帳</span>
-                                ${hasNote ? `<span class="details-btn" onclick="toggleDetails(this)">(詳細)</span>` : ''}
-                            </div>
-                            ${hasNote ? `<div class="details-content">${mNote}</div>` : ''}
-                        `;
+                        // 移除詳細按鈕邏輯
+                        tentHtml = `<div class="tent-count-tag"><span>🏕️ 同行帳數：${tentCount} 帳</span></div>`;
                     }
 
                     const vids = [v1, v2, v3];
@@ -279,6 +260,7 @@
                                 <div class="count-badge">${count}</div>
                             </div>
                             ${isUpcoming ? '' : idBtnsHtml}
+                            ${(!isUpcoming && revisitHtml) ? revisitHtml : ''}
                         </div>`;
                     
                     item.innerHTML = `
@@ -289,7 +271,6 @@
                             <div class="camp-name-row">
                                 <span class="camp-name">${name}</span>
                                 ${isUpcoming ? '<span class="status-badge">期待中</span>' : ''}
-                                ${revisitHtml}
                             </div>
                             ${altHtml}
                             ${tentHtml}
