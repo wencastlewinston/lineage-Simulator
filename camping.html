@@ -47,7 +47,7 @@
         .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; font-weight: bold; color: #666; }
         .tag.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        .stat-row { display: flex; gap: 8px; }
+        .stat-row { display: flex; gap: 6px; flex-wrap: wrap; }
         .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
         .stat-item-small b { color: var(--primary); font-size: 13px; }
 
@@ -134,6 +134,8 @@
             <div class="stat-row">
                 <div class="stat-item-small">已完成 <b><span id="stat-total">0</span></b> 露</div>
                 <div class="stat-item-small">造訪 <b><span id="stat-camps">0</span></b> 處</div>
+                <div class="stat-item-small">2訪 <b><span id="stat-visit2">0</span></b> 次</div>
+                <div class="stat-item-small">3訪+ <b><span id="stat-visit3">0</span></b> 次</div>
             </div>
         </div>
 
@@ -201,7 +203,6 @@
                 
                 parsedRows.forEach((cols) => {
                     if (cols.length < 4) return;
-                    // 移除 M 欄的抓取，僅保留前 12 欄
                     const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount] = cols;
                     
                     let seasonIcon = "";
@@ -223,7 +224,8 @@
                     let revisitHtml = "";
                     if (thisVisitNum > 1) {
                         const medals = "🏅".repeat(thisVisitNum);
-                        revisitHtml = `<div class="revisit-tag">${medals} 第 ${thisVisitNum} 訪</div>`;
+                        // 加入 data-visit 屬性方便後續統計
+                        revisitHtml = `<div class="revisit-tag" data-visit="${thisVisitNum}">${medals} 第 ${thisVisitNum} 訪</div>`;
                     }
                     
                     let altHtml = "";
@@ -236,7 +238,6 @@
 
                     let tentHtml = "";
                     if (tentCount && tentCount.trim() !== "") {
-                        // 移除詳細按鈕邏輯
                         tentHtml = `<div class="tent-count-tag"><span>🏕️ 同行帳數：${tentCount} 帳</span></div>`;
                     }
 
@@ -284,16 +285,31 @@
             } catch (e) { console.error(e); }
         }
 
+        // --- 統計邏輯：細分為 2訪 與 3訪+ ---
         function updateStats() {
-            const items = Array.from(document.querySelectorAll('.camp-item:not(.is-upcoming)'));
-            const finishedItems = items.filter(item => item.style.display !== 'none');
-            const names = new Set();
-            finishedItems.forEach(item => {
-                const nameNode = item.querySelector('.camp-name');
-                if (nameNode) names.add(nameNode.innerText.trim());
+            const visibleItems = Array.from(document.querySelectorAll('.camp-item:not(.is-upcoming)'))
+                                      .filter(item => item.style.display !== 'none');
+            
+            // 1. 已完成露數 (總計)
+            document.getElementById('stat-total').innerText = visibleItems.length;
+
+            // 2. 造訪處 (第 1 訪)
+            const v1 = visibleItems.filter(item => !item.querySelector('.revisit-tag'));
+            document.getElementById('stat-camps').innerText = v1.length;
+
+            // 3. 2訪 次數
+            const v2 = visibleItems.filter(item => {
+                const tag = item.querySelector('.revisit-tag');
+                return tag && tag.getAttribute('data-visit') === "2";
             });
-            document.getElementById('stat-total').innerText = finishedItems.length;
-            document.getElementById('stat-camps').innerText = names.size;
+            document.getElementById('stat-visit2').innerText = v2.length;
+
+            // 4. 3訪+ 次數
+            const v3plus = visibleItems.filter(item => {
+                const tag = item.querySelector('.revisit-tag');
+                return tag && parseInt(tag.getAttribute('data-visit')) >= 3;
+            });
+            document.getElementById('stat-visit3').innerText = v3plus.length;
         }
 
         function filterYear(year, btn) { document.querySelectorAll('.tag').forEach(t => t.classList.remove('active')); btn.classList.add('active'); document.getElementById("searchInput").value = year; searchTable(); }
