@@ -9,17 +9,12 @@
     <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/26fa.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <meta name="theme-color" content="#2d5a27">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
         :root { 
-            --primary: #2d5a27; 
-            --primary-light: #43a047;
-            --bg: #f4f7f4; --yt-red: #ff0000; --fb-blue: #1877f2;
-            --forest-green: #8bc34a;
-            --coming-soon: #e67e22;
-            --low: #8bc34a; --mid: #2d5a27; --high: #1a73e8;
+            --primary: #2d5a27; --primary-light: #43a047; --bg: #f4f7f4; 
+            --yt-red: #ff0000; --fb-blue: #1877f2; --forest-green: #8bc34a;
+            --coming-soon: #e67e22; --low: #8bc34a; --mid: #2d5a27; --high: #1a73e8;
             --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
             --watermark-color: rgba(255, 255, 255, 0.5); 
         }
@@ -62,21 +57,7 @@
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        .thumb-box::after {
-            content: "WenCastle";
-            position: absolute;
-            bottom: 3px;
-            right: 5px;
-            font-size: 10px;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            color: var(--watermark-color);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            z-index: 10;
-            pointer-events: none;
-            letter-spacing: 0.5px;
-        }
-
+        .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 3px; right: 5px; font-size: 10px; font-family: Arial, sans-serif; font-weight: bold; color: var(--watermark-color); text-shadow: 0 1px 2px rgba(0,0,0,0.3); z-index: 10; pointer-events: none; letter-spacing: 0.5px; }
         .count-badge { position: absolute; top: 0; left: 0; background: rgba(45, 90, 39, 0.7); color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-bottom-right-radius: 6px; z-index: 200; pointer-events: none; }
 
         .thumb-id-row { display: flex; justify-content: center; gap: 15px; width: 100%; margin-top: 2px; }
@@ -97,7 +78,11 @@
         .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
         .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }
 
-        .tent-count-tag { font-size: 11px; color: #666; font-weight: bold; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+        /* --- 帳數詳細內容樣式 --- */
+        .tent-count-tag { font-size: 11px; color: #666; font-weight: bold; margin-top: 2px; }
+        .details-btn { color: #1a73e8; cursor: pointer; text-decoration: none; margin-left: 5px; font-size: 10px; border: 1px solid #1a73e8; padding: 0 4px; border-radius: 4px; display: inline-block; vertical-align: middle; }
+        .details-content { font-size: 11px; color: #555; background: #f9f9f9; padding: 5px 8px; border-radius: 5px; margin-top: 4px; border-left: 3px solid #ccc; display: none; line-height: 1.4; }
+        /* ----------------------- */
 
         .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
         .upcoming-thumb { background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; display: flex; align-items: center; justify-content: center; color: white; width: 100%; height: 100%; }
@@ -207,6 +192,14 @@
             }
         }
 
+        // 新增：切換詳細內容展開狀態
+        function toggleDetails(btn) {
+            const content = btn.parentElement.nextElementSibling;
+            const isHidden = content.style.display === "none" || content.style.display === "";
+            content.style.display = isHidden ? "block" : "none";
+            btn.innerText = isHidden ? "(收起)" : "(詳細)";
+        }
+
         async function fetchCampData() {
             try {
                 const response = await fetch(sheetUrl);
@@ -220,7 +213,8 @@
                 
                 parsedRows.forEach((cols) => {
                     if (cols.length < 4) return;
-                    const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount] = cols;
+                    // M欄是索引12
+                    const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount, mNote] = cols;
                     
                     let seasonIcon = "";
                     if (date) {
@@ -252,10 +246,17 @@
                         altHtml = `<div class="altitude-row"><div class="alt-bar-fill" style="width:${barWidth}%; background:${barColor}; opacity:0.3;"></div><span class="altitude-tag">⛰️ ${altitude}m</span></div>`;
                     }
 
-                    // --- 更新：使用 🏕️ 作為同行帳數圖示 ---
+                    // --- 更新：處理詳細註解邏輯 ---
                     let tentHtml = "";
                     if (tentCount && tentCount.trim() !== "") {
-                        tentHtml = `<div class="tent-count-tag">🏕️ 同行帳數：${tentCount} 帳</div>`;
+                        const hasNote = mNote && mNote.trim() !== "";
+                        tentHtml = `
+                            <div class="tent-count-tag">
+                                <span>🏕️ 同行帳數：${tentCount} 帳</span>
+                                ${hasNote ? `<span class="details-btn" onclick="toggleDetails(this)">(詳細)</span>` : ''}
+                            </div>
+                            ${hasNote ? `<div class="details-content">${mNote}</div>` : ''}
+                        `;
                     }
 
                     const vids = [v1, v2, v3];
