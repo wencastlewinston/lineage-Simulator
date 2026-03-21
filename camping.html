@@ -34,7 +34,20 @@
 
         .brand-banner { width: 100%; aspect-ratio: 16/9; background-image: url('https://wencastlewinston.github.io/lineage-Simulator/IMG_20260318_084529.png'); background-size: cover; background-position: center; }
 
-        .search-container { padding: 12px 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 9px; z-index: 900; border-top-left-radius: 25px; border-top-right-radius: 25px; margin-top: -10px; }
+        /* 修正後的搜尋容器樣式 */
+        .search-container { 
+            padding: 15px 10px; 
+            background: #f1f3f1; 
+            border-bottom: 1px solid #ddd; 
+            position: sticky; 
+            top: 9px; 
+            z-index: 900; 
+            border-top-left-radius: 25px; 
+            border-top-right-radius: 25px; 
+            margin-top: 10px; /* 與橫幅圖案拉開距離 */
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
         .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; min-width: 0; }
         
@@ -61,7 +74,7 @@
         .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 3px; right: 5px; font-size: 10px; font-family: Arial, sans-serif; font-weight: bold; color: var(--watermark-color); text-shadow: 0 1px 2px rgba(0,0,0,0.3); z-index: 10; pointer-events: none; letter-spacing: 0.5px; }
         .count-badge { position: absolute; top: 0; left: 0; background: rgba(45, 90, 39, 0.7); color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-bottom-right-radius: 6px; z-index: 200; pointer-events: none; }
 
-        .thumb-id-row { display: flex; justify-content: center; gap: 12px; width: 100%; margin-top: 2px; }
+        .thumb-id-row { display: flex; justify(center); gap: 12px; width: 100%; margin-top: 2px; }
         .id-btn { font-size: 24px; color: #888; cursor: pointer; transition: color 0.2s; line-height: 1; border-radius: 50%; }
         .id-btn.has-vid { color: var(--yt-red); }
         .id-btn.active { color: var(--forest-green) !important; }
