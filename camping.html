@@ -62,7 +62,6 @@
         .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* 水印樣式 */
         .thumb-box::after {
             content: "WenCastle";
             position: absolute;
@@ -97,6 +96,8 @@
         .altitude-row { position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; }
         .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
         .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }
+
+        .tent-count-tag { font-size: 11px; color: #666; font-weight: bold; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
 
         .is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
         .upcoming-thumb { background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; display: flex; align-items: center; justify-content: center; color: white; width: 100%; height: 100%; }
@@ -219,7 +220,7 @@
                 
                 parsedRows.forEach((cols) => {
                     if (cols.length < 4) return;
-                    const [cat, count, date, name, v1, v2, v3, , , altitude, location] = cols;
+                    const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount] = cols;
                     
                     let seasonIcon = "";
                     if (date) {
@@ -237,13 +238,11 @@
                     currentTrack[name] = (currentTrack[name] || 0) + 1;
                     const thisVisitNum = currentTrack[name];
                     
-                    // --- 核心修改：勳章數量翻倍邏輯 ---
                     let revisitHtml = "";
                     if (thisVisitNum > 1) {
-                        const medals = "🏅".repeat(thisVisitNum); // 訪幾次就重複幾次勳章
+                        const medals = "🏅".repeat(thisVisitNum);
                         revisitHtml = `<span class="revisit-tag">${medals} 第 ${thisVisitNum} 訪</span>`;
                     }
-                    // ----------------------------
                     
                     let altHtml = "";
                     if (altitude) {
@@ -251,6 +250,12 @@
                         const barColor = altV > 1000 ? "var(--high)" : (altV > 500 ? "var(--mid)" : "var(--low)");
                         const barWidth = Math.min((altV / 2000) * 100, 100);
                         altHtml = `<div class="altitude-row"><div class="alt-bar-fill" style="width:${barWidth}%; background:${barColor}; opacity:0.3;"></div><span class="altitude-tag">⛰️ ${altitude}m</span></div>`;
+                    }
+
+                    // --- 更新：使用 🏕️ 作為同行帳數圖示 ---
+                    let tentHtml = "";
+                    if (tentCount && tentCount.trim() !== "") {
+                        tentHtml = `<div class="tent-count-tag">🏕️ 同行帳數：${tentCount} 帳</div>`;
                     }
 
                     const vids = [v1, v2, v3];
@@ -286,6 +291,7 @@
                                 ${revisitHtml}
                             </div>
                             ${altHtml}
+                            ${tentHtml}
                         </div>`;
                     
                     if (cat.trim() === "露營") { listCamping.appendChild(item); } else { campBody.prepend(item); }
