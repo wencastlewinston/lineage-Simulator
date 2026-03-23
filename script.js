@@ -149,24 +149,19 @@ async function fetchCampData() {
             const [cat, count, date, name, v1, v2, v3, , , altitude, location, tentCount, weather, photoLinks] = cols;
             if (location) { const city = location.substring(0, 2); if (city) areas.add(city); }
             
-            // 🌸 溫家堡 V2.0 季節小圖修正：春天🌸、夏天🌻、秋天🍁、冬天❄️
             let seasonIcon = "";
             if (date) {
-                const dateParts = date.split('.');
-                if (dateParts.length >= 2) {
-                    const month = parseInt(dateParts[1]);
-                    if (month >= 3 && month <= 5) seasonIcon = " 🌸";
-                    else if (month >= 6 && month <= 8) seasonIcon = " 🌻"; // 夏天改為向日葵
-                    else if (month >= 9 && month <= 11) seasonIcon = " 🍁";
-                    else seasonIcon = " ❄️";
-                }
+                const month = parseInt(date.split('.')[1]);
+                if (month >= 3 && month <= 5) seasonIcon = " 🌸";
+                else if (month >= 6 && month <= 8) seasonIcon = " ☀️";
+                else if (month >= 9 && month <= 11) seasonIcon = " 🍁";
+                else seasonIcon = " ❄️";
             }
 
-            // 🌸 溫家堡 V2.0 天氣小圖修正：晴天☀️、多雲☁️、雨天🌧️、雷雨⛈️
             let weatherIcon = "";
             if (weather) {
                 const w = weather.trim();
-                if (w === "1") weatherIcon = " ☀️"; // 晴天維持太陽
+                if (w === "1") weatherIcon = " ☀️";
                 else if (w === "2") weatherIcon = " ☁️";
                 else if (w === "3") weatherIcon = " 🌧️";
                 else if (w === "4") weatherIcon = " ⛈️";
@@ -233,7 +228,7 @@ async function fetchCampData() {
 function filterData(val, btn, type) {
     if (type === 'year') {
         document.querySelectorAll('.year-tag').forEach(t => t.classList.remove('active'));
-        currentYearFilter = val;
+        currentYearFilter = val; // 🌸 補回年份過濾變數
     } else {
         document.querySelectorAll('.area-tag').forEach(t => t.classList.remove('active'));
         currentAreaFilter = val;
@@ -246,7 +241,7 @@ function searchTable() {
     const searchInput = document.getElementById("searchInput").value.toUpperCase(); 
     document.querySelectorAll(".camp-item").forEach(item => { 
         const text = item.textContent.toUpperCase();
-        const matchYear = currentYearFilter === "" || text.includes(currentYearFilter);
+        const matchYear = currentYearFilter === "" || text.includes(currentYearFilter); // 🌸 補回年份過濾邏輯
         const matchArea = currentAreaFilter === "" || text.includes(currentAreaFilter);
         const matchSearch = searchInput === "" || text.includes(searchInput);
         item.style.display = (matchYear && matchArea && matchSearch) ? "" : "none"; 
@@ -269,7 +264,7 @@ function updateStats() {
 
     const now = new Date();
     const timerElem = document.getElementById('update-timer');
-    if (timerElem) timerElem.innerText = `更新時間：${now.getFullYear()-1911}/${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    if (timerElem) timerElem.innerText = `最後同步：${now.getFullYear()-1911}/${now.getMonth()+1}/${now.getDate()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
 }
 
 function toggleView() { document.body.classList.toggle("grid-mode"); }
