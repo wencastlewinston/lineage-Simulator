@@ -9,7 +9,14 @@
     {
       "src": "https://raw.githubusercontent.com/wencastlewinston/lineage-Simulator/main/1774111559586.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/wencastlewinston/lineage-Simulator/main/1774111559586.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
