@@ -5,18 +5,27 @@
     --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
     --watermark-color: rgba(255, 255, 255, 0.5); 
 }
+
 body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
 .rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
+
+/* 載入動畫 */
 #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; transition: opacity 0.0s ease; }
 .loader-icon { font-size: 50px; margin-bottom: 10px; animation: pulse 1.5s infinite; }
 .loader-text { font-weight: bold; color: var(--primary); letter-spacing: 2px; }
 @keyframes pulse { 0% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0.3; transform: scale(0.9); } }
+
 .fade-in { animation: fadeIn 0.4s ease forwards; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 .header-fixed { position: sticky; top: 4px; z-index: 1000; background: var(--primary); height: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 .main-content { max-width: 800px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
+
+/* 橫幅 */
 .brand-banner { width: 100%; aspect-ratio: 16/9; background-image: url('https://wencastlewinston.github.io/lineage-Simulator/IMG_20260318_084529.png'); background-size: cover; background-position: center; position: relative; }
 #update-timer { position: absolute; bottom: 8px; right: 12px; font-size: 11px; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 10px; pointer-events: none; }
+
+/* 搜尋欄與工具列 */
 .search-container { padding: 15px 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; position: sticky; top: 9px; z-index: 900; border-top-left-radius: 25px; border-top-right-radius: 25px; margin-top: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
 .search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
 #searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; min-width: 0; }
@@ -24,46 +33,150 @@ body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microso
 .icon-btn i { font-size: 20px; }
 .fb-ic { color: var(--fb-blue); }
 .yt-ic { color: var(--yt-red); font-size: 18px !important; }
+
 .tool-bar { display: flex; overflow-x: auto; gap: 8px; padding: 2px 0 8px 0; align-items: center; -webkit-overflow-scrolling: touch; }
 .tool-bar::-webkit-scrollbar { display: none; }
 .tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; font-weight: bold; color: #666; }
 .tag.active { background: var(--primary); color: white; border-color: var(--primary); }
+
 .stat-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
 .stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
 .stat-item-small b { color: var(--primary); font-size: 13px; }
+
+/* 露營列表項 */
 .camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; background: #fff; position: relative; box-sizing: border-box; }
 .col-thumb { width: 140px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; gap: 5px; align-items: center; }
 .thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
 .thumb-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .thumb-box::after { content: "WenCastle"; position: absolute; bottom: 3px; right: 5px; font-size: 10px; font-family: Arial, sans-serif; font-weight: bold; color: var(--watermark-color); text-shadow: 0 1px 2px rgba(0,0,0,0.3); z-index: 10; pointer-events: none; letter-spacing: 0.5px; }
 .count-badge { position: absolute; top: 0; left: 0; background: rgba(45, 90, 39, 0.7); color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-bottom-right-radius: 6px; z-index: 200; pointer-events: none; }
-.thumb-id-row { display: flex; justify-content: center; gap: 12px; width: 100%; margin-top: 2px; }
-.id-btn { font-size: 24px; color: #888; cursor: pointer; transition: color 0.2s; line-height: 1; border-radius: 50%; }
-.id-btn.has-vid { color: var(--yt-red); }
-.id-btn.active { color: var(--forest-green) !important; }
-.id-btn.no-vid { color: #e0e0e0; cursor: default; }
+
+/* 🌸 28露預備縮圖修復：找回漸層綠與居中文字 */
+.upcoming-thumb { 
+    background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; 
+    display: flex !important; 
+    align-items: center !important; 
+    justify-content: center !important; 
+    color: white !important; 
+    width: 100% !important; 
+    height: 100% !important; 
+}
+.center-text { font-size: 18px; font-weight: bold; letter-spacing: 2px; }
+
+/* 影片與相簿按鈕列 - 底部切齊 */
+.thumb-id-row { 
+    display: flex; 
+    justify-content: center; 
+    gap: 6px; 
+    width: 100%; 
+    margin-top: 4px; 
+    align-items: flex-end; 
+    line-height: 1;
+}
+
+/* 影片紅底按鈕：底部切齊微調 */
+.id-btn.red-mode {
+    background: var(--yt-red) !important;
+    color: white !important;
+    width: 26px;     
+    height: 19px;     
+    padding: 0;       
+    border-radius: 4px;
+    font-size: 11px;  
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform 0.1s;
+    margin-bottom: 1.5px; 
+}
+.id-btn.red-mode::before { content: "▶"; font-size: 8px; }
+.id-btn.red-mode:active { transform: scale(0.9); }
+
+/* 相簿圖示按鈕 */
+.album-icon-btn {
+    font-size: 19px;  
+    cursor: pointer;
+    margin-left: 2px;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: flex-end;
+}
+.album-icon-btn:hover { transform: scale(1.2) rotate(5deg); }
+
+/* 列表資訊區 */
 .col-info { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; justify-content: center; }
 .camp-date { color: #888; font-size: 13px; line-height: 1.2; font-weight: 500; } 
 .camp-location { color: #000; font-size: 14px; font-weight: bold; margin-top: 1px; letter-spacing: 0.5px; }
 .camp-name-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
 .camp-name { font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
 .revisit-tag { font-size: 10px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 2px 6px; border-radius: 8px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(45, 90, 39, 0.2); white-space: nowrap; }
+
+/* 海拔條 */
 .altitude-row { position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; }
 .alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
 .altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }
 .tent-count-tag { font-size: 11px; color: #666; font-weight: bold; margin-top: 2px; }
-.is-upcoming { background: #fffcf9; border-left: 4px solid var(--coming-soon); }
-.upcoming-thumb { background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; display: flex; align-items: center; justify-content: center; color: white; width: 100%; height: 100%; }
+
+/* 網格模式 */
 .grid-mode #campBody, .grid-mode #list-camping { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; padding: 10px !important; }
 .grid-mode .camp-item { flex-direction: column !important; padding: 8px !important; border: 1px solid #eee !important; border-radius: 8px !important; height: auto !important; align-items: flex-start !important; }
 .grid-mode .col-thumb { width: 100% !important; }
 .grid-mode .camp-name { font-size: 16px !important; }
+
+/* 播放清單卡片 */
 .playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
 .playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
+
+/* 影片彈出層 */
 .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .video-container { width: 95%; max-width: 800px; aspect-ratio: 16/9; position: relative; background: #000; border-radius: 12px; }
 .video-container iframe { width: 100%; height: 100%; border: none; border-radius: 12px; }
 .close-btn { position: absolute; top: -45px; right: 0; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; }
+
+/* 相簿彈出層 (沉浸式) */
+.album-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 4000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+.album-container { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+.album-close-btn { position: absolute; top: 20px; right: 20px; color: white; font-size: 32px; cursor: pointer; z-index: 4001; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+
+/* 🌸 溫家堡 V4.0：自動播放控制鈕樣式 */
+.album-control-btn {
+    position: absolute;
+    top: 20px;
+    right: 70px; /* 位於關閉按鈕左側 */
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 4005;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    background: rgba(255,255,255,0.1);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+.album-control-btn:active { transform: scale(0.9); }
+.album-control-btn.playing { 
+    color: var(--primary-light); 
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 0 15px rgba(67, 160, 71, 0.4);
+}
+
+.main-photo-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; padding: 20px; box-sizing: border-box; }
+#mainPhoto { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; box-shadow: 0 0 30px rgba(0,0,0,0.5); transition: opacity 0.3s ease; }
+.filmstrip-container { height: 100px; width: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; padding: 10px 0; }
+.filmstrip { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px; width: 100%; -webkit-overflow-scrolling: touch; }
+.filmstrip::-webkit-scrollbar { display: none; }
+.strip-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: 0.4; border: 2px solid transparent; flex-shrink: 0; transition: all 0.2s; }
+.strip-thumb.active { opacity: 1; border-color: var(--primary-light); transform: scale(1.1); }
+
+/* 底部與按鈕 */
 .footer { padding: 40px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
 .footer-big { font-size: 20px; font-weight: bold; color: var(--primary); margin-bottom: 8px; }
 .footer-mid { font-size: 15px; color: #444; margin-bottom: 12px; letter-spacing: 1px; }
