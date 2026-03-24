@@ -1,0 +1,29 @@
+/* 搜尋與按鈕列 */
+.search-container { 
+    padding: 15px 10px; background: #f1f3f1; border-bottom: 1px solid #ddd; 
+    position: sticky; top: 9px; z-index: 900; 
+    border-top-left-radius: 25px; border-top-right-radius: 25px; 
+    margin-top: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); 
+}
+.search-bar-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+#searchInput { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 16px; min-width: 0; }
+.icon-btn { 
+    width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; 
+    border: 1px solid #ddd; background: white; cursor: pointer; 
+    display: flex; align-items: center; justify-content: center; 
+    text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+}
+.icon-btn i { font-size: 20px; }
+.fb-ic { color: var(--fb-blue); }
+.yt-ic { color: var(--yt-red); font-size: 18px !important; }
+
+/* 標籤篩選列 */
+.tool-bar { display: flex; overflow-x: auto; gap: 8px; padding: 2px 0 8px 0; align-items: center; -webkit-overflow-scrolling: touch; }
+.tool-bar::-webkit-scrollbar { display: none; }
+.tag { background: white; padding: 6px 14px; border-radius: 15px; font-size: 13px; border: 1px solid #ddd; cursor: pointer; white-space: nowrap; font-weight: bold; color: #666; }
+.tag.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* 數據統計列 */
+.stat-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+.stat-item-small { white-space: nowrap; font-size: 11px; color: #555; background: #e8eee8; padding: 4px 10px; border-radius: 12px; border: 1px solid #d0ddd0; }
+.stat-item-small b { color: var(--primary); font-size: 13px; }

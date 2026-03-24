@@ -1,0 +1,57 @@
+:root { 
+    --primary: #2d5a27; --primary-light: #43a047; --bg: #f4f7f4; 
+    --yt-red: #ff0000; --fb-blue: #1877f2; --forest-green: #8bc34a;
+    --coming-soon: #e67e22; --low: #8bc34a; --mid: #2d5a27; --high: #1a73e8;
+    --rainbow: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); 
+    --watermark-color: rgba(255, 255, 255, 0.5); 
+}
+
+body, html { margin: 0; padding: 0; background: var(--bg); font-family: "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+.rainbow-line { height: 4px; background: var(--rainbow); width: 100%; position: fixed; top: 0; z-index: 2000; }
+
+#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; transition: opacity 0.0s ease; }
+.loader-icon { font-size: 50px; margin-bottom: 10px; animation: pulse 1.5s infinite; }
+.loader-text { font-weight: bold; color: var(--primary); letter-spacing: 2px; }
+@keyframes pulse { 0% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0.3; transform: scale(0.9); } }
+
+.fade-in { animation: fadeIn 0.4s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.header-fixed { position: sticky; top: 4px; z-index: 1000; background: var(--primary); height: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.main-content { max-width: 800px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
+.brand-banner { width: 100%; aspect-ratio: 16/9; background-image: url('https://wencastlewinston.github.io/lineage-Simulator/IMG_20260318_084529.png'); background-size: cover; background-position: center; position: relative; }
+
+/* 核心排版 */
+.camp-item { display: flex; padding: 15px; border-bottom: 1px solid #eee; gap: 15px; background: #fff; position: relative; box-sizing: border-box; }
+.col-thumb { width: 140px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; gap: 5px; align-items: center; }
+.thumb-box { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #eee; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+.thumb-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.col-info { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; justify-content: center; }
+.camp-date { color: #888; font-size: 13px; line-height: 1.2; font-weight: 500; } 
+.camp-location { color: #000; font-size: 14px; font-weight: bold; margin-top: 1px; letter-spacing: 0.5px; }
+.camp-name { font-weight: bold; font-size: 18px; letter-spacing: 0.3px; background: linear-gradient(to right, var(--primary), var(--primary-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
+
+/* 🚀 兩欄瀏覽模式 (Grid Mode) 修正補丁 */
+body.grid-mode #campBody, 
+body.grid-mode #list-camping { 
+    display: grid !important; 
+    grid-template-columns: 1fr 1fr !important; 
+    gap: 8px !important; 
+    padding: 8px !important; 
+    background: #f0f0f0;
+}
+body.grid-mode .camp-item { 
+    flex-direction: column !important; 
+    padding: 10px !important; 
+    gap: 8px !important; 
+    border-radius: 8px; 
+    border: 1px solid #ddd;
+}
+body.grid-mode .col-thumb { width: 100% !important; }
+body.grid-mode .camp-name { white-space: normal !important; font-size: 14px !important; line-height: 1.3; }
+body.grid-mode .altitude-row, 
+body.grid-mode .tent-count-tag { display: none !important; }
+
+.footer { padding: 40px 20px; text-align: center; background: #f8faf8; border-top: 1px solid #eee; }
+#goTopBtn { position: fixed; bottom: 30px; right: 20px; width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 2500; }

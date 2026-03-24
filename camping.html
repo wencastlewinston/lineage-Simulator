@@ -13,32 +13,39 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="search-ui.css">
+    <link rel="stylesheet" href="yt-player.css">
+    <link rel="stylesheet" href="components.css">
 </head>
 <body>
     <div class="rainbow-line"></div>
-    <div id="loader">
-        <div class="loader-icon">🏕️</div>
-        <div class="loader-text">WenCastle 載入中...</div>
-    </div>
+    
     <div class="header-fixed"></div>
 
     <div class="main-content" id="mainWrapper">
-        <div class="brand-banner fade-in">
-            <div id="update-timer">最後同步：載入中...</div>
-        </div>
+        <div class="brand-banner fade-in"></div>
 
         <div class="search-container">
             <div class="search-bar-row">
-                <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 搜尋">
+                <input type="text" id="searchInput" onkeyup="if(window.searchTable) searchTable()" placeholder="🔍 搜尋">
+                
                 <a href="https://www.facebook.com/share/1EQ3BSyzmy/" target="_blank" class="icon-btn">
                     <i class="fab fa-facebook-f fb-ic"></i>
                 </a>
+                
                 <a href="https://www.youtube.com/@WenCastle" target="_blank" class="icon-btn">
                     <i class="fab fa-youtube yt-ic"></i>
                 </a>
-                <button class="icon-btn" onclick="toggleView()">🖼️</button>
-                <button class="icon-btn" onclick="reverseAll()">⇅</button>
+                
+                <button class="icon-btn" onclick="toggleView()" style="color: var(--primary); font-size: 18px;">
+                    <i class="fas fa-images"></i>
+                </button>
+
+                <button class="icon-btn" onclick="reverseAll()" style="color: var(--primary); font-size: 18px; font-weight: bold;">
+                    ⇅
+                </button>
             </div>
             
             <div class="tool-bar">
@@ -91,7 +98,6 @@
         <div class="album-container" onclick="event.stopPropagation()">
             <div id="autoPlayBtn" class="album-control-btn" onclick="toggleAutoPlay()">▶️</div>
             <div class="album-close-btn" onclick="closeAlbum()">✕</div>
-            
             <div class="main-photo-wrapper">
                 <img id="mainPhoto" src="" alt="溫家堡美照">
             </div>
@@ -101,6 +107,9 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="config.js"></script>
+    <script src="yt-player.js"></script>
+    <script src="ui-utils.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

@@ -1,0 +1,35 @@
+/* 相簿系統 (Album) */
+.album-icon-btn { font-size: 19px; cursor: pointer; margin-left: 2px; display: flex; align-items: flex-end; }
+.album-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; z-index: 4000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+.album-container { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+.album-control-btn { position: absolute; top: 20px; right: 70px; color: white; font-size: 24px; cursor: pointer; z-index: 4005; background: rgba(255,255,255,0.1); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.album-close-btn { position: absolute; top: 20px; right: 20px; color: white; font-size: 32px; cursor: pointer; z-index: 4001; }
+#mainPhoto { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; }
+.filmstrip-container { height: 100px; width: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; padding: 10px 0; }
+.filmstrip { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px; width: 100%; }
+.strip-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: 0.4; }
+.strip-thumb.active { opacity: 1; border: 2px solid var(--primary-light); }
+
+/* 幸福清單與標籤 (Playlist & Tags) */
+.playlist-card { margin: 10px 15px; border-radius: 10px; overflow: hidden; border: 2px solid #43a047; }
+.playlist-header { background: #43a047; color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; }
+.revisit-tag { font-size: 10px; color: var(--primary); font-weight: bold; background: rgba(45, 90, 39, 0.1); padding: 2px 6px; border-radius: 8px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(45, 90, 39, 0.2); white-space: nowrap; }
+
+/* 🚀 同行人數標籤 (Tent Count) 修正補丁 */
+.tent-count-tag { 
+    margin-top: 2px; 
+    display: inline-flex; 
+}
+.tent-count-tag span { 
+    font-size: 10px; /* 調小字體 */
+    color: #666; 
+    background: #f0f0f0; 
+    padding: 1px 6px; 
+    border-radius: 4px; 
+    font-weight: normal; 
+}
+
+/* 海拔條 (Altitude Bar) */
+.altitude-row { position: relative; margin-top: 2px; width: 100%; max-width: 120px; height: 14px; background: #f0f0f0; border-radius: 10px; overflow: hidden; display: flex; align-items: center; box-sizing: border-box; }
+.alt-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 1s ease-out; z-index: 1; border-radius: 10px; }
+.altitude-tag { position: relative; z-index: 2; color: #444; font-size: 10px; font-weight: bold; padding-left: 6px; }

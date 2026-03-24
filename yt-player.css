@@ -1,0 +1,56 @@
+/* 縮圖水印與編號 */
+.thumb-box::after { 
+    content: "WenCastle"; position: absolute; bottom: 3px; right: 5px; 
+    font-size: 10px; font-family: Arial, sans-serif; font-weight: bold; 
+    color: var(--watermark-color); text-shadow: 0 1px 2px rgba(0,0,0,0.3); 
+    z-index: 10; pointer-events: none; letter-spacing: 0.5px; 
+}
+.count-badge { 
+    position: absolute; top: 0; left: 0; background: rgba(45, 90, 39, 0.7); 
+    color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; 
+    border-bottom-right-radius: 6px; z-index: 200; pointer-events: none; 
+}
+
+/* 影片按鈕列 (紅底鈕) */
+.thumb-id-row { 
+    display: flex; justify-content: center; gap: 6px; width: 100%; 
+    margin-top: 4px; align-items: flex-end; line-height: 1;
+}
+
+.id-btn.red-mode {
+    background: var(--yt-red) !important; color: white !important;
+    width: 28px; height: 20px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); 
+    transition: all 0.2s ease; margin-bottom: 1px; 
+}
+.id-btn.red-mode i { font-size: 10px; }
+.id-btn.red-mode.active { box-shadow: 0 0 8px rgba(255, 0, 0, 0.6); transform: scale(1.05); }
+
+/* 影片彈出層 */
+.video-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.8); display: none; z-index: 3000; 
+    align-items: center; justify-content: center; backdrop-filter: blur(5px); 
+}
+.video-container { 
+    width: 95%; max-width: 800px; aspect-ratio: 16/9; 
+    position: relative; background: #000; border-radius: 12px; 
+}
+.video-container iframe { width: 100%; height: 100%; border: none; border-radius: 12px; }
+
+/* 影片關閉按鈕 */
+.close-btn { 
+    position: absolute; top: -45px; right: 0; color: white; 
+    background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; 
+    cursor: pointer; font-size: 14px; font-weight: bold; z-index: 3001;
+}
+
+/* 籌備中專用樣式 */
+.upcoming-thumb { 
+    background: linear-gradient(135deg, #1e3f1a 0%, #2d5a27 60%, #43a047 100%) !important; 
+    display: flex !important; align-items: center !important; 
+    justify-content: center !important; color: white !important; 
+    width: 100% !important; height: 100% !important; 
+}
+.center-text { font-size: 18px; font-weight: bold; letter-spacing: 2px; }
