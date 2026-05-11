@@ -2,6 +2,13 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO 內容 -->
+    <title>天堂經典版創杖對戰帳本 - 溫家堡 WenCastle</title>
+    <meta name="description" content="專為天堂經典版玩家設計的創杖對戰管理工具。支援儲值金管理、莊閒賠率自訂、自動派彩及開牌歷史記錄匯出，由溫家堡 WenCastle 開發。">
+    <meta name="keywords" content="天堂經典版, 創杖賭博, 創杖對戰, 溫家堡, WenCastle, 天堂帳本, 遊戲管理工具">
+    <meta name="author" content="溫家堡 WenCastle">
+
     <style>
         body { background: #121212; color: #fff; font-family: sans-serif; font-size: 13px; margin: 10px; }
         h3 { color: #ffd700; margin: 0 0 10px 0; text-align: center; border-bottom: 1px solid #333; padding-bottom: 5px; }
@@ -27,7 +34,7 @@
     </style>
 </head>
 <body>
-    <h3>🏰 娛樂賭城</h3>
+    <h3>🏰 創杖賭城管理系統</h3>
 
     <div class="summary-row">
         <div class="bank-total">賭城總金額: <span id="bankCash">0</span> 萬</div>
@@ -72,7 +79,7 @@
             <option value="閒">開【閒】</option>
             <option value="和">開【和】</option>
         </select>
-        <button class="btn-win" onclick="settle()">確認派彩</button>
+        <button class="btn-win" onclick="settle()">確認派彩 (扣賭城金給玩家)</button>
     </div>
 
     <div class="history-row">
@@ -80,7 +87,7 @@
         <div id="historyList" style="margin-top:5px; max-height:100px; overflow-y:auto;"></div>
     </div>
 
-    <button class="btn-csv" onclick="exportToCSV()">📊 下載 CSV 存檔</button>
+    <button class="btn-csv" onclick="exportToCSV()">📊 下載 CSV 存檔 (Excel可開)</button>
 
     <div class="footer">
         溫家堡 WenCastle 
@@ -100,7 +107,7 @@
         if (!players[name]) players[name] = { 儲值金: 0, 莊: 0, 閒: 0, 和: 0 };
         if (action === "儲值") { players[name].儲值金 += amt; bankCash += amt; } 
         else {
-            if (players[name].儲值金 < amt) return alert("餘額不足！");
+            if (players[name].儲值金 < amt) return alert("個人儲值金不足！");
             players[name].儲值金 -= amt; players[name][action] += amt;
             if (action === "莊") bTotal += amt; if (action === "閒") pTotal += amt;
         }
@@ -119,7 +126,10 @@
             if (winSide === "莊" && p.莊 > 0) prize = p.莊 + (p.莊 * oddBP);
             if (winSide === "閒" && p.閒 > 0) prize = p.閒 + (p.閒 * oddBP);
             if (winSide === "和" && p.和 > 0) prize = p.和 + (p.和 * oddT);
-            if (prize > 0) { p.儲值金 += prize; bankCash -= (prize - (winSide === "莊" ? p.莊 : winSide === "閒" ? p.閒 : p.和)); }
+            if (prize > 0) { 
+                p.儲值金 += prize; 
+                bankCash -= (prize - (winSide === "莊" ? p.莊 : winSide === "閒" ? p.閒 : p.和)); 
+            }
             p.莊 = 0; p.閒 = 0; p.和 = 0;
         }
         bTotal = 0; pTotal = 0; round++; updateUI();
@@ -134,15 +144,15 @@
         }
     }
     function exportToCSV() {
-        let csvContent = "\ufeff名字,儲值金(萬),賭城總額(萬)\n";
-        csvContent += `總結算,,${bankCash}\n`;
+        let csvContent = "\ufeff名字,個人儲值金(萬),賭城總金(萬)\n";
+        csvContent += `賭城總結算,,${bankCash}\n`;
         for (let name in players) { csvContent += `${name},${players[name].儲值金},\n`; }
-        csvContent += "\n局數,結果,莊總注,閒總注\n";
+        csvContent += "\n局數,開牌結果,全場莊注,全場閒注\n";
         historyData.forEach(h => { csvContent += `${h.round},${h.result},${h.bT},${h.pT}\n`; });
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `創杖帳本_${new Date().getTime()}.csv`;
+        link.download = `WenCastle_Ledger_${new Date().getTime()}.csv`;
         link.click();
     }
 </script>
