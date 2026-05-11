@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { background: #121212; color: #fff; font-family: sans-serif; font-size: 13px; margin: 10px; }
+        h3 { color: #ffd700; margin: 0 0 10px 0; text-align: center; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .summary-row { background: #222; padding: 10px; border-radius: 4px; border: 1px solid #ffd700; margin-bottom: 10px; }
+        .bank-total { display: block; text-align: center; font-size: 16px; color: #ffd700; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        .bet-total { display: flex; justify-content: space-around; font-weight: bold; }
+        .input-row { display: flex; gap: 5px; margin-bottom: 10px; background: #2a2a2a; padding: 10px; border-radius: 4px; }
+        .settle-row { margin-top: 20px; padding: 15px; background: #1a1a1a; border: 2px dashed #444; border-radius: 8px; }
+        .history-row { margin-top: 15px; background: #000; padding: 10px; border: 1px solid #333; }
+        .hist-item { border-bottom: 1px solid #222; padding: 5px 0; display: flex; justify-content: space-between; font-size: 11px; }
+        input, select, button { background: #333; color: #fff; border: 1px solid #555; padding: 5px; border-radius: 3px; }
+        button { background: #ffd700; color: #000; font-weight: bold; cursor: pointer; border: none; }
+        .btn-win { background: #d32f2f; color: white; width: 100%; margin-top: 10px; height: 35px; }
+        .btn-csv { background: #2e7d32; color: white; width: 100%; margin-top: 20px; height: 40px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #333; color: #ffd700; font-size: 12px; padding: 8px; }
+        td { border-bottom: 1px solid #333; padding: 10px 0; text-align: center; }
+        .chip { color: #ffeb3b; font-weight: bold; }
+        .b { color: #ff66ff; } .p { color: #00ccff; } .t { color: #4caf50; }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #888; border-top: 1px solid #333; padding-top: 15px; padding-bottom: 20px; }
+        .footer a { text-decoration: none; display: inline-flex; align-items: center; vertical-align: middle; gap: 5px; color: #888; }
+        .yt-icon { width: 20px; height: auto; vertical-align: middle; }
+    </style>
+</head>
+<body>
+    <h3>🏰 娛樂賭城</h3>
+
+    <div class="summary-row">
+        <div class="bank-total">賭城總金額: <span id="bankCash">0</span> 萬</div>
+        <div class="bet-total">
+            <span>全場莊: <span id="sB" class="b">0</span> 萬</span>
+            <span>全場閒: <span id="sP" class="p">0</span> 萬</span>
+        </div>
+    </div>
+
+    <div class="input-row">
+        <input id="n" style="width:70px" placeholder="名字">
+        <select id="s">
+            <option value="儲值">儲值金</option>
+            <option value="莊">壓莊</option>
+            <option value="閒">壓閒</option>
+            <option value="和">壓和</option>
+        </select>
+        <input id="a" type="number" style="width:50px" placeholder="金額"> 萬
+        <button onclick="add()">記錄</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>名字</th>
+                <th>個人儲值金</th>
+                <th class="b">莊</th>
+                <th class="p">閒</th>
+                <th class="t">和</th>
+            </tr>
+        </thead>
+        <tbody id="t"></tbody>
+    </table>
+
+    <div class="settle-row">
+        <div style="display:flex; justify-content:space-between;">
+            <b style="color:#ffd700">【開牌派彩】</b>
+            <span>1:<input id="oB" style="width:20px" value="1"> | 1:<input id="oT" style="width:20px" value="5"></span>
+        </div>
+        <select id="winSide" style="width:100%; margin:10px 0;">
+            <option value="莊">開【莊】</option>
+            <option value="閒">開【閒】</option>
+            <option value="和">開【和】</option>
+        </select>
+        <button class="btn-win" onclick="settle()">確認派彩</button>
+    </div>
+
+    <div class="history-row">
+        <b style="color:#ffd700">📜 歷史開牌紀錄</b>
+        <div id="historyList" style="margin-top:5px; max-height:100px; overflow-y:auto;"></div>
+    </div>
+
+    <button class="btn-csv" onclick="exportToCSV()">📊 下載 CSV 存檔</button>
+
+    <div class="footer">
+        溫家堡 WenCastle 
+        <a href="https://www.youtube.com/@WenCastle" target="_blank">
+            <svg class="yt-icon" viewBox="0 0 24 24" fill="#ff0000" xmlns="http://w3.org"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a> 
+        ⓒ 2021-2026
+    </div>
+
+<script>
+    let players = {}; let bTotal = 0, pTotal = 0, bankCash = 0, round = 1; let historyData = [];
+    function add() {
+        const name = document.getElementById('n').value.trim() || '匿名';
+        const action = document.getElementById('s').value;
+        const amt = parseFloat(document.getElementById('a').value) || 0;
+        if (amt <= 0 && action !== "儲值") return;
+        if (!players[name]) players[name] = { 儲值金: 0, 莊: 0, 閒: 0, 和: 0 };
+        if (action === "儲值") { players[name].儲值金 += amt; bankCash += amt; } 
+        else {
+            if (players[name].儲值金 < amt) return alert("餘額不足！");
+            players[name].儲值金 -= amt; players[name][action] += amt;
+            if (action === "莊") bTotal += amt; if (action === "閒") pTotal += amt;
+        }
+        updateUI(); document.getElementById('a').value = ''; 
+    }
+    function settle() {
+        if (!confirm("確定派彩？")) return;
+        const winSide = document.getElementById('winSide').value;
+        const oddBP = parseFloat(document.getElementById('oB').value) || 1;
+        const oddT = parseFloat(document.getElementById('oT').value) || 5;
+        historyData.push({ round, result: winSide, bT: bTotal, pT: pTotal });
+        const histDiv = document.getElementById('historyList');
+        histDiv.insertAdjacentHTML('afterbegin', `<div class="hist-item"><span>第 ${round} 局</span><span class="${winSide==='莊'?'b':winSide==='閒'?'p':'t'}">開【${winSide}】</span><span style="color:#777">莊:${bTotal} 閒:${pTotal}</span></div>`);
+        for (let name in players) {
+            let p = players[name]; let prize = 0;
+            if (winSide === "莊" && p.莊 > 0) prize = p.莊 + (p.莊 * oddBP);
+            if (winSide === "閒" && p.閒 > 0) prize = p.閒 + (p.閒 * oddBP);
+            if (winSide === "和" && p.和 > 0) prize = p.和 + (p.和 * oddT);
+            if (prize > 0) { p.儲值金 += prize; bankCash -= (prize - (winSide === "莊" ? p.莊 : winSide === "閒" ? p.閒 : p.和)); }
+            p.莊 = 0; p.閒 = 0; p.和 = 0;
+        }
+        bTotal = 0; pTotal = 0; round++; updateUI();
+    }
+    function updateUI() {
+        document.getElementById('bankCash').innerText = bankCash.toLocaleString();
+        document.getElementById('sB').innerText = bTotal; document.getElementById('sP').innerText = pTotal;
+        const tbody = document.getElementById('t'); tbody.innerHTML = '';
+        for (let name in players) {
+            const p = players[name];
+            tbody.innerHTML += `<tr><td>${name}</td><td class="chip">${p.儲值金.toFixed(1)} 萬</td><td class="b">${p.莊}</td><td class="p">${p.閒}</td><td class="t">${p.和}</td></tr>`;
+        }
+    }
+    function exportToCSV() {
+        let csvContent = "\ufeff名字,儲值金(萬),賭城總額(萬)\n";
+        csvContent += `總結算,,${bankCash}\n`;
+        for (let name in players) { csvContent += `${name},${players[name].儲值金},\n`; }
+        csvContent += "\n局數,結果,莊總注,閒總注\n";
+        historyData.forEach(h => { csvContent += `${h.round},${h.result},${h.bT},${h.pT}\n`; });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `創杖帳本_${new Date().getTime()}.csv`;
+        link.click();
+    }
+</script>
+</body>
+</html>
