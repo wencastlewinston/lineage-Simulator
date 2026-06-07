@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台指漲跌計算系統</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #fff3e0; color: #0d47a1; font-family: "Microsoft JhengHei", sans-serif; padding: 20px 16px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        .主容器 { width: 100%; max-width: 460px; background: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(13, 71, 161, 0.08); }
+        header { border-bottom: 2px solid #b3e5fc; padding-bottom: 12px; margin-bottom: 24px; text-align: center; }
+        h1 { font-size: 1.7rem; font-weight: 900; color: #0d47a1; letter-spacing: 0.05em; }
+        .區塊 { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px dashed #ffe0b2; }
+        .標題列 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .標題 { font-size: 0.95rem; font-weight: bold; color: #0d47a1; }
+        .備註 { font-size: 0.75rem; color: #666666; text-align: right; }
+        .雙欄位並排 { display: flex; gap: 8px; width: 100%; }
+        .下拉寬度 { width: 32%; } .輸入寬度 { flex: 1; }      
+        select, input { width: 100%; background-color: #fafafa; border: 1px solid #b3e5fc; border-radius: 8px; padding: 11px; color: #0d47a1; font-size: 1rem; font-weight: bold; outline: none; transition: all 0.2s; }
+        input:focus, select:focus { border-color: #0d47a1; background-color: #ffffff; box-shadow: 0 0 8px rgba(13, 71, 161, 0.1); }
+        .數值結果 { color: #e65100; font-weight: bold; font-size: 1.1rem; }
+        .價格區塊 { margin-top: 18px; padding-top: 14px; border-top: 2px dashed #b3e5fc; text-align: center; }
+        .最終定價 { font-size: 2.5rem; font-weight: 900; color: #e65100; margin-top: 8px; letter-spacing: -0.02em; }
+        .目標台指區塊 { margin-top: 16px; padding-top: 16px; border-top: 1px solid #ffe0b2; }
+        .目標台指文字 { font-size: 1.1rem; font-weight: bold; color: #0d47a1; }
+        .目標台指數值 { font-size: 1.8rem; font-weight: 900; color: #1565c0; display: block; margin-top: 4px; }
+        .警示方塊 { margin-top: 12px; border-radius: 8px; padding: 10px; display: none; font-size: 0.85rem; font-weight: bold; }
+        .漲停紅 { background-color: #ffebee; border: 1px solid #ef5350; color: #d32f2f; }
+        .跌停綠 { background-color: #e8f5e9; border: 1px solid #66bb6a; color: #2e7d32; }
+        footer { margin-top: 24px; text-align: center; color: #78909c; font-size: 0.75rem; width: 100%; max-width: 460px; }
+        .選項群組 { display: flex; justify-content: space-around; margin-bottom: 12px; }
+        .選項標籤 { display: flex; align-items: center; gap: 4px; font-size: 1rem; font-weight: 900; color: #0d47a1; cursor: pointer; white-space: nowrap; }
+        /* 分頁控制 */
+        .分頁頁籤 { display: flex; gap: 10px; margin-bottom: 20px; }
+        .頁籤按鈕 { flex: 1; padding: 10px; border: 1px solid #0d47a1; background: #fff; color: #0d47a1; font-weight: bold; cursor: pointer; border-radius: 8px; }
+        .頁籤按鈕.active { background: #0d47a1; color: #fff; }
+        .分頁內容 { display: none; }
+        .分頁內容.active { display: block; }
+        .輸入標籤 { font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="主容器">
+        <header><h1>台指漲跌計算</h1></header>
+
+        <div class="分頁頁籤">
+            <button class="頁籤按鈕 active" onclick="切換分頁(event, 'calc1')">正算</button>
+            <button class="頁籤按鈕" onclick="切換分頁(event, 'calc2')">反推</button>
+        </div>
+
+        <div id="calc1" class="分頁內容 active">
+            <div class="區塊">
+                <div class="標題列"><div class="標題">1. 前日台指數</div><div class="備註">手動輸入昨日大盤</div></div>
+                <input type="number" id="前日台指" value="40000" step="1" onclick="this.select()">
+            </div>
+            <div class="區塊">
+                <div class="標題列"><div class="標題">2. 夜盤預期變動</div><div class="備註">選擇正負與點數</div></div>
+                <div class="雙欄位並排">
+                    <div class="下拉寬度"><select id="正負號"><option value="-">跌 (-)</option><option value="+">漲 (+)</option></select></div>
+                    <div class="輸入寬度"><input type="number" id="變動點數" value="3000" step="1" onclick="this.select()"></div>
+                </div>
+                <div style="margin-top: 12px; background: #fff8e1; padding: 10px; border-radius: 8px; border-bottom: none; display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
+                    <div style="display: flex; justify-content: space-between; width: 100%;"><span style="font-size: 0.85rem; color: #666666; font-weight: bold;">預估台指數</span><span class="數值結果" id="台指結果">0 點</span></div>
+                    <div style="display: flex; justify-content: space-between; width: 100%; border-top: 1px dashed #ffe0b2; padding-top: 6px;"><span style="font-size: 0.85rem; color: #666666; font-weight: bold;">漲跌百分比</span><span class="數值結果" id="大盤變動率結果" style="color: #1565c0;">0.00%</span></div>
+                </div>
+            </div>
+            <div class="區塊" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                <div class="標題列"><div class="標題">3. 現有股價連動</div></div>
+                <div class="選項群組">
+                    <label class="選項標籤"><input type="radio" name="倍數" value="1" checked> 正常</label>
+                    <label class="選項標籤"><input type="radio" name="倍數" value="2"> 正2</label>
+                    <label class="選項標籤"><input type="radio" name="倍數" value="-1"> 反1</label>
+                </div>
+                <input type="number" id="現有股價" value="100" step="0.01" onclick="this.select()">
+                <div class="價格區塊">
+                    <div class="標題列" style="justify-content: center; margin-bottom: 0;"><span class="標題" style="font-size: 1.05rem;">預估開盤價</span></div>
+                    <div class="最終定價" id="最終股價">0.00 元</div>
+                    <div id="警示區域" class="警示方塊"><div id="警示內容">⚠️</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="calc2" class="分頁內容">
+            <div class="區塊">
+                <div class="標題列"><div class="標題">1. 基準數據設定</div><div class="備註">獨立設定反推參數</div></div>
+                <div class="雙欄位並排" style="margin-bottom: 12px;">
+                    <div class="輸入寬度">
+                        <label class="輸入標籤">前日台指</label>
+                        <input type="number" id="反推_前日台指" value="40000" step="1" onclick="this.select()">
+                    </div>
+                    <div class="輸入寬度">
+                        <label class="輸入標籤">現有股價</label>
+                        <input type="number" id="反推_現有股價" value="100" step="0.01" onclick="this.select()">
+                    </div>
+                </div>
+                <div class="選項群組">
+                    <label class="選項標籤"><input type="radio" name="反推_倍數" value="1" checked> 正常</label>
+                    <label class="選項標籤"><input type="radio" name="反推_倍數" value="2"> 正2</label>
+                    <label class="選項標籤"><input type="radio" name="反推_倍數" value="-1"> 反1</label>
+                </div>
+            </div>
+            <div class="區塊">
+                <div class="標題列"><div class="標題">2. 目標開盤價</div><div class="備註">預期達到的股價</div></div>
+                <input type="number" id="目標價" value="105" step="0.01" onclick="this.select()">
+            </div>
+            <div class="區塊" style="border-bottom: none; text-align: center;">
+                <div class="標題" style="font-size: 1.05rem;">反推所需大盤變動</div>
+                <div class="最終定價" id="反推結果">0 點</div>
+                
+                <div class="目標台指區塊">
+                    <span class="目標台指文字">預計台指須達到</span>
+                    <span class="目標台指數值" id="反推_目標台指">0 點</span>
+                </div>
+
+                <div id="反推警示區域" class="警示方塊"><div id="反推警示內容">⚠️</div></div>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>© 2026 溫家堡 版權所有</p><p>僅供參考，實際交易請依證券所規範為準</p></footer>
+
+    <script>
+        const Tick規則 = [{上限:10,單位:0.01},{上限:50,單位:0.05},{上限:100,單位:0.1},{上限:500,單位:0.5},{上限:1000,單位:1.0},{上限:Infinity,單位:5.0}];
+        
+        function 校正台股交易單位(價格) {
+            if (價格 <= 0) return 0;
+            const 規則 = Tick規則.find(r => 價格 < r.上限) || Tick規則[Tick規則.length - 1];
+            return Math.round(價格 / 規則.單位) * 規則.單位;
+        }
+
+        function 切換分頁(evt, id) {
+            document.querySelectorAll('.分頁內容').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.頁籤按鈕').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function 核心量化計算() {
+            // ================= 【正算邏輯】 =================
+            const 前日台指 = parseFloat(document.getElementById('前日台指').value) || 0;
+            const 正負號 = document.getElementById('正負號').value;
+            const 變動點數 = parseFloat(document.getElementById('變動點數').value) || 0;
+            const 現有股價 = parseFloat(document.getElementById('現有股價').value) || 0;
+            const 倍數 = parseFloat(document.querySelector('input[name="倍數"]:checked').value);
+
+            let 實質變動點數 = (正負號 === '-') ? -變動點數 : 變動點數;
+            let 預估台指結果 = 前日台指 + 實質變動點數;
+            document.getElementById('台指結果').innerText = `${預估台指結果.toLocaleString()} 點`;
+            
+            let 大盤變動率 = (前日台指 > 0) ? (實質變動點數 / 前日台指) : 0;
+            let 預估開盤股價 = 現有股價 + (現有股價 * 大盤變動率 * 倍數);
+
+            document.getElementById('大盤變動率結果').innerText = `${(大盤變動率 * 100).toFixed(2)}%`;
+            document.getElementById('大盤變動率結果').style.color = (實質變動點數 >= 0) ? '#d32f2f' : '#2e7d32';
+
+            const 漲停價限制 = 校正台股交易單位(現有股價 * 1.10);
+            const 跌停價限制 = 校正台股交易單位(現有股價 * 0.90);
+            const 警示框 = document.getElementById('警示區域');
+            const 警示字 = document.getElementById('警示內容');
+            警示框.style.display = 'none';
+            
+            if (預估開盤股價 >= 漲停價限制) { 
+                預估開盤股價 = 漲停價限制; 
+                警示字.innerText = `⚠️ 漲停限制`; 
+                警示框.className = '警示方塊 漲停紅'; 
+                警示框.style.display = 'block'; 
+            } else if (預估開盤股價 <= 跌停價限制) { 
+                預估開盤股價 = 跌停價限制; 
+                警示字.innerText = `⚠️ 跌停限制`; 
+                警示框.className = '警示方塊 跌停綠'; 
+                警示框.style.display = 'block'; 
+            } else { 
+                預估開盤股價 = 校正台股交易單位(預估開盤股價); 
+            }
+            document.getElementById('最終股價').innerText = `${預估開盤股價.toFixed(2)} 元`;
+
+            // ================= 【反推邏輯】 =================
+            const 反推_前日台指 = parseFloat(document.getElementById('反推_前日台指').value) || 0;
+            const 反推_現有股價 = parseFloat(document.getElementById('反推_現有股價').value) || 0;
+            const 反推_倍數 = parseFloat(document.querySelector('input[name="反推_倍數"]:checked').value);
+            const 目標 = parseFloat(document.getElementById('目標價').value) || 0;
+
+            const 反推警示框 = document.getElementById('反推警示區域');
+            const 反推警示字 = document.getElementById('反推警示內容');
+            反推警示框.style.display = 'none';
+
+            if (反推_現有股價 > 0 && 反推_倍數 !== 0 && 反推_前日台指 > 0) {
+                const 反推_漲停價限制 = 校正台股交易單位(反推_現有股價 * 1.10);
+                const 反推_跌停價限制 = 校正台股交易單位(反推_現有股價 * 0.90);
+                
+                let 有效目標價 = 目標;
+
+                if (目標 > 反推_漲停價限制) {
+                    有效目標價 = 反推_漲停價限制;
+                    反推警示字.innerText = `⚠️ 該目標價無法達成\n今日漲停極限為 ${反推_漲停價限制.toFixed(2)} 元`; 
+                    反推警示框.className = '警示方塊 漲停紅'; 
+                    反推警示框.style.display = 'block';
+                } else if (目標 < 反推_跌停價限制) {
+                    有效目標價 = 反推_跌停價限制;
+                    反推警示字.innerText = `⚠️ 該目標價無法達成\n今日跌停極限為 ${反推_跌停價限制.toFixed(2)} 元`; 
+                    反推警示框.className = '警示方塊 跌停綠'; 
+                    反推警示框.style.display = 'block';
+                }
+
+                // 計算所需點數
+                const 反推點數 = ((有效目標價 / 反推_現有股價) - 1) * 反推_前日台指 / 反推_倍數;
+                // 計算最終目標台指
+                const 目標台指位階 = 反推_前日台指 + 反推點數;
+                
+                const 符號 = 反推點數 >= 0 ? "+" : "";
+                document.getElementById('反推結果').innerText = `${符號}${Math.round(反推點數)} 點`;
+                document.getElementById('反推結果').style.color = 反推點數 >= 0 ? '#e65100' : '#2e7d32';
+                
+                // 顯示實際需要達到的台指數值 (加上千分位逗號會更好閱讀)
+                document.getElementById('反推_目標台指').innerText = `${Math.round(目標台指位階).toLocaleString()} 點`;
+
+            } else {
+                document.getElementById('反推結果').innerText = `0 點`;
+                document.getElementById('反推_目標台指').innerText = `0 點`;
+            }
+        }
+
+        // 事件監聽綁定
+        ['前日台指','正負號','變動點數','現有股價'].forEach(id => document.getElementById(id).addEventListener('input', 核心量化計算));
+        document.querySelectorAll('input[name="倍數"]').forEach(r => r.addEventListener('change', 核心量化計算));
+        
+        ['反推_前日台指','反推_現有股價','目標價'].forEach(id => document.getElementById(id).addEventListener('input', 核心量化計算));
+        document.querySelectorAll('input[name="反推_倍數"]').forEach(r => r.addEventListener('change', 核心量化計算));
+
+        核心量化計算();
+    </script>
+</body>
+</html>
