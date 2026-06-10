@@ -2,244 +2,151 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026年 3人週末自選排班系統 (精準五日對齊優化版)</title>
+    <title>2026年 3人週末自選排班系統 (精準對齊版)</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1a365d; margin-bottom: 25px; font-size: 24px; }
-        .control-panel { display: flex; gap: 15px; margin-bottom: 25px; background: #edf2f7; padding: 15px; border-radius: 8px; align-items: center; justify-content: center; }
-        label { font-weight: bold; color: #4a5568; }
-        select { padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 16px; background-color: white; cursor: pointer; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f9; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1a365d; font-size: 22px; margin-bottom: 20px; }
+        .control-panel { display: flex; justify-content: center; margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+        .header { background: #2b6cb0; color: white; padding: 10px 0; font-weight: bold; border-radius: 4px; font-size: 14px; }
+        .card { border: 1px solid #e2e8f0; padding: 15px 5px; border-radius: 6px; background: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 75px; }
+        .thu { border-top: 4px solid #805ad5; background-color: #faf5ff; } 
+        .fri { border-top: 4px solid #dd6b20; background-color: #fffaf0; } 
+        .sun { border-top: 4px solid #3182ce; background-color: #ebf8ff; } 
+        .date-num { font-weight: bold; font-size: 14px; margin-bottom: 6px; color: #4a5568; }
         
-        .calendar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: center; }
-        .weekday-header { font-weight: bold; background-color: #2b6cb0; color: white; padding: 12px 0; border-radius: 4px; font-size: 16px; }
-        .day-card { border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px 5px; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; transition: all 0.2s; }
+        /* 關鍵修正：強制文字不換行 */
+        .staff-on { font-size: 15px; font-weight: bold; color: #2d3748; white-space: nowrap; }
+        .lock-text { font-size: 15px; font-weight: bold; color: #e53e3e; white-space: nowrap; }
         
-        .date-num { font-weight: bold; font-size: 15px; margin-bottom: 6px; color: #4a5568; }
-        .friday-highlight { background-color: #fffaf0; border: 2px solid #dd6b20; }
-        .friday-highlight .date-num { color: #dd6b20; }
-        
-        /* 當週五被手動指派人員時的加強樣式 */
-        .friday-highlight.assigned { background-color: #fff5f5; border-color: #e53e3e; }
-        .friday-highlight.assigned .date-num { color: #e53e3e; }
-        
-        .sunday-highlight { background-color: #ebf8ff; border: 2px solid #3182ce; }
-        .sunday-highlight .date-num { color: #3182ce; }
-        
-        .staff-on { font-size: 16px; font-weight: bold; color: #1a202c; line-height: 1.4; white-space: nowrap; }
-        .select-btn { padding: 6px 10px; font-size: 15px; font-weight: bold; border-radius: 4px; border: 1px solid #cbd5e0; color: #4a5568; background: white; cursor: pointer; outline: none; }
-        .select-btn.selected { border-color: #e53e3e; color: #e53e3e; background-color: #fff5f5; }
-        .summary-notes { margin-top: 25px; font-size: 14px; color: #4a5568; background: #f7fafc; padding: 15px; border-radius: 8px; line-height: 1.6; }
+        select { width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #cbd5e0; background: white; font-size: 14px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📅 2026年 週末排班自選系統</h1>
-    
+    <h1>📅 2026年 週末排班系統</h1>
     <div class="control-panel">
-        <label for="month-select">選擇月份：</label>
-        <select id="month-select" onchange="generateCalendar()">
-            </select>
+        <select id="month-select" onchange="render()"></select>
     </div>
-
-    <div class="calendar-grid" id="calendar-body">
-        </div>
-
-    <div class="summary-notes">
-        <strong>💡 自選操作說明：</strong><br>
-        1. <b>星期五（左欄）：</b> 預設顯示「排班」，點擊下拉選單可手動指派當天上班人員（卡片變更為紅框表示已指派）。<br>
-        2. <b>星期日（右欄）：</b> 系統會自動根據「同一個週末（前兩天）的星期五」人選，即時自動連動另外 2 人上班。
-    </div>
+    <div id="grid" class="grid"></div>
 </div>
 
 <script>
-    const allStaff = ["冠妏", "俊傑", "雲勇"];
-    // 儲存格式改為： { "2026-7-31": "冠妏" }，改用唯一的 weekendId 作為 Key
-    let userSelections = {}; 
+    const staff = ["冠妏", "俊傑", "雲勇"];
+    let data = JSON.parse(localStorage.getItem('sc2026_final')) || {};
 
-    // 初始化月份下拉選單
-    const monthSelect = document.getElementById('month-select');
-    for (let m = 1; m <= 12; m++) {
+    const select = document.getElementById('month-select');
+    for(let i=1; i<=12; i++) {
         let opt = document.createElement('option');
-        opt.value = m;
-        opt.innerText = m + ' 月';
-        if (m === 7) opt.selected = true; // 預設顯示 7 月
-        monthSelect.appendChild(opt);
+        opt.value = i; opt.text = i + ' 月';
+        if(i === (new Date().getMonth() + 1)) opt.selected = true;
+        select.appendChild(opt);
     }
 
-    function updateFridayDuty(weekendId, selectedValue) {
-        userSelections[weekendId] = selectedValue;
-        generateCalendar(); 
-    }
+    function render() {
+        const m = parseInt(select.value) - 1;
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '<div class="header">星期四</div><div class="header">星期五</div><div class="header">星期日</div>';
+        
+        let d = new Date(2026, m, 1);
+        while(d.getDay() !== 4) d.setDate(d.getDate() + 1); 
+        
+        while(d.getMonth() === m) {
+            let thu = new Date(d);
+            let fri = new Date(d); fri.setDate(fri.getDate() + 1);
+            let sun = new Date(d); sun.setDate(sun.getDate() + 3);
+            
+            let key = thu.toISOString().split('T')[0];
 
-    // 以「週五與其接下來的週日」作為同一個週末識別碼的計算函數
-    function getWeekendId(date) {
-        let d = new Date(date.getTime());
-        let day = d.getDay();
-        // 如果是週日，往前推2天到週五，以確保它和前兩天的週五拿到同一個週末ID
-        if (day === 0) {
-            d.setDate(d.getDate() - 2);
-        } else if (day !== 5) {
-            // 如果既不是週五也不是週日，找最近的週五
-            let diff = (day < 5) ? (-day - 2) : 5 - day;
-            d.setDate(d.getDate() + diff);
+            if (!data[key]) {
+                data[key] = {};
+            }
+            if (!data[key].thu) data[key].thu = "全體";
+            if (!data[key].fri) data[key].fri = "排班";
+
+            if(data[key].thu !== "全體") {
+                data[key].fri = "全體休假";
+            }
+
+            buildThuCard(thu, key);
+            buildFriCard(fri, key);
+            buildSunCard(sun, key);
+
+            d.setDate(d.getDate() + 7);
         }
-        return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
     }
 
-    function generateCalendar() {
-        const year = 2026;
-        const month = parseInt(document.getElementById('month-select').value);
+    function buildThuCard(date, key) {
+        let div = document.createElement('div');
+        div.className = 'card thu';
+        div.innerHTML = `<div class="date-num">${date.getMonth()+1}/${date.getDate()}</div>`;
         
-        const calendarBody = document.getElementById('calendar-body');
-        calendarBody.innerHTML = ''; 
-
-        // 建立 2 欄式表頭 (五、日)
-        const displayedDays = [
-            { label: '星期五', value: 5 },
-            { label: '星期日', value: 0 }
-        ];
+        let s = document.createElement('select');
+        let options = ["全體", ...staff];
+        s.innerHTML = options.map(n => `<option value="${n}" ${data[key].thu==n?'selected':''}>${n}</option>`).join('');
         
-        displayedDays.forEach(dayInfo => {
-            let header = document.createElement('div');
-            header.className = 'weekday-header';
-            header.innerText = dayInfo.label;
-            calendarBody.appendChild(header);
-        });
+        s.onchange = (e) => {
+            data[key].thu = e.target.value;
+            if(e.target.value === "全體") {
+                data[key].fri = "排班";
+            }
+            saveAndRefresh();
+        };
+        div.appendChild(s);
+        document.getElementById('grid').appendChild(div);
+    }
 
-        // 收集所有與當月有交集的週末
-        let weekendsMap = {};
+    function buildFriCard(date, key) {
+        let div = document.createElement('div');
+        div.className = 'card fri';
+        div.innerHTML = `<div class="date-num">${date.getMonth()+1}/${date.getDate()}</div>`;
+        
+        if(data[key].thu !== "全體") {
+            div.innerHTML += `<div class="lock-text">全體休假</div>`;
+        } else {
+            let s = document.createElement('select');
+            let options = ["排班", ...staff];
+            s.innerHTML = options.map(n => `<option value="${n}" ${data[key].fri==n?'selected':''}>${n}</option>`).join('');
+            
+            s.onchange = (e) => {
+                data[key].fri = e.target.value;
+                saveAndRefresh();
+            };
+            div.appendChild(s);
+        }
+        document.getElementById('grid').appendChild(div);
+    }
 
-        // 建立一個檢查並放入地圖的輔助函式
-        function checkAndAddDate(d) {
-            let dayOfWeek = d.getDay();
-            if (dayOfWeek === 5 || dayOfWeek === 0) {
-                let wId = getWeekendId(d);
-                if (!weekendsMap[wId]) {
-                    weekendsMap[wId] = { 5: null, 0: null };
-                }
-                weekendsMap[wId][dayOfWeek] = {
-                    dayNum: d.getDate(),
-                    monthNum: d.getMonth() + 1
-                };
+    function buildSunCard(date, key) {
+        let div = document.createElement('div');
+        div.className = 'card sun';
+        div.innerHTML = `<div class="date-num">${date.getMonth()+1}/${date.getDate()}</div>`;
+        
+        let displayTarget = "待定";
+        
+        if(data[key].thu !== "全體") {
+            let offStaff = data[key].thu;
+            displayTarget = staff.filter(n => n !== offStaff).join('、');
+        } 
+        else {
+            let friChoice = data[key].fri;
+            if(friChoice !== "排班") {
+                displayTarget = staff.filter(n => n !== friChoice).join('、');
             }
         }
-
-        // 遍歷當月所有日子
-        let totalDays = new Date(year, month, 0).getDate();
-        for (let day = 1; day <= totalDays; day++) {
-            let currentDate = new Date(year, month - 1, day);
-            checkAndAddDate(currentDate);
-        }
-
-        // 跨月邊界延伸擴展，確保不漏掉跨月週末
-        for (let day = -2; day <= 0; day++) {
-            let currentDate = new Date(year, month - 1, day);
-            checkAndAddDate(currentDate);
-        }
-        for (let day = totalDays + 1; day <= totalDays + 3; day++) {
-            let currentDate = new Date(year, month - 1, day);
-            checkAndAddDate(currentDate);
-        }
-
-        // 將週末的 Key 依照日期時間順序排序
-        let sortedKeys = Object.keys(weekendsMap).sort((a, b) => {
-            return new Date(a.replace(/-/g, '/')) - new Date(b.replace(/-/g, '/'));
-        });
-
-        // 開始繪製表格
-        sortedKeys.forEach(wId => {
-            let week = weekendsMap[wId];
-
-            // 只有當「週五」或「週日」其中一天屬於目前選擇的月份時，才把這個週末秀出來
-            let hasThisMonthDay = (week[5] && week[5].monthNum === month) || (week[0] && week[0].monthNum === month);
-            if (!hasThisMonthDay) return;
-
-            displayedDays.forEach(dayInfo => {
-                let dayOfWeek = dayInfo.value;
-                let dayData = week[dayOfWeek];
-
-                let card = document.createElement('div');
-                card.className = 'day-card';
-
-                // 如果這天完全不存在，顯示空白
-                if (!dayData) {
-                    card.classList.add('empty-day');
-                    card.style.border = 'none';
-                    calendarBody.appendChild(card);
-                    return;
-                }
-
-                // 顯示日期
-                let dateNumDiv = document.createElement('div');
-                dateNumDiv.className = 'date-num';
-                dateNumDiv.innerText = dayData.monthNum + '/' + dayData.dayNum;
-                card.appendChild(dateNumDiv);
-
-                // 核心優化：統一使用 wId (如 2026-7-31) 作為狀態綁定
-                if (!userSelections[wId]) {
-                    userSelections[wId] = "排班"; 
-                }
-
-                if (dayOfWeek === 5) {
-                    // 星期五：下拉式自選單
-                    card.classList.add('friday-highlight');
-                    
-                    let select = document.createElement('select');
-                    select.className = 'select-btn';
-                    
-                    // 如果不是預設的「排班」，就切換高亮樣式
-                    if (userSelections[wId] !== "排班") {
-                        select.classList.add('selected');
-                        card.classList.add('assigned');
-                    }
-                    
-                    select.onchange = function() { updateFridayDuty(wId, this.value); };
-                    
-                    let defaultOpt = document.createElement('option');
-                    defaultOpt.value = "排班";
-                    defaultOpt.innerText = "排班";
-                    if (userSelections[wId] === "排班") defaultOpt.selected = true;
-                    select.appendChild(defaultOpt);
-
-                    allStaff.forEach(staff => {
-                        let opt = document.createElement('option');
-                        opt.value = staff;
-                        opt.innerText = staff;
-                        if (userSelections[wId] === staff) opt.selected = true;
-                        select.appendChild(opt);
-                    });
-                    
-                    card.appendChild(select);
-                } 
-                else if (dayOfWeek === 0) {
-                    // 星期日：連動同一個 wId 週末的週五狀態
-                    card.classList.add('sunday-highlight');
-                    
-                    let offDutyStaff = userSelections[wId] || "排班";
-                    let onDutyList = [];
-                    
-                    if (offDutyStaff === "排班") {
-                        onDutyList = [...allStaff];
-                    } else {
-                        onDutyList = allStaff.filter(name => name !== offDutyStaff);
-                    }
-                    
-                    let staffDiv = document.createElement('div');
-                    staffDiv.className = 'staff-on';
-                    staffDiv.innerText = onDutyList.join('、');
-                    card.appendChild(staffDiv);
-                }
-
-                calendarBody.appendChild(card);
-            });
-        });
+        
+        div.innerHTML += `<div class="staff-on">${displayTarget}</div>`;
+        document.getElementById('grid').appendChild(div);
     }
 
-    generateCalendar();
-</script>
+    function saveAndRefresh() {
+        localStorage.setItem('sc2026_final', JSON.stringify(data));
+        render();
+    }
 
+    render();
+</script>
 </body>
 </html>
