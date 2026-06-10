@@ -16,7 +16,6 @@
         .sun { border-top: 4px solid #3182ce; background-color: #ebf8ff; } 
         .date-num { font-weight: bold; font-size: 14px; margin-bottom: 6px; color: #4a5568; }
         
-        /* 關鍵修正：強制文字不換行 */
         .staff-on { font-size: 15px; font-weight: bold; color: #2d3748; white-space: nowrap; }
         .lock-text { font-size: 15px; font-weight: bold; color: #e53e3e; white-space: nowrap; }
         
@@ -37,11 +36,19 @@
     const staff = ["冠妏", "俊傑", "雲勇"];
     let data = JSON.parse(localStorage.getItem('sc2026_final')) || {};
 
+    // 初始化月份選單 (若當前是 2026 年則預設當月，否則預設 1 月)
     const select = document.getElementById('month-select');
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    
     for(let i=1; i<=12; i++) {
         let opt = document.createElement('option');
         opt.value = i; opt.text = i + ' 月';
-        if(i === (new Date().getMonth() + 1)) opt.selected = true;
+        if(currentYear === 2026 && i === currentMonth) {
+            opt.selected = true;
+        } else if (currentYear !== 2026 && i === 1) {
+            opt.selected = true;
+        }
         select.appendChild(opt);
     }
 
@@ -50,19 +57,30 @@
         const grid = document.getElementById('grid');
         grid.innerHTML = '<div class="header">星期四</div><div class="header">星期五</div><div class="header">星期日</div>';
         
+        // 往前尋找，確保連同上個月底跨過來的週次也能被包含進來
         let d = new Date(2026, m, 1);
-        while(d.getDay() !== 4) d.setDate(d.getDate() + 1); 
+        while(d.getDay() !== 4) {
+            d.setDate(d.getDate() - 1);
+        }
         
-        while(d.getMonth() === m) {
+        // 條件修正：只要這一週的 四、五、日 任一天屬於目標月份，就渲染該週
+        while(true) {
             let thu = new Date(d);
             let fri = new Date(d); fri.setDate(fri.getDate() + 1);
             let sun = new Date(d); sun.setDate(sun.getDate() + 3);
             
+            // 檢查這三天的月份是否有任何一天等於當前選擇的月份
+            if (thu.getMonth() !== m && fri.getMonth() !== m && sun.getMonth() !== m) {
+                // 如果已經完全走入下一個月，就跳出迴圈
+                if (thu.getMonth() > m || (thu.getFullYear() > 2026)) break;
+                // 如果還在上個月的尾巴，就繼續往下找
+                d.setDate(d.getDate() + 7);
+                continue;
+            }
+
             let key = thu.toISOString().split('T')[0];
 
-            if (!data[key]) {
-                data[key] = {};
-            }
+            if (!data[key]) data[key] = {};
             if (!data[key].thu) data[key].thu = "全體";
             if (!data[key].fri) data[key].fri = "排班";
 
@@ -95,7 +113,7 @@
             saveAndRefresh();
         };
         div.appendChild(s);
-        document.getElementById('grid').appendChild(div);
+        grid.appendChild(div);
     }
 
     function buildFriCard(date, key) {
@@ -116,7 +134,7 @@
             };
             div.appendChild(s);
         }
-        document.getElementById('grid').appendChild(div);
+        grid.appendChild(div);
     }
 
     function buildSunCard(date, key) {
@@ -138,7 +156,7 @@
         }
         
         div.innerHTML += `<div class="staff-on">${displayTarget}</div>`;
-        document.getElementById('grid').appendChild(div);
+        grid.appendChild(div);
     }
 
     function saveAndRefresh() {
