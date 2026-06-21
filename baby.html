@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溫家堡育兒金</title>
+    <style>
+        :root { --primary-color: #2b5876; --secondary-color: #4e4376; --accent-color: #ff6b6b; --bg-color: #f5f7fa; --card-bg: #ffffff; --text-color: #333333; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.7; }
+        .container { max-width: 650px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color); }
+        h2 { color: var(--primary-color); font-size: 1.3rem; margin-top: 0; border-bottom: 2px solid #eaeaea; padding-bottom: 0.6rem; margin-bottom: 1.2rem; }
+        .calc-group { margin-bottom: 1rem; }
+        label { display: block; font-weight: bold; margin-bottom: 0.5rem; font-size: 0.95rem; color: #2d3748; }
+        select, input { width: 100%; padding: 0.8rem; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 1rem; background-color: #fff; box-sizing: border-box; }
+        .param-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+        .result-box { background: #edf2f7; padding: 1.2rem; border-radius: 8px; margin-top: 1.5rem; border-left: 5px solid #2b5876; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 0.6rem; }
+        .result-total { display: flex; justify-content: space-between; font-weight: bold; color: var(--accent-color); font-size: 1.2rem; border-top: 2px dashed #cbd5e0; padding-top: 10px; margin-top: 10px; }
+        .formula-card { background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .formula-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .formula-total { text-align: right; font-weight: bold; border-top: 1px dotted #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem; }
+        .global-summary { background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e0; margin-top: 1.2rem; font-weight: bold; }
+        .todo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #f0f0f0; }
+        .todo-item input { width: auto; margin-right: 12px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <header style="text-align: center; padding: 1rem;">
+        <h1 style="color:#2b5876;">溫家堡育兒金</h1>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>⚙️ 基礎條件設定</h2>
+            <div class="calc-group"><label>👨 爸爸實際月薪資總額</label><select id="dadSalary" onchange="calculateWelfare()"></select></div>
+            <div class="calc-group"><label>👩 媽媽實際月薪資總額</label><select id="momSalary" onchange="calculateWelfare()"></select></div>
+        </div>
+
+        <div class="card">
+            <h2>👶 小孩年紀與金額參數設定</h2>
+            <div id="kidInputs"></div>
+        </div>
+
+        <div class="card">
+            <h2>💰 爸媽補助落袋總計</h2>
+            <div class="result-box">
+                <div class="result-item"><span>出生現領生育金：</span><span>150,000 元</span></div>
+                <div class="result-item"><span>育嬰留停津貼：</span><span id="babyLeaveTotal">0 元</span></div>
+                <div class="result-total"><span>總額：</span><span id="firstYearTotal">0 元</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🚀 生育津貼 (成長津貼)</h2>
+            <div id="childrenDetailsBox"></div>
+            <div class="global-summary">
+                <div style="color: #dd6b20; margin-bottom: 0.5rem;">🏠 家庭戶累計：<span id="familyAccountTotal">0 元</span></div>
+                <div style="color: #b7791f;">🎓 小孩戶累計：<span id="nationalAccountTotal">0 元</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 三寶出生辦理進度條</h2>
+            <div class="todo-item"><input type="checkbox"> 戶政：報戶口、領生育紅包、親子停車證。</div>
+            <div class="todo-item"><input type="checkbox"> 區公所：申請每月育兒津貼。</div>
+            <div class="todo-item"><input type="checkbox"> 公司：育嬰留職停薪申請。</div>
+        </div>
+    </div>
+
+    <script>
+        const salArr = [45800,43900,42000,40100,38200,36300,34800,33300,31800,30300,29500];
+        salArr.forEach(s => {
+            document.getElementById('dadSalary').innerHTML += `<option value="${s}">${s} 元</option>`;
+            document.getElementById('momSalary').innerHTML += `<option value="${s}">${s} 元</option>`;
+        });
+
+        // 定義每一胎的基礎與設定
+        const kidsData = [
+            { n: '大寶', b: 5000, f: 5000, f7: 2500, n7: 2500 },
+            { n: '二寶', b: 6000, f: 5000, f7: 2500, n7: 2500 },
+            { n: '三寶', b: 7000, f: 5000, f7: 2500, n7: 2500 }
+        ];
+
+        kidsData.forEach((k, i) => {
+            let html = `<div class="child-input-block" style="margin-bottom:20px;"><strong>${k.n}</strong>
+                <select id="k${i}" onchange="calculateWelfare()">`;
+            for(let j=0; j<=18; j++) html += `<option value="${j}">${j} 歲</option>`;
+            html += `</select><div class="param-row">
+                <input type="number" id="b${i}" value="${k.b}" placeholder="0-6底數" oninput="calculateWelfare()">
+                <input type="number" id="f${i}" value="${k.f}" placeholder="0-6加成" oninput="calculateWelfare()">
+                <input type="number" id="f7${i}" value="${k.f7}" placeholder="7-18家庭" oninput="calculateWelfare()">
+                <input type="number" id="n7${i}" value="${k.n7}" placeholder="7-18小孩" oninput="calculateWelfare()">
+            </div></div>`;
+            document.getElementById('kidInputs').innerHTML += html;
+        });
+
+        function calculateWelfare() {
+            var d = parseInt(document.getElementById('dadSalary').value);
+            var m = parseInt(document.getElementById('momSalary').value);
+            var dT = Math.round(d*0.8)*9, mT = Math.round(m*0.8)*9;
+            document.getElementById('babyLeaveTotal').innerText = (dT + mT).toLocaleString() + " 元";
+            document.getElementById('firstYearTotal').innerText = (150000 + dT + mT).toLocaleString() + " 元";
+
+            let fSum = 0, nSum = 0, h = "";
+            kidsData.forEach((k, i) => {
+                let age = parseInt(document.getElementById('k'+i).value);
+                let b = parseInt(document.getElementById('b'+i).value);
+                let f = parseInt(document.getElementById('f'+i).value);
+                let f7 = parseInt(document.getElementById('f7'+i).value);
+                let n7 = parseInt(document.getElementById('n7'+i).value);
+
+                let m06 = (age <= 6) ? (6 - age + 1) * 12 : 0;
+                let m718 = (age <= 18) ? (18 - Math.max(7, age) + 1) * 12 : 0;
+                
+                let v06 = m06 * (b + f);
+                let v718_f = m718 * f7;
+                let v718_n = m718 * n7;
+                
+                h += `<div class="formula-card">
+                    <div class="formula-header">${k.n}</div>
+                    <div class="formula-row"><span>0-6歲 (${m06}月)：</span><span>${(b+f).toLocaleString()}元/月</span></div>
+                    <div class="formula-row"><span>7-18歲 (${m718}月)：</span><span>${(f7+n7).toLocaleString()}元/月</span></div>
+                    <div class="formula-total">合計：${(v06 + v718_f + v718_n).toLocaleString()} 元</div>
+                </div>`;
+                fSum += (v06 + v718_f); nSum += v718_n;
+            });
+            document.getElementById('childrenDetailsBox').innerHTML = h;
+            document.getElementById('familyAccountTotal').innerText = fSum.toLocaleString() + " 元";
+            document.getElementById('nationalAccountTotal').innerText = nSum.toLocaleString() + " 元";
+        }
+        calculateWelfare();
+    </script>
+</body>
+</html>
